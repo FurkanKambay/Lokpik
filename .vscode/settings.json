@@ -1,0 +1,34 @@
+{
+    "explorer.excludeGitIgnore": true,
+    "files.exclude": {
+        "**/*.meta": true,
+        "UIElementsSchema/": true
+    },
+    "files.readonlyInclude": {
+        "Packages/packages-lock.json": true,
+        "UIElementsSchema/**": true,
+        "Assets/Plugins/": true,
+        "FMODProject/**": true
+    },
+    "conventionalCommits.scopes": [
+        "ai",
+        "art",
+        "audio",
+        "balance",
+        "content",
+        "core",
+        "economy",
+        "gameplay",
+        "graphics",
+        "juice",
+        "level",
+        "narrative",
+        "shader",
+        "system",
+        "tool",
+        "ui",
+        "vfx"
+    ],
+    "conventionalCommits.gitmoji": false,
+    "conventionalCommits.promptFooter": false
+}

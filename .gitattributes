@@ -1,0 +1,105 @@
+[attr]lfs                   -text filter=lfs diff=lfs merge=lfs
+[attr]unity-json            eol=lf linguist-language=json
+[attr]unity-yaml            eol=lf linguist-language=yaml merge=unityyamlmerge
+
+*                           text=auto eol=lf
+*.cs                        eol=lf diff=csharp
+*.md                        eol=lf diff=markdown
+
+# Exclude third-party plugins and the packages lockfile from GitHub stats and diffs
+Assets/Plugins/**           linguist-generated
+Packages/packages-lock.json linguist-generated
+*.g.cs                      linguist-generated
+
+# Unity shader files
+*.cginc                     eol=lf
+*.compute                   eol=lf linguist-language=hlsl
+*.hlsl                      eol=lf linguist-language=hlsl
+*.raytrace                  eol=lf linguist-language=hlsl
+*.shader                    eol=lf
+
+# Unity JSON files
+*.asmdef                    unity-json
+*.asmref                    unity-json
+*.index                     unity-json
+*.inputactions              unity-json
+*.shadergraph               unity-json
+*.shadersubgraph            unity-json
+
+# Unity UI Toolkit files
+*.tss                       eol=lf linguist-language=css diff=css
+*.uss                       eol=lf linguist-language=css diff=css
+*.uxml                      eol=lf linguist-language=xml linguist-detectable
+
+# Unity YAML files
+*.anim                      unity-yaml
+*.asset                     unity-yaml
+*.brush                     unity-yaml
+*.controller                unity-yaml
+*.cubemap                   unity-yaml
+*.flare                     unity-yaml
+*.fontsettings              unity-yaml
+*.giparams                  unity-yaml
+*.guiskin                   unity-yaml
+*.lighting                  unity-yaml
+*.mask                      unity-yaml
+*.mat                       unity-yaml
+*.meta                      unity-yaml
+*.mixer                     unity-yaml
+*.overrideController        unity-yaml
+*.physicMaterial            unity-yaml
+*.physicsMaterial2D         unity-yaml
+*.playable                  unity-yaml
+*.prefab                    unity-yaml
+*.preset                    unity-yaml
+*.renderTexture             unity-yaml
+*.scenetemplate             unity-yaml
+*.shadervariants            unity-yaml
+*.signal                    unity-yaml
+*.spriteatlas               unity-yaml
+*.spriteatlasv2             unity-yaml
+*.spriteLib                 unity-yaml
+*.terrainlayer              unity-yaml
+*.unity                     unity-yaml
+*.vfx                       unity-yaml
+*.vfxblock                  unity-yaml
+*.vfxoperator               unity-yaml
+
+# FMOD Banks
+*.bank                      lfs
+
+# Image formats
+*.exr                       lfs
+*.hdr                       lfs
+*.jpg                       lfs
+*.png                       lfs
+*.psd                       lfs
+*.tga                       lfs
+*.xcf                       lfs
+
+# Audio formats
+*.flac                      lfs
+*.ogg                       lfs
+*.wav                       lfs
+
+# Video formats
+*.mp4                       lfs
+*.ogv                       lfs
+*.vp8                       lfs
+*.webm                      lfs
+
+# 3D formats
+*.dae                       lfs
+*.dxf                       lfs
+*.fbx                       lfs
+*.obj                       lfs
+
+# Build
+*.dll                       lfs
+*.pdb                       lfs
+
+# Packaging
+*.7z                        lfs
+*.gz                        lfs
+*.tar                       lfs
+*.zip                       lfs
