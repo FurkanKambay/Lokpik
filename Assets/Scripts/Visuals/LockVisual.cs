@@ -19,27 +19,31 @@ namespace Lokpik.Visuals
             for (int i = 0; i < pinVisuals.Length; i++)
             {
                 pinVisuals[i].Progress = tumblerLock.PinRiseAmounts[i];
-                pinVisuals[i].KeyPinHeight = 22;
+                // pinVisuals[i].KeyPinHeight = 22;
             }
         }
 
         private void OnDrawGizmos()
         {
-            Vector3 center = plugVisual.transform.position;
-            Vector3 forward = plugVisual.transform.forward;
-            float plugScale = plugVisual.transform.localScale.x / 2f;
+            // Vector3 center = plugVisual.transform.position;
+            // Vector3 forward = plugVisual.transform.forward;
+            // float plugScale = plugVisual.transform.localScale.x / 2f;
 
-            Handles.color = Color.red;
+            // Handles.color = Color.red;
+            //
+            // foreach (float bindPoint in tumblerLock.Config.KeyPinLengths)
+            //     Handles.DrawWireDisc(center, forward, bindPoint * plugScale);
 
-            foreach (float bindPoint in tumblerLock.Config.BindPoints)
-                Handles.DrawWireDisc(center, forward, bindPoint * plugScale);
+            // ^ old code for drawing circles for the Bind Points
 
+            // Shear line
             Handles.color = Color.cyan;
 
             PinVisual firstPin = pinVisuals.First();
             PinVisual lastPin = pinVisuals.Last();
 
-            float shear = tumblerLock.ShearLine - (firstPin.HoleHeight / 2f);
+            float heightScale = firstPin.HoleHeight;
+            float shear = (tumblerLock.Config.ShearLine * heightScale) - (heightScale / 2f);
 
             Vector3 p1 = firstPin.transform.TransformPoint(-firstPin.HoleWidth, shear, 0);
             Vector3 p2 = lastPin.transform.TransformPoint(firstPin.HoleWidth, shear, 0);

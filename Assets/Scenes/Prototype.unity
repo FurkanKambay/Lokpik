@@ -508,10 +508,16 @@ MonoBehaviour:
   pickRaiseAction: {fileID: 1120369429361536294, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   pickLowerAction: {fileID: -1828684789285524841, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   nextPinAction: {fileID: 1781555164194001046, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  config:
-    bindPoints:
-    - 0.4
-    - 0.8
+  state:
+    config:
+      shearLine: 0.5
+      uniformDriverPins: 1
+      driverPinLengths:
+      - 0.3
+      - 0.3
+      keyPinLengths:
+      - 0.2
+      - 0.35
   tensionCurve:
     serializedVersion: 2
     m_Curve:
@@ -538,12 +544,11 @@ MonoBehaviour:
     m_RotationOrder: 4
   tensionForce: 0.2
   tensionGravity: 0.2
-  minTension: 0.4
+  minTension: 0.408
   maxTension: 0.8
   turnSpeed: 0.2
   plugGravity: 0.5
   pinRaiseSpeed: 0.7
-  shearLine: 1
   isLocked: 1
   appliedTension: 0
   progress: 0

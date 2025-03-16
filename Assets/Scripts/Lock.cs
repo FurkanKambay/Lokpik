@@ -1,4 +1,5 @@
 using System;
+using SaintsField;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,14 +17,18 @@ namespace Lokpik
         [SerializeField] InputActionReference pickLowerAction;
         [SerializeField] InputActionReference nextPinAction;
 
-        [Header("Initial Config")]
-        [SerializeField] LockConfig config;
+        [SaintsRow(inline: true)]
+        [SerializeField] TumblerLockState state;
 
         [Header("Tension Wrench")]
         [SerializeField] AnimationCurve tensionCurve;
         [SerializeField, Min(0)] float tensionForce = 0.2f;
         [SerializeField, Min(0)] float tensionGravity = 0.2f;
+
+        [Tooltip("Minimum tension required to turn plug.")]
         [SerializeField, Range(0, 1)] float minTension = 0.5f;
+
+        [Tooltip("Maximum tension the plug can handle.")]
         [SerializeField, Range(0, 1)] float maxTension = 0.8f;
 
         [Header("Plug Rotation")]
@@ -33,18 +38,16 @@ namespace Lokpik
         [Header("Pin Raise")]
         [SerializeField, Min(0)] float pinRaiseSpeed = 2f;
         // [SerializeField] float coyoteTime = 0.5f;
-        [SerializeField, Min(0)] float shearLine;
 
         [Header("Debug")]
-        [SerializeField] bool isLocked;
-        [SerializeField, Range(0, 1)] float appliedTension;
-        [SerializeField, Range(0, 1)] float progress;
-        [SerializeField, Range(0, 2)] int currentPin;
-        [SerializeField, Range(0, 1)] float[] pinRises;
+        [SerializeField, ReadOnly] bool isLocked;
+        [SerializeField, ReadOnly, Range(0, 1)] float appliedTension;
+        [SerializeField, ReadOnly, Range(0, 1)] float progress;
+        [SerializeField, ReadOnly, Range(0, 2)] int currentPin;
+        [SerializeField, ReadOnly, Range(0, 1)] float[] pinRises;
 
-        public LockConfig Config => config;
+        public TumblerLockConfig Config => state.Config;
 
-        public float ShearLine => shearLine;
         public float MinTension => minTension;
         public float MaxTension => maxTension;
 
@@ -90,7 +93,7 @@ namespace Lokpik
         {
             // move to the next pin
             if (nextPinAction.action.triggered)
-                currentPin = (currentPin + 1) % (config.PinCount - 1);
+                currentPin = (currentPin + 1) % (Config.PinCount - 1);
 
             ApplyTension();
             TickPinRaise();
@@ -109,7 +112,7 @@ namespace Lokpik
             float minRise = GetMinRise(currentPin);
             float maxRise = GetMaxRise(currentPin);
 
-            float bindRisePoint = config.BindPoints[currentPin];
+            float bindRisePoint = Config.KeyPinLengths[currentPin];
             float rise = pinRises[currentPin];
 
             // if (CurrentProgress < bindRisePoint)
@@ -129,7 +132,8 @@ namespace Lokpik
             // }
 
             float newRiseValue = pinRises[currentPin] + (pinMoveDelta * Time.deltaTime);
-            pinRises[currentPin] = Mathf.Clamp(newRiseValue, minRise, maxRise);
+            // pinRises[currentPin] = Mathf.Clamp(newRiseValue, minRise, maxRise);
+            pinRises[currentPin] = Mathf.Clamp(newRiseValue, minRise, 1);
         }
 
         /// <summary>
@@ -167,13 +171,13 @@ namespace Lokpik
 
         private float GetMinRise(int pin)
         {
-            float bindingPoint = config.BindPoints[pin];
+            float bindingPoint = Config.KeyPinLengths[pin];
             return Progress < bindingPoint ? 0f : bindingPoint;
         }
 
         private float GetMaxRise(int pin)
         {
-            float bindingPoint = config.BindPoints[pin];
+            float bindingPoint = Config.KeyPinLengths[pin];
             return Progress < bindingPoint ? bindingPoint : 1f;
         }
 
@@ -187,9 +191,7 @@ namespace Lokpik
         {
             Progress = progress;
 
-            Array.Resize(ref pinRises, config.PinCount);
-
-            shearLine = Mathf.Clamp(shearLine, 0, 3);
+            Array.Resize(ref pinRises, Config.PinCount);
 
             for (int i = 0; i < pinRises.Length; i++)
                 pinRises[i] = 0;

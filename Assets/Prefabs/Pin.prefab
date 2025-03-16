@@ -230,8 +230,8 @@ MonoBehaviour:
   holeWidth: 0.5
   holeHeight: 3
   pinWidth: 0.45
-  keyPinHeight: 0.6
-  driverPinHeight: 1
+  keyPinLength: 0.6
+  driverPinLength: 1
   progress: 0
   isBinding: 0
 --- !u!1 &9072662904130622510

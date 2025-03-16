@@ -1,5 +1,4 @@
-using System;
-using UnityEditor;
+using SaintsField;
 using UnityEngine;
 
 namespace Lokpik.Visuals
@@ -21,12 +20,12 @@ namespace Lokpik.Visuals
         [SerializeField, Min(0)] float holeWidth;
         [SerializeField, Min(0)] float holeHeight;
         [SerializeField, Min(0)] float pinWidth;
-        [SerializeField, Min(0)] float keyPinHeight;
-        [SerializeField, Min(0)] float driverPinHeight;
+        [SerializeField, Min(0)] float keyPinLength;
+        [SerializeField, Min(0)] float driverPinLength;
 
         [Header("Debug")]
-        [SerializeField, Range(0, 1)] float progress;
-        [SerializeField] private bool isBinding;
+        [ReadOnly, Range(0, 1)] float progress;
+        [ReadOnly] private bool isBinding;
 
         public float HoleHeight => holeHeight;
         public float HoleWidth => holeWidth;
@@ -39,8 +38,8 @@ namespace Lokpik.Visuals
 
         public float KeyPinHeight
         {
-            get => keyPinHeight;
-            set => keyPinHeight = value;
+            get => keyPinLength;
+            set => keyPinLength = value;
         }
 
         private void Update()
@@ -50,15 +49,15 @@ namespace Lokpik.Visuals
             backgroundRenderer.color = backgroundColor;
 
             backgroundRenderer.transform.localScale = new Vector3(holeWidth, holeHeight, 1);
-            keyPinRenderer.transform.localScale = new Vector3(pinWidth, keyPinHeight, 1);
-            driverPinRenderer.transform.localScale = new Vector3(pinWidth, driverPinHeight, 1);
+            keyPinRenderer.transform.localScale = new Vector3(pinWidth, keyPinLength, 1);
+            driverPinRenderer.transform.localScale = new Vector3(pinWidth, driverPinLength, 1);
 
-            float keyPinY = (keyPinHeight / 2f) - (holeHeight / 2f) + (progress / 2f);
-            float driverPinY = keyPinY + (keyPinHeight / 2f) + (driverPinHeight / 2f);
+            float keyPinY = (keyPinLength / 2f) - (holeHeight / 2f) + (progress / 2f);
+            float driverPinY = keyPinY + (keyPinLength / 2f) + (driverPinLength / 2f);
 
             if (isBinding)
             {
-                float maxY = driverPinY - (driverPinHeight / 2f) - (keyPinHeight / 2f);
+                float maxY = driverPinY - (driverPinLength / 2f) - (keyPinLength / 2f);
                 keyPinY = Mathf.Min(keyPinY, maxY);
             }
 
