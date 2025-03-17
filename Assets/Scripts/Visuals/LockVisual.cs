@@ -19,10 +19,7 @@ namespace Lokpik.Visuals
         private void OnEnable()
         {
             for (int pin = 0; pin < pinVisuals.Length; pin++)
-            {
-                PinVisual pinVisual = pinVisuals[pin];
-                pinVisual.SetLock(lockpicker.State, pin);
-            }
+                pinVisuals[pin].SetLock(lockpicker.State, pin);
         }
 
         private void Update()
@@ -33,7 +30,7 @@ namespace Lokpik.Visuals
 
         private void OnDrawGizmos()
         {
-            // Plug rotation per pin
+            // Required plug rotation per pin
             Vector3 center = plugVisual.transform.position;
             Vector3 forward = plugVisual.transform.forward;
 

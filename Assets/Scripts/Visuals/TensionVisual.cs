@@ -9,23 +9,12 @@ namespace Lokpik.Visuals
         [SerializeField] SpriteRenderer innerBar;
         [SerializeField] SpriteRenderer outerBar;
 
-        [Header("Config")]
+        [Header("Debug")]
         [SerializeField, Range(0, 1)] float progress;
-        [SerializeField] Color innerColor;
-        [SerializeField] Color outerColor;
 
-        public float Progress
-        {
-            get => progress;
-            set => progress = value;
-        }
+        public float Progress { set => progress = value; }
 
-        private void Update()
-        {
+        private void Update() =>
             innerBar.transform.localScale = new Vector3(1, progress, 1);
-
-            innerBar.color = innerColor;
-            outerBar.color = outerColor;
-        }
     }
 }
