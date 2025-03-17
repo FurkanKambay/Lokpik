@@ -30,7 +30,7 @@ namespace Lokpik.Visuals
 
             for (int i = 0; i < pinVisuals.Length; i++)
             {
-                pinVisuals[i].Progress = tumblerLock.PinRiseAmounts[i];
+                // pinVisuals[i].Progress = tumblerLock.PinRiseAmounts[i];
                 // pinVisuals[i].KeyPinLength = Config.KeyPinLengths[i];
             }
         }
@@ -47,27 +47,23 @@ namespace Lokpik.Visuals
             //     Handles.DrawWireDisc(center, forward, bindPoint * plugScale);
 
             // ^ old code for drawing circles for the Bind Points
+            // replace with maybe an actual turning plug?
 
             // Shear line
+            float shearLine = tumblerLock.Config.ShearLine * TumblerLockConfig.ChamberHeight;
+
             PinVisual firstPin = pinVisuals.First();
             PinVisual lastPin = pinVisuals.Last();
-
-            const float heightScale = TumblerLockConfig.ChamberHeight;
-            float shear = (tumblerLock.Config.ShearLine * heightScale) - (heightScale / 2f);
-
-            Vector3 p1 = firstPin.transform.TransformPoint(-firstPin.ChamberWidth, shear, 0);
-            Vector3 p2 = lastPin.transform.TransformPoint(firstPin.ChamberWidth, shear, 0);
+            Vector3 leftPoint = firstPin.transform.TransformPoint(-firstPin.ChamberWidth, shearLine, 0);
+            Vector3 rightPoint = lastPin.transform.TransformPoint(firstPin.ChamberWidth, shearLine, 0);
 
             Handles.color = Color.cyan;
-            Handles.DrawDottedLine(p1, p2, 1f);
+            Handles.DrawDottedLine(leftPoint, rightPoint, 1f);
 
-            // State labels
+            // Pin labels
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
                 PinVisual pinVisual = pinVisuals[pin];
-                float pinVisualScaleY = pinVisual.transform.localScale.y;
-                Vector3 labelPosition = pinVisual.transform.TransformPoint(0, -pinVisualScaleY / 2f, 0);
-
                 (string text, Color color) = ("Pin", Color.white);
 
                 if (pin == State.BindingPin)
@@ -82,7 +78,7 @@ namespace Lokpik.Visuals
                     normal = { textColor = color }
                 };
 
-                Handles.Label(labelPosition, text, style);
+                Handles.Label(pinVisual.transform.position, text, style);
             }
         }
     }

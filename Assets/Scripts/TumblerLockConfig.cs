@@ -49,6 +49,9 @@ namespace Lokpik
 
         internal float GetMaxLiftForPin(int pin)
         {
+            if (pin < 0 || pin >= PinCount)
+                return 0;
+
             float driverPinLength = DriverPinLengths[pin];
             float keyPinLength = KeyPinLengths[pin];
             return ChamberHeight - (driverPinLength + keyPinLength);

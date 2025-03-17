@@ -12,10 +12,9 @@ namespace Lokpik
         public event Action OnUnlocked;
 
         [Header("Input")]
-        [SerializeField] InputActionReference holdTensionAction;
-        [SerializeField] InputActionReference pickRaiseAction;
-        [SerializeField] InputActionReference pickLowerAction;
-        [SerializeField] InputActionReference nextPinAction;
+        [SerializeField] InputActionReference holdTensionInput;
+        [SerializeField] InputActionReference movePickInput;
+        [SerializeField] InputActionReference changePinInput;
 
         [SaintsRow(inline: true)]
         [SerializeField] TumblerLockState state;
@@ -35,24 +34,21 @@ namespace Lokpik
         [SerializeField, Min(0)] float turnSpeed = 1f;
         [SerializeField, Min(0)] float plugGravity = 5f;
 
-        [Header("Pin Raise")]
-        [SerializeField, Min(0)] float pinRaiseSpeed = 2f;
+        [Header("Pick")]
+        [SerializeField, Min(0)] float pickRaiseSpeed = 2f;
         // [SerializeField] float coyoteTime = 0.5f;
 
         [Header("Debug")]
         [SerializeField, ReadOnly] bool isLocked;
         [SerializeField, ReadOnly, Range(0, 1)] float appliedTension;
         [SerializeField, ReadOnly, Range(0, 1)] float progress;
-        [SerializeField, ReadOnly, Range(0, 2)] int currentPin;
-        [SerializeField, ReadOnly, Range(0, 1)] float[] pinRises;
+        // [SerializeField, ReadOnly, Range(0, 2)] int currentPin;
 
         public TumblerLockState State => state;
         public TumblerLockConfig Config => state.Config;
 
         public float MinTension => minTension;
         public float MaxTension => maxTension;
-
-        public float[] PinRiseAmounts => pinRises;
 
         public float AppliedTension
         {
@@ -66,11 +62,9 @@ namespace Lokpik
             private set
             {
                 // constrain plug rotation
-                progress = Mathf.Clamp(value, GetMinRise(currentPin), GetMaxRise(currentPin));
-                // progress = Mathf.Clamp(value, 0, 1);
+                // progress = Mathf.Clamp(value, GetMinRise(currentPin), GetMaxRise(currentPin));
+                progress = Mathf.Clamp(value, 0, 1);
 
-                // does this make sense?
-                // IsLocked = value < config.LastBindPoint;
                 IsLocked = progress < 1;
             }
         }
@@ -92,29 +86,39 @@ namespace Lokpik
 
         private void Update()
         {
-            // move to the next pin
-            if (nextPinAction.action.triggered)
-                currentPin = (currentPin + 1) % (Config.PinCount - 1);
-
+            TickChangePin();
             ApplyTension();
             TickPinRaise();
             // TickPlugRotation();
         }
 
+        private void TickChangePin()
+        {
+            int delta = (int)changePinInput.action.ReadValue<float>();
+
+            if (delta == 0)
+                return;
+
+            State.StartPicking(State.PickingPin + delta);
+        }
+
         private void TickPinRaise()
         {
-            float pinMoveDelta = 0;
+            if (State.PickingPin == -1)
+                return;
 
-            if (pickRaiseAction.action.inProgress)
-                pinMoveDelta = pinRaiseSpeed;
-            else if (pickLowerAction.action.inProgress)
-                pinMoveDelta = -pinRaiseSpeed;
+            float delta = movePickInput.action.ReadValue<float>();
 
-            float minRise = GetMinRise(currentPin);
-            float maxRise = GetMaxRise(currentPin);
+            if (delta == 0)
+                return;
 
-            float bindRisePoint = Config.KeyPinLengths[currentPin];
-            float rise = pinRises[currentPin];
+            float pickMoveDelta = pickRaiseSpeed * delta;
+
+            // float minRise = GetMinRise(currentPin);
+            // float maxRise = GetMaxRise(currentPin);
+
+            // float bindRisePoint = Config.KeyPinLengths[currentPin];
+            // float rise = pinRises[currentPin];
 
             // if (CurrentProgress < bindRisePoint)
             // {
@@ -132,9 +136,8 @@ namespace Lokpik
             //     maxRise = bindRisePoint;
             // }
 
-            float newRiseValue = pinRises[currentPin] + (pinMoveDelta * Time.deltaTime);
-            // pinRises[currentPin] = Mathf.Clamp(newRiseValue, minRise, maxRise);
-            pinRises[currentPin] = Mathf.Clamp(newRiseValue, minRise, 1);
+            // pinRises[currentPin] = Mathf.Clamp(newLiftAmount, minRise, maxRise);
+            State.LiftPin(State.LiftAmount + (pickMoveDelta * Time.deltaTime));
         }
 
         /// <summary>
@@ -142,7 +145,7 @@ namespace Lokpik
         /// </summary>
         private void ApplyTension()
         {
-            float tension = holdTensionAction.action.inProgress ? tensionForce : -tensionGravity;
+            float tension = holdTensionInput.action.inProgress ? tensionForce : -tensionGravity;
             tension *= tensionCurve.Evaluate(AppliedTension);
 
             AppliedTension += tension * Time.deltaTime;
@@ -185,17 +188,17 @@ namespace Lokpik
         private void ResetProgress()
         {
             Progress = 0;
-            currentPin = 0;
+            State.StopPicking();
+            State.StopBinding();
         }
 
         private void OnValidate()
         {
             Progress = progress;
 
-            Array.Resize(ref pinRises, Config.PinCount);
-
-            for (int i = 0; i < pinRises.Length; i++)
-                pinRises[i] = 0;
+            // Array.Resize(ref pinRises, Config.PinCount);
+            // for (int i = 0; i < pinRises.Length; i++)
+            //     pinRises[i] = 0;
         }
 
         // /// <param name="progress">Normalized [0, 1]</param>

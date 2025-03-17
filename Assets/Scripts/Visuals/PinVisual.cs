@@ -1,6 +1,7 @@
 using SaintsField;
 using SaintsField.Playa;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Lokpik.Visuals
 {
@@ -22,24 +23,19 @@ namespace Lokpik.Visuals
         [SerializeField, Min(0)] float pinWidth;
 
         [Header("Debug")]
-        [SerializeField, ReadOnly, Range(0, 1)] float progress;
+        // [SerializeField, ReadOnly, Range(0, 1)] float liftAmount;
         [SerializeField, ReadOnly] bool isBinding;
 
         [Header("Info")]
         [ShowInInspector] private float KeyPinLength => lockState.Config.KeyPinLengths[pinIndex];
         [ShowInInspector] private float DriverPinLength => lockState.Config.DriverPinLengths[pinIndex];
         [ShowInInspector] private float ChamberHeight => TumblerLockConfig.ChamberHeight;
+
         [SerializeReference] TumblerLockState lockState;
         private int pinIndex;
 
         public float ChamberWidth => chamberWidth;
         public float PinWidth => pinWidth;
-
-        public float Progress
-        {
-            get => progress;
-            set => progress = value;
-        }
 
         internal void SetLockState(TumblerLockState state, int pin)
         {
@@ -52,21 +48,25 @@ namespace Lokpik.Visuals
             if (lockState == null)
                 return;
 
+            backgroundRenderer.color = backgroundColor;
             keyPinRenderer.color = keyPinColor;
             driverPinRenderer.color = driverPinColor;
-            backgroundRenderer.color = backgroundColor;
 
             backgroundRenderer.transform.localScale = new Vector3(chamberWidth, ChamberHeight, 1);
             keyPinRenderer.transform.localScale = new Vector3(pinWidth, KeyPinLength, 1);
             driverPinRenderer.transform.localScale = new Vector3(pinWidth, DriverPinLength, 1);
 
-            float keyPinY = (KeyPinLength / 2f) - (ChamberHeight / 2f) + (progress / 2f);
-            float driverPinY = keyPinY + (KeyPinLength / 2f) + (DriverPinLength / 2f);
+            float liftAmount = pinIndex == lockState.PickingPin ? lockState.LiftAmount
+                : pinIndex == lockState.BindingPin ? lockState.BindingPoint
+                : 0;
+
+            float keyPinY = liftAmount;
+            float driverPinY = keyPinY + KeyPinLength;
 
             if (isBinding)
             {
-                float maxY = driverPinY - (DriverPinLength / 2f) - (KeyPinLength / 2f);
-                keyPinY = Mathf.Min(keyPinY, maxY);
+                float maxLift = driverPinY - KeyPinLength;
+                keyPinY = Mathf.Min(keyPinY, maxLift);
             }
 
             keyPinRenderer.transform.localPosition = new Vector3(0, keyPinY, 0);
