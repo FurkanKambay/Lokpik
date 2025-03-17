@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Lokpik.TumblerLock
 {
     [Serializable]
-    public class TumblerLockState : ISerializationCallbackReceiver
+    public class TumblerLock : ISerializationCallbackReceiver
     {
         // public event Action OnLocked;
         // public event Action OnUnlocked;
@@ -18,7 +18,7 @@ namespace Lokpik.TumblerLock
         [LayoutGroup("./Manipulated Pin", ELayout.TitleOut)]
         [ShowInInspector, Ordered] public int PickingPin => pickingPin;
         [ShowInInspector, Ordered] public float LiftAmount => liftAmount;
-        [ShowInInspector, Ordered] public PinStackState PinState => pinState;
+        [ShowInInspector, Ordered] public ChamberState PinState => pinState;
         [ShowInInspector, Ordered] public float PlugRotation => plugRotation;
 
         [LayoutGroup("./Binding Pin", ELayout.TitleOut)]
@@ -33,7 +33,7 @@ namespace Lokpik.TumblerLock
 
         private int pickingPin = -1;
         private float liftAmount;
-        private PinStackState pinState;
+        private ChamberState pinState;
         private float plugRotation;
 
         private int bindingPin = -1;
@@ -49,7 +49,7 @@ namespace Lokpik.TumblerLock
         {
             bool adequateRotation = plugRotation > Config.GetAdequateRotation(pickingPin);
 
-            if (adequateRotation && pinState is PinStackState.Underset or PinStackState.Overset)
+            if (adequateRotation && pinState is ChamberState.Underset or ChamberState.Overset)
                 Bind(pickingPin, liftAmount);
 
             // reset the pin if it's not binding
@@ -63,8 +63,8 @@ namespace Lokpik.TumblerLock
         {
             float maxRotation = PinState switch
             {
-                PinStackState.Underset or PinStackState.Overset => Config.GetAdequateRotation(pickingPin),
-                PinStackState.Set or PinStackState.AboveShearLine => Config.GetAdequateRotation(pickingPin + 1),
+                ChamberState.Underset or ChamberState.Overset => Config.GetAdequateRotation(pickingPin),
+                ChamberState.Set or ChamberState.AboveShearLine => Config.GetAdequateRotation(pickingPin + 1),
                 _ => 0
             };
             plugRotation = Mathf.Clamp(plugRotation + delta, 0, maxRotation);
@@ -78,13 +78,13 @@ namespace Lokpik.TumblerLock
             float correctLift = Config.ShearLine - keyPinLength;
 
             if (Math.Abs(liftAmount - correctLift) < tolerance)
-                pinState = PinStackState.Set;
+                pinState = ChamberState.Set;
             else if (liftAmount >= Config.ShearLine)
-                pinState = PinStackState.AboveShearLine;
+                pinState = ChamberState.AboveShearLine;
             else if (liftAmount > correctLift)
-                pinState = PinStackState.Overset;
+                pinState = ChamberState.Overset;
             else if (liftAmount < correctLift)
-                pinState = PinStackState.Underset;
+                pinState = ChamberState.Underset;
         }
 
         public void StopBinding() => (bindingPin, bindingPoint) = (-1, 0);

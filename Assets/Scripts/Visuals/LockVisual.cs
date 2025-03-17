@@ -13,7 +13,7 @@ namespace Lokpik.Visuals
         [SerializeField] PinVisual[] pinVisuals;
 
         private TumblerLockConfig Config => tumblerLock.Config;
-        private TumblerLockState State => tumblerLock.State;
+        private TumblerLock.TumblerLock State => tumblerLock.State;
 
         private void OnEnable()
         {

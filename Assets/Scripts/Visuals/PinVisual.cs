@@ -28,25 +28,25 @@ namespace Lokpik.Visuals
         [SerializeField, ReadOnly] bool isBinding;
 
         [Header("Info")]
-        [ShowInInspector] private float KeyPinLength => lockState.Config.KeyPinLengths[pinIndex];
-        [ShowInInspector] private float DriverPinLength => lockState.Config.DriverPinLengths[pinIndex];
+        [ShowInInspector] private float KeyPinLength => @lock.Config.KeyPinLengths[pinIndex];
+        [ShowInInspector] private float DriverPinLength => @lock.Config.DriverPinLengths[pinIndex];
         [ShowInInspector] private float ChamberHeight => TumblerLockConfig.ChamberHeight;
 
-        [SerializeReference] TumblerLockState lockState;
+        [FormerlySerializedAs("lockState")] [SerializeReference] TumblerLock.TumblerLock @lock;
         private int pinIndex;
 
         public float ChamberWidth => chamberWidth;
         public float PinWidth => pinWidth;
 
-        internal void SetLockState(TumblerLockState state, int pin)
+        internal void SetLockState(TumblerLock.TumblerLock state, int pin)
         {
-            lockState = state;
+            @lock = state;
             pinIndex = pin;
         }
 
         private void Update()
         {
-            if (lockState == null)
+            if (@lock == null)
                 return;
 
             backgroundRenderer.color = backgroundColor;
@@ -57,8 +57,8 @@ namespace Lokpik.Visuals
             keyPinRenderer.transform.localScale = new Vector3(pinWidth, KeyPinLength, 1);
             driverPinRenderer.transform.localScale = new Vector3(pinWidth, DriverPinLength, 1);
 
-            float liftAmount = pinIndex == lockState.PickingPin ? lockState.LiftAmount
-                : pinIndex == lockState.BindingPin ? lockState.BindingPoint
+            float liftAmount = pinIndex == @lock.PickingPin ? @lock.LiftAmount
+                : pinIndex == @lock.BindingPin ? @lock.BindingPoint
                 : 0;
 
             float keyPinY = liftAmount;

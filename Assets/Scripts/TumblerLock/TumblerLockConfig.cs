@@ -48,7 +48,7 @@ namespace Lokpik.TumblerLock
         // }
 
         /// <summary>
-        /// Return the rotation at which the <paramref name="pin"/> can stay <see cref="PinStackState.Set"/>.
+        /// Return the rotation at which the <paramref name="pin"/> can stay <see cref="ChamberState.Set"/>.
         /// </summary>
         internal float GetAdequateRotation(int pin)
         {
