@@ -1,4 +1,4 @@
-﻿namespace Lokpik.TumblerLock
+﻿namespace Lokpik.Locks
 {
     public enum ChamberState
     {

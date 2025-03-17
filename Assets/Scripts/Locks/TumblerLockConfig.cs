@@ -4,7 +4,7 @@ using SaintsField;
 using SaintsField.Playa;
 using UnityEngine;
 
-namespace Lokpik.TumblerLock
+namespace Lokpik.Locks
 {
     [Serializable]
     public class TumblerLockConfig : ISerializationCallbackReceiver

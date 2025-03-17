@@ -1,5 +1,5 @@
 using System.Linq;
-using Lokpik.TumblerLock;
+using Lokpik.Locks;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,14 +13,14 @@ namespace Lokpik.Visuals
         [SerializeField] PinVisual[] pinVisuals;
 
         private TumblerLockConfig Config => tumblerLock.Config;
-        private TumblerLock.TumblerLock State => tumblerLock.State;
+        private TumblerLock Lock => tumblerLock.State;
 
         private void OnEnable()
         {
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
                 PinVisual pinVisual = pinVisuals[pin];
-                pinVisual.SetLockState(tumblerLock.State, pin);
+                pinVisual.SetLock(tumblerLock.State, pin);
             }
         }
 
@@ -39,7 +39,7 @@ namespace Lokpik.Visuals
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
                 float radius = Config.GetAdequateRotation(pin) / 2f;
-                Handles.color = pin == State.PickingPin ? Color.green : Color.red;
+                Handles.color = pin == Lock.PickingPin ? Color.green : Color.red;
                 Handles.DrawWireDisc(center, forward, radius);
             }
 
@@ -74,10 +74,10 @@ namespace Lokpik.Visuals
                 PinVisual pinVisual = pinVisuals[pin];
                 (string text, Color color) = ("Pin", Color.white);
 
-                if (pin == State.BindingPin)
+                if (pin == Lock.BindingPin)
                     (color, text) = (Color.red, "Binding");
-                else if (pin == State.PickingPin)
-                    (color, text) = (Color.blue, State.PickingChamber.State.ToString());
+                else if (pin == Lock.PickingPin)
+                    (color, text) = (Color.blue, Lock.PickingChamber.State.ToString());
 
                 var style = new GUIStyle
                 {

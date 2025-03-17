@@ -1,9 +1,8 @@
 using System;
-using Lokpik.TumblerLock;
+using Lokpik.Locks;
 using SaintsField;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 namespace Lokpik
 {
@@ -19,7 +18,7 @@ namespace Lokpik
         [SerializeField] InputActionReference changePinInput;
 
         [SaintsRow(inline: true)]
-        [SerializeField] TumblerLock.TumblerLock state;
+        [SerializeField] TumblerLock state;
 
         [Header("Tension Wrench")]
         [SerializeField] AnimationCurve tensionCurve;
@@ -45,7 +44,7 @@ namespace Lokpik
         [SerializeField, ReadOnly, Range(0, 1)] float appliedTorque;
         [SerializeField, ReadOnly, Range(0, 1)] float progress;
 
-        public TumblerLock.TumblerLock State => state;
+        public TumblerLock State => state;
         public TumblerLockConfig Config => state.Config;
 
         public float MinTorque => minTorque;

@@ -1,4 +1,4 @@
-using Lokpik.TumblerLock;
+using Lokpik.Locks;
 using SaintsField.Playa;
 using UnityEngine;
 
@@ -25,17 +25,11 @@ namespace Lokpik.Visuals
         [ShowInInspector] private float KeyPinLength => tumblerLock.Config.KeyPinLengths[pinIndex];
         [ShowInInspector] private float DriverPinLength => tumblerLock.Config.DriverPinLengths[pinIndex];
         [ShowInInspector] private float ChamberHeight => TumblerLockConfig.ChamberHeight;
-        [SerializeReference] TumblerLock.TumblerLock tumblerLock;
+        [SerializeReference] TumblerLock tumblerLock;
 
         public float ChamberWidth => chamberWidth;
 
         private int pinIndex;
-
-        internal void SetLockState(TumblerLock.TumblerLock state, int pin)
-        {
-            tumblerLock = state;
-            pinIndex = pin;
-        }
 
         private void Update()
         {
@@ -55,6 +49,12 @@ namespace Lokpik.Visuals
 
             keyPinRenderer.transform.localPosition = new Vector3(0, chamber.KeyPinLift, 0);
             driverPinRenderer.transform.localPosition = new Vector3(0, driverPinY, 0);
+        }
+
+        internal void SetLock(TumblerLock value, int pin)
+        {
+            tumblerLock = value;
+            pinIndex = pin;
         }
     }
 }

@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SaintsField.Playa;
 using UnityEngine;
 
-namespace Lokpik.TumblerLock
+namespace Lokpik.Locks
 {
     /// <summary>
     /// The state of a pin stack chamber.
