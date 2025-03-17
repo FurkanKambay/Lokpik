@@ -28,11 +28,13 @@ namespace Lokpik.Visuals
         [SerializeField, ReadOnly] bool isBinding;
 
         [Header("Info")]
-        [ShowInInspector] private float KeyPinLength => @lock.Config.KeyPinLengths[pinIndex];
-        [ShowInInspector] private float DriverPinLength => @lock.Config.DriverPinLengths[pinIndex];
+        [ShowInInspector] private float KeyPinLength => tumblerLock.Config.KeyPinLengths[pinIndex];
+        [ShowInInspector] private float DriverPinLength => tumblerLock.Config.DriverPinLengths[pinIndex];
         [ShowInInspector] private float ChamberHeight => TumblerLockConfig.ChamberHeight;
 
-        [FormerlySerializedAs("lockState")] [SerializeReference] TumblerLock.TumblerLock @lock;
+        [FormerlySerializedAs("lock")]
+        [FormerlySerializedAs("lockState")]
+        [SerializeReference] TumblerLock.TumblerLock tumblerLock;
         private int pinIndex;
 
         public float ChamberWidth => chamberWidth;
@@ -40,13 +42,13 @@ namespace Lokpik.Visuals
 
         internal void SetLockState(TumblerLock.TumblerLock state, int pin)
         {
-            @lock = state;
+            tumblerLock = state;
             pinIndex = pin;
         }
 
         private void Update()
         {
-            if (@lock == null)
+            if (tumblerLock == null)
                 return;
 
             backgroundRenderer.color = backgroundColor;
@@ -57,25 +59,14 @@ namespace Lokpik.Visuals
             keyPinRenderer.transform.localScale = new Vector3(pinWidth, KeyPinLength, 1);
             driverPinRenderer.transform.localScale = new Vector3(pinWidth, DriverPinLength, 1);
 
-            float liftAmount = pinIndex == @lock.PickingPin ? @lock.LiftAmount
-                : pinIndex == @lock.BindingPin ? @lock.BindingPoint
-                : 0;
-
-            float keyPinY = liftAmount;
-            float driverPinY = keyPinY + KeyPinLength;
-
-            if (isBinding)
-            {
-                float maxLift = driverPinY - KeyPinLength;
-                keyPinY = Mathf.Min(keyPinY, maxLift);
-            }
+            Chamber chamber = tumblerLock.Chambers[pinIndex];
+            float keyPinY = chamber.KeyPinLift;
+            float driverPinY = chamber.DriverPinLift + KeyPinLength;
 
             keyPinRenderer.transform.localPosition = new Vector3(0, keyPinY, 0);
 
-            if (!isBinding)
-            {
+            // if (!isBinding)
                 driverPinRenderer.transform.localPosition = new Vector3(0, driverPinY, 0);
-            }
         }
     }
 }

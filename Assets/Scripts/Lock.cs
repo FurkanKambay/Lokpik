@@ -82,6 +82,12 @@ namespace Lokpik
 
         private void Awake() => State.StopPicking();
 
+        private void OnEnable()
+        {
+            for (int i = 0; i < State.Chambers.Length; i++)
+                State.Chambers[i].SetLock(State, i);
+        }
+
         private void Update()
         {
             HandleChangePin();
@@ -127,6 +133,7 @@ namespace Lokpik
             RotatePlug();
         }
 
+        // TODO: move this into TumblerLock?
         /// <summary>
         /// Rotate the plug when adequate torque is applied
         /// </summary>
@@ -137,10 +144,14 @@ namespace Lokpik
             bool lowTorque = AppliedTorque < minTorque;
             bool highTorque = AppliedTorque > maxTorque;
 
-            float adequateRotation = Config.GetAdequateRotation(State.PickingPin);
-            float deltaForBinding = adequateRotation - State.PlugRotation + 0.05f;
+            bool isPicked = State.PickingChamber.State.IsPicked();
+            bool isLastPin = State.PickingPin == Config.LastPinIndex;
 
-            // TODO: move all this into TumblerLockState?
+            float adequateRotation = isLastPin && isPicked ? 1 : Config.GetAdequateRotation(
+                isPicked ? State.PickingPin + 1 : State.PickingPin);
+
+            float deltaForBinding = adequateRotation + 0.05f - State.PlugRotation;
+
             float turnDelta = (lowTorque, highTorque) switch
             {
                 (_, true) when !IsLocked => turnSpeed,  // unlocked: free rotation
@@ -152,13 +163,6 @@ namespace Lokpik
             State.RotatePlug(turnDelta * Time.deltaTime);
         }
 
-        private void OnValidate()
-        {
-            // Progress = progress;
-
-            // Array.Resize(ref pinRises, Config.PinCount);
-            // for (int i = 0; i < pinRises.Length; i++)
-            //     pinRises[i] = 0;
-        }
+        // private void OnValidate() => Progress = progress;
     }
 }

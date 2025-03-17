@@ -1,25 +1,5 @@
-﻿using System;
-using SaintsField.Playa;
-
-namespace Lokpik.TumblerLock
+﻿namespace Lokpik.TumblerLock
 {
-    /// <summary>
-    /// The state of a pin stack chamber.
-    /// </summary>
-    [Serializable]
-    public class Chamber
-    {
-        // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
-        [ShowInInspector] public ChamberState State => state;
-        [ShowInInspector] public float KeyPinLift => keyPinLift;
-        [ShowInInspector] public float DriverPinLift => driverPinLift;
-        // ReSharper restore ConvertToAutoPropertyWithPrivateSetter
-
-        private ChamberState state;
-        private float keyPinLift;
-        private float driverPinLift;
-    }
-
     public enum ChamberState
     {
         /// <summary>
@@ -46,5 +26,17 @@ namespace Lokpik.TumblerLock
         /// The key pin is blocking the shear line, and the pin is binding.
         /// </summary>
         OversetBinding
+    }
+
+    public static class ChamberStateExtensions
+    {
+        public static bool IsPicked(this ChamberState state) =>
+            state is ChamberState.Set or ChamberState.AboveShearLine;
+
+        public static bool IsBlocking(this ChamberState state) =>
+            !state.IsPicked();
+
+        public static bool IsBinding(this ChamberState state) =>
+            state is ChamberState.UndersetBinding or ChamberState.OversetBinding;
     }
 }

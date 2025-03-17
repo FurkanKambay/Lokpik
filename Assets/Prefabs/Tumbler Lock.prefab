@@ -322,9 +322,10 @@ MonoBehaviour:
   movePickInput: {fileID: -3560264501342311791, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   changePinInput: {fileID: -2865560764156463112, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   state:
-    tolerance: 0.01
+    chambers: []
     config:
       shearLine: 0.5
+      tolerance: 0.01
       uniformDriverPins: 1
       driverPinLengths:
       - 0.3
@@ -332,6 +333,7 @@ MonoBehaviour:
       keyPinLengths:
       - 0.2
       - 0.35
+      bindingOrder: 0000000001000000
   tensionCurve:
     serializedVersion: 2
     m_Curve:
@@ -357,9 +359,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   tensionForce: 1.5
-  tensionGravity: 2
-  minTorque: 0.1
-  maxTorque: 0.9
+  tensionGravity: 0.5
+  minTorque: 0.05
+  maxTorque: 0.95
   turnSpeed: 0.2
   plugGravity: 0.5
   pickRaiseSpeed: 0.2

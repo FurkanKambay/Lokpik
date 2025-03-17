@@ -364,18 +364,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tumbler Lock
       objectReference: {fileID: 0}
-    - target: {fileID: 6724146748325058508, guid: fc26f13d7b13df3468c1913d30d5e952, type: 3}
-      propertyPath: maxTorque
-      value: 0.95
-      objectReference: {fileID: 0}
-    - target: {fileID: 6724146748325058508, guid: fc26f13d7b13df3468c1913d30d5e952, type: 3}
-      propertyPath: minTorque
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 6724146748325058508, guid: fc26f13d7b13df3468c1913d30d5e952, type: 3}
-      propertyPath: tensionGravity
-      value: 0.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

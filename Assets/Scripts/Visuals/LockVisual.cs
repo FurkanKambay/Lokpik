@@ -77,7 +77,7 @@ namespace Lokpik.Visuals
                 if (pin == State.BindingPin)
                     (color, text) = (Color.red, "Binding");
                 else if (pin == State.PickingPin)
-                    (color, text) = (Color.blue, State.PinState.ToString());
+                    (color, text) = (Color.blue, State.PickingChamber.State.ToString());
 
                 var style = new GUIStyle
                 {

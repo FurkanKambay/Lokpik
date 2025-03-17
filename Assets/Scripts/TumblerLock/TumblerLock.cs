@@ -12,56 +12,69 @@ namespace Lokpik.TumblerLock
         // public event Action OnUnlocked;
 
         [LayoutGroup("Tumbler Lock State", ELayout.TitleBox)]
-        [SerializeField, Ordered] float tolerance;
+
+        [SaintsRow(inline: true)]
+        [SerializeField, Ordered] Chamber[] chambers;
 
         // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
         [LayoutGroup("./Manipulated Pin", ELayout.TitleOut)]
         [ShowInInspector, Ordered] public int PickingPin => pickingPin;
-        [ShowInInspector, Ordered] public float LiftAmount => liftAmount;
-        [ShowInInspector, Ordered] public ChamberState PinState => pinState;
+        // [ShowInInspector, Ordered] public float LiftAmount => liftAmount;
+        // [ShowInInspector, Ordered] public ChamberState PinState => pinState;
         [ShowInInspector, Ordered] public float PlugRotation => plugRotation;
 
         [LayoutGroup("./Binding Pin", ELayout.TitleOut)]
         [ShowInInspector, Ordered] public int BindingPin => bindingPin;
-        [ShowInInspector, Ordered] public float BindingPoint => bindingPoint;
+        // [ShowInInspector, Ordered] public float BindingPoint => bindingPoint;
         // ReSharper restore ConvertToAutoPropertyWithPrivateSetter
 
         [SaintsRow(inline: true)]
         [SerializeField, Ordered] TumblerLockConfig config;
 
         public TumblerLockConfig Config => config;
+        public Chamber[] Chambers => chambers;
+        public Chamber PickingChamber => chambers[pickingPin];
+        public Chamber BindingChamber => chambers[bindingPin];
 
-        private int pickingPin = -1;
-        private float liftAmount;
-        private ChamberState pinState;
         private float plugRotation;
-
+        private int pickingPin = 0;
         private int bindingPin = -1;
-        private float bindingPoint;
+        // private float liftAmount;
+        // private ChamberState pinState;
+        // private float bindingPoint;
 
         public void StopPicking()
         {
-            (pickingPin, plugRotation) = (-1, 0f);
-            StopBinding();
+            foreach (Chamber chamber in Chambers)
+                chamber.Reset();
+
+            (pickingPin, plugRotation) = (0, 0f);
         }
 
         public void StartPicking(int pin)
         {
             bool adequateRotation = plugRotation > Config.GetAdequateRotation(pickingPin);
 
-            if (adequateRotation && pinState is ChamberState.Underset or ChamberState.Overset)
-                Bind(pickingPin, liftAmount);
+            if (adequateRotation && PickingChamber.State is ChamberState.Underset or ChamberState.Overset)
+            {
+
+                Bind(pickingPin, PickingChamber.KeyPinLift);
+            }
 
             // reset the pin if it's not binding
             if (pickingPin != bindingPin)
-                liftAmount = 0;
+                PickingChamber.Reset();
 
             pickingPin = ClampPinIndex(pin);
         }
 
         public void RotatePlug(float delta)
         {
-            float maxRotation = PinState switch
+            // TODO: this would be "isLastBindingPin"
+            bool isLastPin = PickingPin == Config.LastPinIndex;
+
+            bool isUnlocking = isLastPin && PickingChamber.State.IsPicked();
+            float maxRotation = PickingChamber.State switch
             {
                 ChamberState.Underset or ChamberState.Overset => Config.GetAdequateRotation(pickingPin),
                 ChamberState.Set or ChamberState.AboveShearLine => Config.GetAdequateRotation(pickingPin + 1),
@@ -70,33 +83,24 @@ namespace Lokpik.TumblerLock
             plugRotation = Mathf.Clamp(plugRotation + delta, 0, maxRotation);
         }
 
-        public void LiftPin(float delta)
-        {
-            liftAmount = Mathf.Clamp(liftAmount + delta, 0, config.GetMaxLiftForPin(pickingPin));
+        public void LiftPin(float delta) => PickingChamber.LiftPin(delta);
 
-            float keyPinLength = Config.KeyPinLengths[pickingPin];
-            float correctLift = Config.ShearLine - keyPinLength;
-
-            if (Math.Abs(liftAmount - correctLift) < tolerance)
-                pinState = ChamberState.Set;
-            else if (liftAmount >= Config.ShearLine)
-                pinState = ChamberState.AboveShearLine;
-            else if (liftAmount > correctLift)
-                pinState = ChamberState.Overset;
-            else if (liftAmount < correctLift)
-                pinState = ChamberState.Underset;
-        }
-
-        public void StopBinding() => (bindingPin, bindingPoint) = (-1, 0);
+        // public void StopBinding() => (bindingPin, bindingPoint) = (-1, 0);
         public void Bind(int pin, float point)
         {
             bindingPin = ClampPinIndex(pin);
-            bindingPoint = Mathf.Clamp(point, 0, config.GetMaxLiftForPin(pin));
+            // PickingChamber.
+            // bindingPoint = Mathf.Clamp(point, 0, config.GetMaxLiftForPin(pin));
         }
 
-        private int ClampPinIndex(int pin) => Math.Clamp(pin, 0, Config.PinCount - 1);
+        private int ClampPinIndex(int pin) => Math.Clamp(pin, 0, Config.LastPinIndex);
 
-        void ISerializationCallbackReceiver.OnBeforeSerialize() { }
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+            if (Config != null)
+                Array.Resize(ref chambers, Config.PinCount);
+        }
+
         void ISerializationCallbackReceiver.OnAfterDeserialize() { }
     }
 }
