@@ -1,8 +1,6 @@
 using Lokpik.TumblerLock;
-using SaintsField;
 using SaintsField.Playa;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Lokpik.Visuals
 {
@@ -23,22 +21,15 @@ namespace Lokpik.Visuals
         [SerializeField, Min(0)] float chamberWidth;
         [SerializeField, Min(0)] float pinWidth;
 
-        [Header("Debug")]
-        // [SerializeField, ReadOnly, Range(0, 1)] float liftAmount;
-        [SerializeField, ReadOnly] bool isBinding;
-
         [Header("Info")]
         [ShowInInspector] private float KeyPinLength => tumblerLock.Config.KeyPinLengths[pinIndex];
         [ShowInInspector] private float DriverPinLength => tumblerLock.Config.DriverPinLengths[pinIndex];
         [ShowInInspector] private float ChamberHeight => TumblerLockConfig.ChamberHeight;
-
-        [FormerlySerializedAs("lock")]
-        [FormerlySerializedAs("lockState")]
         [SerializeReference] TumblerLock.TumblerLock tumblerLock;
-        private int pinIndex;
 
         public float ChamberWidth => chamberWidth;
-        public float PinWidth => pinWidth;
+
+        private int pinIndex;
 
         internal void SetLockState(TumblerLock.TumblerLock state, int pin)
         {
@@ -60,13 +51,10 @@ namespace Lokpik.Visuals
             driverPinRenderer.transform.localScale = new Vector3(pinWidth, DriverPinLength, 1);
 
             Chamber chamber = tumblerLock.Chambers[pinIndex];
-            float keyPinY = chamber.KeyPinLift;
             float driverPinY = chamber.DriverPinLift + KeyPinLength;
 
-            keyPinRenderer.transform.localPosition = new Vector3(0, keyPinY, 0);
-
-            // if (!isBinding)
-                driverPinRenderer.transform.localPosition = new Vector3(0, driverPinY, 0);
+            keyPinRenderer.transform.localPosition = new Vector3(0, chamber.KeyPinLift, 0);
+            driverPinRenderer.transform.localPosition = new Vector3(0, driverPinY, 0);
         }
     }
 }

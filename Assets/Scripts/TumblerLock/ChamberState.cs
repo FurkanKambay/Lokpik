@@ -19,11 +19,11 @@
         /// </summary>
         AboveShearLine,
         /// <summary>
-        /// The driver pin is blocking the shear line, and the pin is binding.
+        /// The driver pin is blocking the shear line, and is binding.
         /// </summary>
         UndersetBinding,
         /// <summary>
-        /// The key pin is blocking the shear line, and the pin is binding.
+        /// The key pin is blocking the shear line, and is binding.
         /// </summary>
         OversetBinding
     }
@@ -33,6 +33,9 @@
         public static bool IsPicked(this ChamberState state) =>
             state is ChamberState.Set or ChamberState.AboveShearLine;
 
+        /// <summary>
+        /// Is the shear line blocked?
+        /// </summary>
         public static bool IsBlocking(this ChamberState state) =>
             !state.IsPicked();
 

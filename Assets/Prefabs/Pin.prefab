@@ -229,8 +229,7 @@ MonoBehaviour:
   backgroundColor: {r: 0.8745098, g: 0.827451, b: 0.7647059, a: 1}
   chamberWidth: 0.16
   pinWidth: 0.15
-  isBinding: 0
-  lockState:
+  tumblerLock:
     rid: -2
   references:
     version: 2

@@ -13,7 +13,7 @@ namespace Lokpik.TumblerLock
 
         [LayoutGroup("Tumbler Lock Config", ELayout.TitleBox)]
         [SerializeField, Range(0, 1)] float shearLine = 0.5f;
-        [SerializeField, Ordered] float tolerance = 0.01f;
+        [SerializeField] float tolerance = 0.01f;
 
         [LayoutGroup("./Pins", ELayout.TitleOut)]
         [SerializeField] bool uniformDriverPins;
@@ -22,7 +22,7 @@ namespace Lokpik.TumblerLock
         [SerializeField, Range(0, 1)] float[] keyPinLengths = { 0.2f, 0.4f };
 
         [ArraySize(nameof(PinCount))]
-        [SerializeField, ReadOnly] int[] bindingOrder;
+        [SerializeField, ReadOnly, NoLabel] int[] bindingOrder;
 
         [LayoutGroup("./Info", ELayout.TitleOut)]
         [ShowInInspector] internal bool IsVulnerableToCombPicking =>
