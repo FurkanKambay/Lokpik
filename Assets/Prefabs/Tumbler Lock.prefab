@@ -322,6 +322,8 @@ MonoBehaviour:
   movePickInput: {fileID: -3560264501342311791, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   changePinInput: {fileID: -2865560764156463112, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   state:
+    pinState: 0
+    tolerance: 0.01
     config:
       shearLine: 0.5
       uniformDriverPins: 1
@@ -361,7 +363,7 @@ MonoBehaviour:
   maxTension: 0.8
   turnSpeed: 0.2
   plugGravity: 0.5
-  pickRaiseSpeed: 0.7
+  pickRaiseSpeed: 0.2
   isLocked: 1
   appliedTension: 0
   progress: 0
