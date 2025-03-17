@@ -416,7 +416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 407d4abf573039a4196b868e282c7bd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tumblerLock: {fileID: 6724146748325058508}
+  lockpicker: {fileID: 6724146748325058508}
   tensionVisual: {fileID: 7315901769482422794}
   plugVisual: {fileID: 4843243355914069207}
   pinVisuals:

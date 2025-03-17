@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 namespace Lokpik
 {
     // https://newworldfishingguide.com/how-to-fish-in-new-world.html
-    public class Lock : MonoBehaviour
+    public class Lockpicker : MonoBehaviour
     {
         public event Action OnLocked;
         public event Action OnUnlocked;

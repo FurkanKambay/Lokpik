@@ -7,27 +7,28 @@ namespace Lokpik.Visuals
 {
     public class LockVisual : MonoBehaviour
     {
-        [SerializeField] Lock tumblerLock;
+        [Header("References")]
+        [SerializeField] Lockpicker lockpicker;
         [SerializeField] TensionVisual tensionVisual;
         [SerializeField] PlugVisual plugVisual;
         [SerializeField] PinVisual[] pinVisuals;
 
-        private TumblerLockConfig Config => tumblerLock.Config;
-        private TumblerLock Lock => tumblerLock.State;
+        private TumblerLockConfig Config => lockpicker.Config;
+        private TumblerLock Lock => lockpicker.State;
 
         private void OnEnable()
         {
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
                 PinVisual pinVisual = pinVisuals[pin];
-                pinVisual.SetLock(tumblerLock.State, pin);
+                pinVisual.SetLock(lockpicker.State, pin);
             }
         }
 
         private void Update()
         {
-            tensionVisual.Progress = tumblerLock.AppliedTorque;
-            plugVisual.Progress = tumblerLock.State.PlugRotation;
+            tensionVisual.Progress = lockpicker.AppliedTorque;
+            plugVisual.Progress = lockpicker.State.PlugRotation;
         }
 
         private void OnDrawGizmos()
@@ -44,7 +45,7 @@ namespace Lokpik.Visuals
             }
 
             // Shear line
-            float shearLine = tumblerLock.Config.ShearLine * TumblerLockConfig.ChamberHeight;
+            float shearLine = lockpicker.Config.ShearLine * TumblerLockConfig.ChamberHeight;
 
             PinVisual firstPin = pinVisuals.First();
             PinVisual lastPin = pinVisuals.Last();
@@ -55,8 +56,8 @@ namespace Lokpik.Visuals
             Handles.DrawDottedLine(leftPoint, rightPoint, 2f);
 
             // Torque markers
-            float minTorqueX = tumblerLock.MinTorque;
-            float maxTorqueX = tumblerLock.MaxTorque;
+            float minTorqueX = lockpicker.MinTorque;
+            float maxTorqueX = lockpicker.MaxTorque;
 
             Vector3 leftTop = tensionVisual.transform.TransformPoint(1, minTorqueX, 0);
             Vector3 leftBottom = tensionVisual.transform.TransformPoint(-1, minTorqueX, 0);
