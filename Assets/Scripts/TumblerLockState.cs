@@ -14,8 +14,11 @@ namespace Lokpik
         [LayoutGroup("Tumbler Lock State", ELayout.TitleBox)]
 
         // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
+        [Header("Binding Pin")]
         [ShowInInspector, Ordered] public int BindingPin => bindingPin;
         [ShowInInspector, Ordered] public float BindingPoint => bindingPoint;
+
+        [Header("Manipulated Pin")]
         [ShowInInspector, Ordered] public int PickingPin => pickingPin;
         [ShowInInspector, Ordered] public float LiftAmount => liftAmount;
         // ReSharper restore ConvertToAutoPropertyWithPrivateSetter

@@ -46,6 +46,7 @@ namespace Lokpik
         [SerializeField, ReadOnly, Range(0, 2)] int currentPin;
         [SerializeField, ReadOnly, Range(0, 1)] float[] pinRises;
 
+        public TumblerLockState State => state;
         public TumblerLockConfig Config => state.Config;
 
         public float MinTension => minTension;

@@ -1,4 +1,5 @@
 using SaintsField;
+using SaintsField.Playa;
 using UnityEngine;
 
 namespace Lokpik.Visuals
@@ -11,24 +12,28 @@ namespace Lokpik.Visuals
         [SerializeField] SpriteRenderer driverPinRenderer;
         [SerializeField] SpriteRenderer backgroundRenderer;
 
-        [Header("Config")]
+        [Header("Colors")]
         [SerializeField] Color keyPinColor;
         [SerializeField] Color driverPinColor;
         [SerializeField] Color backgroundColor;
 
-        [Header("Values")]
-        [SerializeField, Min(0)] float holeWidth;
-        [SerializeField, Min(0)] float holeHeight;
+        [Header("Config")]
+        [SerializeField, Min(0)] float chamberWidth;
         [SerializeField, Min(0)] float pinWidth;
-        [SerializeField, Min(0)] float keyPinLength;
-        [SerializeField, Min(0)] float driverPinLength;
 
         [Header("Debug")]
-        [ReadOnly, Range(0, 1)] float progress;
-        [ReadOnly] private bool isBinding;
+        [SerializeField, ReadOnly, Range(0, 1)] float progress;
+        [SerializeField, ReadOnly] bool isBinding;
 
-        public float HoleHeight => holeHeight;
-        public float HoleWidth => holeWidth;
+        [Header("Info")]
+        [ShowInInspector] private float KeyPinLength => lockState.Config.KeyPinLengths[pinIndex];
+        [ShowInInspector] private float DriverPinLength => lockState.Config.DriverPinLengths[pinIndex];
+        [ShowInInspector] private float ChamberHeight => TumblerLockConfig.ChamberHeight;
+        [SerializeReference] TumblerLockState lockState;
+        private int pinIndex;
+
+        public float ChamberWidth => chamberWidth;
+        public float PinWidth => pinWidth;
 
         public float Progress
         {
@@ -36,28 +41,31 @@ namespace Lokpik.Visuals
             set => progress = value;
         }
 
-        public float KeyPinHeight
+        internal void SetLockState(TumblerLockState state, int pin)
         {
-            get => keyPinLength;
-            set => keyPinLength = value;
+            lockState = state;
+            pinIndex = pin;
         }
 
         private void Update()
         {
+            if (lockState == null)
+                return;
+
             keyPinRenderer.color = keyPinColor;
             driverPinRenderer.color = driverPinColor;
             backgroundRenderer.color = backgroundColor;
 
-            backgroundRenderer.transform.localScale = new Vector3(holeWidth, holeHeight, 1);
-            keyPinRenderer.transform.localScale = new Vector3(pinWidth, keyPinLength, 1);
-            driverPinRenderer.transform.localScale = new Vector3(pinWidth, driverPinLength, 1);
+            backgroundRenderer.transform.localScale = new Vector3(chamberWidth, ChamberHeight, 1);
+            keyPinRenderer.transform.localScale = new Vector3(pinWidth, KeyPinLength, 1);
+            driverPinRenderer.transform.localScale = new Vector3(pinWidth, DriverPinLength, 1);
 
-            float keyPinY = (keyPinLength / 2f) - (holeHeight / 2f) + (progress / 2f);
-            float driverPinY = keyPinY + (keyPinLength / 2f) + (driverPinLength / 2f);
+            float keyPinY = (KeyPinLength / 2f) - (ChamberHeight / 2f) + (progress / 2f);
+            float driverPinY = keyPinY + (KeyPinLength / 2f) + (DriverPinLength / 2f);
 
             if (isBinding)
             {
-                float maxY = driverPinY - (driverPinLength / 2f) - (keyPinLength / 2f);
+                float maxY = driverPinY - (DriverPinLength / 2f) - (KeyPinLength / 2f);
                 keyPinY = Mathf.Min(keyPinY, maxY);
             }
 

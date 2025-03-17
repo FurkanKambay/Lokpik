@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 5712513072812096828}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.40000004, z: 0}
-  m_LocalScale: {x: 0.45, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.05, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4838794093184905734}
@@ -114,7 +114,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 3, z: 1}
+  m_LocalScale: {x: 0.25, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4838794093184905734}
@@ -227,13 +227,17 @@ MonoBehaviour:
   keyPinColor: {r: 0.5529412, g: 0.28627452, b: 0.22745098, a: 1}
   driverPinColor: {r: 0.6784314, g: 0, b: 0.038289614, a: 1}
   backgroundColor: {r: 0.8745098, g: 0.827451, b: 0.7647059, a: 1}
-  holeWidth: 0.5
-  holeHeight: 3
-  pinWidth: 0.45
-  keyPinLength: 0.6
-  driverPinLength: 1
+  chamberWidth: 0.25
+  pinWidth: 0.2
   progress: 0
   isBinding: 0
+  lockState:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &9072662904130622510
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,8 +264,8 @@ Transform:
   m_GameObject: {fileID: 9072662904130622510}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.2, z: 0}
-  m_LocalScale: {x: 0.45, y: 0.6, z: 1}
+  m_LocalPosition: {x: 0, y: -0.375, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4838794093184905734}
