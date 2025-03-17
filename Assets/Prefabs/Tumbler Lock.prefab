@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 6114b82811bfd094c9644cf52bbb99ac, type: 3}
   m_Color: {r: 0.8745098, g: 0.827451, b: 0.7647059, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -161,7 +161,7 @@ Transform:
   m_GameObject: {fileID: 2371701191969243765}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.5, y: -0.6, z: 0}
+  m_LocalPosition: {x: -1, y: -0.6, z: 0}
   m_LocalScale: {x: 0.1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -212,7 +212,7 @@ Transform:
   m_GameObject: {fileID: 3391559332016177299}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: -0.25, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -262,7 +262,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 6114b82811bfd094c9644cf52bbb99ac, type: 3}
   m_Color: {r: 0.5529412, g: 0.28627452, b: 0.22745098, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -322,7 +322,6 @@ MonoBehaviour:
   movePickInput: {fileID: -3560264501342311791, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   changePinInput: {fileID: -2865560764156463112, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   state:
-    pinState: 0
     tolerance: 0.01
     config:
       shearLine: 0.5
@@ -357,15 +356,15 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  tensionForce: 0.2
-  tensionGravity: 0.2
-  minTension: 0.408
-  maxTension: 0.8
+  tensionForce: 1.5
+  tensionGravity: 2
+  minTorque: 0.1
+  maxTorque: 0.9
   turnSpeed: 0.2
   plugGravity: 0.5
   pickRaiseSpeed: 0.2
   isLocked: 1
-  appliedTension: 0
+  appliedTorque: 0
   progress: 0
 --- !u!1 &4469609992631167078
 GameObject:

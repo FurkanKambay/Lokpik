@@ -1,7 +1,9 @@
 using System;
+using Lokpik.TumblerLock;
 using SaintsField;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace Lokpik
 {
@@ -24,11 +26,11 @@ namespace Lokpik
         [SerializeField, Min(0)] float tensionForce = 0.2f;
         [SerializeField, Min(0)] float tensionGravity = 0.2f;
 
-        [Tooltip("Minimum tension required to turn plug.")]
-        [SerializeField, Range(0, 1)] float minTension = 0.5f;
+        [Tooltip("Minimum torque required to turn plug.")]
+        [SerializeField, Range(0, 1)] float minTorque = 0.5f;
 
-        [Tooltip("Maximum tension the plug can handle.")]
-        [SerializeField, Range(0, 1)] float maxTension = 0.8f;
+        [Tooltip("Maximum torque the plug can handle before binding the pin.")]
+        [SerializeField, Range(0, 1)] float maxTorque = 0.8f;
 
         [Header("Plug Rotation")]
         [SerializeField, Min(0)] float turnSpeed = 1f;
@@ -40,34 +42,30 @@ namespace Lokpik
 
         [Header("Debug")]
         [SerializeField, ReadOnly] bool isLocked;
-        [SerializeField, ReadOnly, Range(0, 1)] float appliedTension;
+        [SerializeField, ReadOnly, Range(0, 1)] float appliedTorque;
         [SerializeField, ReadOnly, Range(0, 1)] float progress;
-        // [SerializeField, ReadOnly, Range(0, 2)] int currentPin;
 
         public TumblerLockState State => state;
         public TumblerLockConfig Config => state.Config;
 
-        public float MinTension => minTension;
-        public float MaxTension => maxTension;
+        public float MinTorque => minTorque;
+        public float MaxTorque => maxTorque;
 
-        public float AppliedTension
+        public float AppliedTorque
         {
-            get => appliedTension;
-            private set => appliedTension = Mathf.Clamp(value, 0, 1);
+            get => appliedTorque;
+            private set => appliedTorque = Mathf.Clamp(value, 0, 1);
         }
 
-        public float Progress
-        {
-            get => progress;
-            private set
-            {
-                // constrain plug rotation
-                // progress = Mathf.Clamp(value, GetMinRise(currentPin), GetMaxRise(currentPin));
-                progress = Mathf.Clamp(value, 0, 1);
-
-                IsLocked = progress < 1;
-            }
-        }
+        // public float Progress
+        // {
+        //     get => progress;
+        //     private set
+        //     {
+        //         progress = Mathf.Clamp(value, 0, 1);
+        //         IsLocked = progress < 1;
+        //     }
+        // }
 
         public bool IsLocked
         {
@@ -82,17 +80,16 @@ namespace Lokpik
             }
         }
 
-        private void Awake() => ResetProgress();
+        private void Awake() => State.StopPicking();
 
         private void Update()
         {
-            TickChangePin();
-            ApplyTension();
+            HandleChangePin();
+            ApplyTorque();
             TickPinRaise();
-            // TickPlugRotation();
         }
 
-        private void TickChangePin()
+        private void HandleChangePin()
         {
             int delta = (int)changePinInput.action.ReadValue<float>();
 
@@ -113,96 +110,55 @@ namespace Lokpik
                 return;
 
             float pickMoveDelta = pickRaiseSpeed * delta;
-
-            // float minRise = GetMinRise(currentPin);
-            // float maxRise = GetMaxRise(currentPin);
-
-            // float bindRisePoint = Config.KeyPinLengths[currentPin];
-            // float rise = pinRises[currentPin];
-
-            // if (CurrentProgress < bindRisePoint)
-            // {
-            //     minRise = 0;
-            //     maxRise = 1;
-            // }
-            // else if (CurrentProgress >= bindRisePoint && rise >= bindRisePoint)
-            // {
-            //     minRise = bindRisePoint;
-            //     maxRise = 1;
-            // }
-            // else if (CurrentProgress >= bindRisePoint && rise < bindRisePoint)
-            // {
-            //     minRise = 0;
-            //     maxRise = bindRisePoint;
-            // }
-
-            // pinRises[currentPin] = Mathf.Clamp(newLiftAmount, minRise, maxRise);
-            State.LiftPin(State.LiftAmount + (pickMoveDelta * Time.deltaTime));
+            State.LiftPin(pickMoveDelta * Time.deltaTime);
         }
 
         /// <summary>
-        /// Apply tension and rotate the plug accordingly.
+        /// Apply torque and rotate the plug accordingly.
         /// </summary>
-        private void ApplyTension()
+        private void ApplyTorque()
         {
-            float tension = holdTensionInput.action.inProgress ? tensionForce : -tensionGravity;
-            tension *= tensionCurve.Evaluate(AppliedTension);
+            // TODO: use two different curves
+            float torque = holdTensionInput.action.inProgress
+                ? tensionForce * tensionCurve.Evaluate(appliedTorque)
+                : -tensionGravity;
 
-            AppliedTension += tension * Time.deltaTime;
+            AppliedTorque += torque * Time.deltaTime;
             RotatePlug();
         }
 
         /// <summary>
-        /// Rotate the plug when adequate tension is applied
+        /// Rotate the plug when adequate torque is applied
         /// </summary>
         private void RotatePlug()
         {
             // TODO: constrain plug rotation when pins are binding
 
-            bool lowTension = AppliedTension < minTension;
-            bool highTension = AppliedTension > maxTension;
+            bool lowTorque = AppliedTorque < minTorque;
+            bool highTorque = AppliedTorque > maxTorque;
 
-            float turnAmount = (lowTension, highTension) switch
+            float adequateRotation = Config.GetAdequateRotation(State.PickingPin);
+            float deltaForBinding = adequateRotation - State.PlugRotation + 0.05f;
+
+            // TODO: move all this into TumblerLockState?
+            float turnDelta = (lowTorque, highTorque) switch
             {
                 (_, true) when !IsLocked => turnSpeed,  // unlocked: free rotation
-                (_, true) => 0,                         // tension is too high: get stuck
+                (_, true) => deltaForBinding,           // tension is too high: binding
                 (true, _) => -plugGravity,              // tension is too low
                 (false, false) => turnSpeed             // tension is adequate
             };
 
-            Progress += turnAmount * Time.deltaTime;
-        }
-
-        private float GetMinRise(int pin)
-        {
-            float bindingPoint = Config.KeyPinLengths[pin];
-            return Progress < bindingPoint ? 0f : bindingPoint;
-        }
-
-        private float GetMaxRise(int pin)
-        {
-            float bindingPoint = Config.KeyPinLengths[pin];
-            return Progress < bindingPoint ? bindingPoint : 1f;
-        }
-
-        private void ResetProgress()
-        {
-            Progress = 0;
-            State.StopPicking();
-            State.StopBinding();
+            State.RotatePlug(turnDelta * Time.deltaTime);
         }
 
         private void OnValidate()
         {
-            Progress = progress;
+            // Progress = progress;
 
             // Array.Resize(ref pinRises, Config.PinCount);
             // for (int i = 0; i < pinRises.Length; i++)
             //     pinRises[i] = 0;
         }
-
-        // /// <param name="progress">Normalized [0, 1]</param>
-        // /// <returns>Angle in range [0, <see cref="UnlockAngle"/>]</returns>
-        // public float ProgressToAngle(float progress) => Mathf.LerpUnclamped(0, unlockAngle, progress);
     }
 }

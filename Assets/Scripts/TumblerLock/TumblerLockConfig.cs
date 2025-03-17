@@ -3,7 +3,7 @@ using System.Linq;
 using SaintsField.Playa;
 using UnityEngine;
 
-namespace Lokpik
+namespace Lokpik.TumblerLock
 {
     [Serializable]
     public class TumblerLockConfig : ISerializationCallbackReceiver
@@ -46,6 +46,15 @@ namespace Lokpik
         //     }
         //     return -1;
         // }
+
+        /// <summary>
+        /// Return the rotation at which the <paramref name="pin"/> can stay <see cref="PinStackState.Set"/>.
+        /// </summary>
+        internal float GetAdequateRotation(int pin)
+        {
+            // TODO: define binding order and take the IndexOf in that instead of `pin` directly
+            return (pin + 1) * 0.1f;
+        }
 
         internal float GetMaxLiftForPin(int pin)
         {

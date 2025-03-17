@@ -1,4 +1,4 @@
-﻿namespace Lokpik
+﻿namespace Lokpik.TumblerLock
 {
     public enum PinStackState
     {

@@ -3,7 +3,7 @@ using SaintsField;
 using SaintsField.Playa;
 using UnityEngine;
 
-namespace Lokpik
+namespace Lokpik.TumblerLock
 {
     [Serializable]
     public class TumblerLockState : ISerializationCallbackReceiver
@@ -19,6 +19,7 @@ namespace Lokpik
         [ShowInInspector, Ordered] public int PickingPin => pickingPin;
         [ShowInInspector, Ordered] public float LiftAmount => liftAmount;
         [ShowInInspector, Ordered] public PinStackState PinState => pinState;
+        [ShowInInspector, Ordered] public float PlugRotation => plugRotation;
 
         [LayoutGroup("./Binding Pin", ELayout.TitleOut)]
         [ShowInInspector, Ordered] public int BindingPin => bindingPin;
@@ -32,31 +33,46 @@ namespace Lokpik
 
         private int pickingPin = -1;
         private float liftAmount;
-        PinStackState pinState;
+        private PinStackState pinState;
+        private float plugRotation;
 
         private int bindingPin = -1;
         private float bindingPoint;
 
-        public void StopPicking() => pickingPin = -1;
+        public void StopPicking()
+        {
+            (pickingPin, plugRotation) = (-1, 0f);
+            StopBinding();
+        }
+
         public void StartPicking(int pin)
         {
-            // TODO only when the torque is too much!
-            // if (torqueTooMuch && pinState is PinStackState.Underset or PinStackState.Overset)
-            //     bindingPin = pickingPin;
+            bool adequateRotation = plugRotation > Config.GetAdequateRotation(pickingPin);
 
-            // if the pin is binding, save the binding point
-            // if not, reset the pin
-            if (pickingPin == bindingPin)
-                bindingPoint = liftAmount;
-            else
+            if (adequateRotation && pinState is PinStackState.Underset or PinStackState.Overset)
+                Bind(pickingPin, liftAmount);
+
+            // reset the pin if it's not binding
+            if (pickingPin != bindingPin)
                 liftAmount = 0;
 
             pickingPin = ClampPinIndex(pin);
         }
 
-        public void LiftPin(float newLiftAmount)
+        public void RotatePlug(float delta)
         {
-            liftAmount = Mathf.Clamp(newLiftAmount, 0, config.GetMaxLiftForPin(pickingPin));
+            float maxRotation = PinState switch
+            {
+                PinStackState.Underset or PinStackState.Overset => Config.GetAdequateRotation(pickingPin),
+                PinStackState.Set or PinStackState.AboveShearLine => Config.GetAdequateRotation(pickingPin + 1),
+                _ => 0
+            };
+            plugRotation = Mathf.Clamp(plugRotation + delta, 0, maxRotation);
+        }
+
+        public void LiftPin(float delta)
+        {
+            liftAmount = Mathf.Clamp(liftAmount + delta, 0, config.GetMaxLiftForPin(pickingPin));
 
             float keyPinLength = Config.KeyPinLengths[pickingPin];
             float correctLift = Config.ShearLine - keyPinLength;
@@ -71,7 +87,7 @@ namespace Lokpik
                 pinState = PinStackState.Underset;
         }
 
-        public void StopBinding() => bindingPin = -1;
+        public void StopBinding() => (bindingPin, bindingPoint) = (-1, 0);
         public void Bind(int pin, float point)
         {
             bindingPin = ClampPinIndex(pin);

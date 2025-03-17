@@ -23,7 +23,6 @@ namespace Lokpik.Visuals
         private void Update()
         {
             innerBar.transform.localScale = new Vector3(1, progress, 1);
-            innerBar.transform.localPosition = Vector3.up * ((progress / 2f) - 0.5f);
 
             innerBar.color = innerColor;
             outerBar.color = outerColor;
