@@ -1,7 +1,7 @@
 ﻿using System;
-using NUnit.Framework;
 using SaintsField.Playa;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Lokpik.Locks
 {
@@ -27,6 +27,9 @@ namespace Lokpik.Locks
 
         public float KeyPinLength => Lock.Config.KeyPinLengths[chamberIndex];
         public float DriverPinLength => Lock.Config.DriverPinLengths[chamberIndex];
+        public bool IsBinding => state.IsBinding();
+        public bool IsPicked => state.IsPicked();
+        public bool IsBlocking => state.IsBlocking();
 
         internal float MaxLift => TumblerLockConfig.ChamberHeight - DriverPinLength - KeyPinLength;
 
@@ -95,12 +98,12 @@ namespace Lokpik.Locks
 
         internal void SetLock(TumblerLock value, int index)
         {
-            Assert.GreaterOrEqual(index, 0);
+            Assert.IsTrue(index >= 0);
 
             Lock = value;
             chamberIndex = index;
 
-            Assert.Less(index, Lock.Config.PinCount);
+            Assert.IsTrue(index < Lock.Config.PinCount);
         }
     }
 }

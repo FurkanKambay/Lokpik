@@ -320,18 +320,25 @@ MonoBehaviour:
   movePickInput: {fileID: -3560264501342311791, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   changePinInput: {fileID: -2865560764156463112, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   state:
+    isLocked: 0
     chambers: []
     config:
       shearLine: 0.5
       tolerance: 0.01
+      pinCount: 3
       uniformDriverPins: 1
       driverPinLengths:
+      - 0.3
       - 0.3
       - 0.3
       keyPinLengths:
       - 0.2
       - 0.35
-      bindingOrder: 0000000001000000
+      - 0.4
+      bindingRotations:
+      - 0.1
+      - 0.2
+      - 0.3
   tensionCurve:
     serializedVersion: 2
     m_Curve:
@@ -363,7 +370,6 @@ MonoBehaviour:
   turnSpeed: 0.2
   plugGravity: 0.5
   pickRaiseSpeed: 0.2
-  isLocked: 1
   appliedTorque: 0
   progress: 0
 --- !u!1 &4469609992631167078
@@ -400,6 +406,7 @@ Transform:
   - {fileID: 7432871474665084569}
   - {fileID: 258661632773884525}
   - {fileID: 1179082378751416982}
+  - {fileID: 9101961888557851524}
   m_Father: {fileID: 4169490025050707507}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6906716684253759422
@@ -420,6 +427,7 @@ MonoBehaviour:
   pinVisuals:
   - {fileID: 1645148661501325380}
   - {fileID: 368942993326661823}
+  - {fileID: 7715480361712359853}
 --- !u!1 &4546844775925187935
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,6 +602,59 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &4428854321167798658
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3271169227950495811}
+    m_Modifications:
+    - target: {fileID: 4838794093184905734, guid: 39848a82d902a6140bc36db818b27040, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4838794093184905734, guid: 39848a82d902a6140bc36db818b27040, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4838794093184905734, guid: 39848a82d902a6140bc36db818b27040, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4838794093184905734, guid: 39848a82d902a6140bc36db818b27040, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4838794093184905734, guid: 39848a82d902a6140bc36db818b27040, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8922345946374258867, guid: 39848a82d902a6140bc36db818b27040, type: 3}
+      propertyPath: m_Name
+      value: Pin 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 39848a82d902a6140bc36db818b27040, type: 3}
+--- !u!114 &7715480361712359853 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6225266647837902895, guid: 39848a82d902a6140bc36db818b27040, type: 3}
+  m_PrefabInstance: {fileID: 4428854321167798658}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 170b6945d8de2114cba99a168290ea1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &9101961888557851524 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4838794093184905734, guid: 39848a82d902a6140bc36db818b27040, type: 3}
+  m_PrefabInstance: {fileID: 4428854321167798658}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4661272847342762091
 PrefabInstance:
   m_ObjectHideFlags: 0

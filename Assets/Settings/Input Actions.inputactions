@@ -16,9 +16,9 @@
                 },
                 {
                     "name": "Change Pin",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "e3679ea4-e733-48c4-9d8e-e08327b23858",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true

@@ -36,7 +36,7 @@ namespace Lokpik.Visuals
 
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
-                float radius = Config.GetAdequateRotation(pin) / 2f;
+                float radius = Config.GetAdequatePlugRotation(pin) / 2f;
                 Handles.color = pin == Lock.PickingPin ? Color.green : Color.red;
                 Handles.DrawWireDisc(center, forward, radius);
             }
