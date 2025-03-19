@@ -19,11 +19,11 @@
         /// </summary>
         AboveShearLine,
         /// <summary>
-        /// The driver pin is blocking the shear line, and is binding.
+        /// The driver pin is blocking the shear line, and is binding. The key pin is free.
         /// </summary>
         UndersetBinding,
         /// <summary>
-        /// The key pin is blocking the shear line, and is binding.
+        /// The key pin is blocking the shear line, and is binding. The driver pin is unreachable.
         /// </summary>
         OversetBinding
     }

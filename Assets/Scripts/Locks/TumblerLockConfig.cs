@@ -44,6 +44,7 @@ namespace Lokpik.Locks
 
         public float[] DriverPinLengths => driverPinLengths;
         public float[] KeyPinLengths => keyPinLengths;
+        public float[] BindingRotations => bindingRotations;
 
         internal float MaxKeyPinHeight => keyPinLengths.Max();
         internal float MaxDriverPinHeight => driverPinLengths.Max();
@@ -60,6 +61,8 @@ namespace Lokpik.Locks
             }
             return -1;
         }
+
+        public int ClampPinIndex(int pin) => Math.Clamp(pin, 0, LastPinIndex);
 
         /// <summary>
         /// Get the plug rotation at which the <paramref name="pin"/> can stay <see cref="ChamberState.Set"/>,

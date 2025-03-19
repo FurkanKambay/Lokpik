@@ -1,5 +1,6 @@
 using System.Linq;
 using Lokpik.Locks;
+using SaintsField;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,21 +12,27 @@ namespace Lokpik.Visuals
         [SerializeField] Lockpicker lockpicker;
         [SerializeField] TensionVisual tensionVisual;
         [SerializeField] PlugVisual plugVisual;
+
+        [ArraySize(nameof(PinCount))]
         [SerializeField] PinVisual[] pinVisuals;
 
         private TumblerLockConfig Config => lockpicker.Config;
-        private TumblerLock Lock => lockpicker.State;
+        private TumblerLock Lock => lockpicker.Lock;
+
+#if UNITY_EDITOR
+        private int PinCount => Config.PinCount;
+#endif
 
         private void OnEnable()
         {
             for (int pin = 0; pin < pinVisuals.Length; pin++)
-                pinVisuals[pin].SetLock(lockpicker.State, pin);
+                pinVisuals[pin].SetLock(lockpicker.Lock, pin);
         }
 
         private void Update()
         {
             tensionVisual.Progress = lockpicker.AppliedTorque;
-            plugVisual.Progress = lockpicker.State.PlugRotation;
+            plugVisual.Progress = lockpicker.Lock.PlugRotation;
         }
 
         private void OnDrawGizmos()
@@ -37,7 +44,7 @@ namespace Lokpik.Visuals
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
                 float radius = Config.GetAdequatePlugRotation(pin) / 2f;
-                Handles.color = pin == Lock.PickingPin ? Color.green : Color.red;
+                Handles.color = pin == lockpicker.PickingPin ? Color.green : Color.red;
                 Handles.DrawWireDisc(center, forward, radius);
             }
 
@@ -69,13 +76,16 @@ namespace Lokpik.Visuals
             // Pin labels
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
-                PinVisual pinVisual = pinVisuals[pin];
-                (string text, Color color) = ("Pin", Color.white);
+                ChamberState pinState = Lock.Chambers[pin].State;
+                string text = pinState.ToString();
 
-                if (pin == Lock.BindingPin)
-                    (color, text) = (Color.red, "Binding");
-                else if (pin == Lock.PickingPin)
-                    (color, text) = (Color.blue, Lock.PickingChamber.State.ToString());
+                Color color = pinState switch
+                {
+                    _ when pin == lockpicker.PickingPin => Color.blue,
+                    _ when pin == Lock.BindingPin => Color.red,
+                    _ when pinState.IsPicked() => Color.green,
+                    _ => Color.white,
+                };
 
                 var style = new GUIStyle
                 {
@@ -84,6 +94,7 @@ namespace Lokpik.Visuals
                     normal = { textColor = color }
                 };
 
+                PinVisual pinVisual = pinVisuals[pin];
                 Handles.Label(pinVisual.transform.position, text, style);
             }
         }

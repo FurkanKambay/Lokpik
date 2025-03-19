@@ -12,9 +12,10 @@ namespace Lokpik
         [SerializeField] InputActionReference holdTensionInput;
         [SerializeField] InputActionReference movePickInput;
         [SerializeField] InputActionReference changePinInput;
+        // TODO: a "lift pick hard" button/repeated press to apply counter-rotation for unbinding a pin
 
         [SaintsRow(inline: true)]
-        [SerializeField] TumblerLock state;
+        [SerializeField] TumblerLock tumblerLock;
 
         [Header("Tension Wrench")]
         [SerializeField] AnimationCurve tensionCurve;
@@ -38,9 +39,11 @@ namespace Lokpik
         [Header("Debug")]
         [SerializeField, ReadOnly, Range(0, 1)] float appliedTorque;
         [SerializeField, ReadOnly, Range(0, 1)] float progress;
+        [SerializeField, ReadOnly] int pickingPin;
 
-        public TumblerLock State => state;
-        public TumblerLockConfig Config => state.Config;
+        public TumblerLock Lock => tumblerLock;
+        public TumblerLockConfig Config => tumblerLock.Config;
+        public int PickingPin => pickingPin;
 
         public float MinTorque => minTorque;
         public float MaxTorque => maxTorque;
@@ -51,12 +54,12 @@ namespace Lokpik
             private set => appliedTorque = Mathf.Clamp(value, 0, 1);
         }
 
-        private void Awake() => State.StopPicking();
+        private void Awake() => Lock.StopPicking();
 
         private void OnEnable()
         {
-            for (int i = 0; i < State.Chambers.Length; i++)
-                State.Chambers[i].SetLock(State, i);
+            for (int i = 0; i < Lock.Chambers.Length; i++)
+                Lock.Chambers[i].SetLock(Lock, i);
         }
 
         private void Update()
@@ -73,12 +76,14 @@ namespace Lokpik
             if (!changePinInput.action.triggered || delta == 0)
                 return;
 
-            State.StartPicking(State.PickingPin + delta);
+            // State.StartPicking(State.PickingPin + delta);
+            tumblerLock.StopManipulating(pickingPin);
+            pickingPin = Config.ClampPinIndex(pickingPin + delta);
         }
 
         private void TickPinRaise()
         {
-            if (State.PickingPin == -1)
+            if (pickingPin < 0)
                 return;
 
             float delta = movePickInput.action.ReadValue<float>();
@@ -87,7 +92,7 @@ namespace Lokpik
                 return;
 
             float pickMoveDelta = pickRaiseSpeed * delta;
-            State.LiftPin(pickMoveDelta * Time.deltaTime);
+            Lock.LiftPin(pickingPin, pickMoveDelta * Time.deltaTime);
         }
 
         /// <summary>
@@ -112,26 +117,25 @@ namespace Lokpik
         {
             // TODO: constrain plug rotation when pins are binding
 
-            bool lowTorque = AppliedTorque < minTorque;
-            bool highTorque = AppliedTorque > maxTorque;
+            bool lowTorque = AppliedTorque < minTorque;     // not enough to Set any pin
+            bool highTorque = AppliedTorque > maxTorque;    // too much for the pin to move
 
-            bool isPicked = State.PickingChamber.State.IsPicked();
-            bool isLastPin = State.PickingPin == Config.LastPinIndex;
+            // TODO: ?
+            // if (highTorque && allPinsArePicked)
+            // {
+            // }
 
-            float adequateRotation = isLastPin && isPicked ? 1 : Config.GetAdequatePlugRotation(
-                isPicked ? State.PickingPin + 1 : State.PickingPin);
+            Lock.Chambers[pickingPin].SetTension(highTorque ? 1 : lowTorque ? -1 : 0);
 
-            float deltaForBinding = adequateRotation + 0.05f - State.PlugRotation;
-
-            float turnDelta = (lowTorque, highTorque) switch
+            if (highTorque)
             {
-                (_, true) when !State.IsLocked => turnSpeed,    // unlocked: free rotation
-                (_, true) => deltaForBinding,                   // tension is too high: binding
-                (true, _) => -plugGravity,                      // tension is too low
-                (false, false) => turnSpeed                     // tension is adequate
-            };
-
-            State.RotatePlug(turnDelta * Time.deltaTime);
+                // State.Bind(pickingPin);
+                Lock.RotatePlug(turnSpeed * Time.deltaTime);
+            }
+            else if (lowTorque)
+                Lock.RotatePlug(-plugGravity * Time.deltaTime);
+            else
+                Lock.RotatePlug(turnSpeed * Time.deltaTime);
         }
     }
 }
