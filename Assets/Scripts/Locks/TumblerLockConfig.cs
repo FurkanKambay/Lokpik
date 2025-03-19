@@ -49,17 +49,31 @@ namespace Lokpik.Locks
         internal float MaxKeyPinHeight => keyPinLengths.Max();
         internal float MaxDriverPinHeight => driverPinLengths.Max();
 
+        // TODO: optimize this by caching on validate
         /// <summary>
-        /// The index of the binding pin at <paramref name="plugRotation"/>. -1 if nothing is binding.
+        /// Find the next binding pin at <paramref name="plugRotation"/>. -1 if none are going to bind.
         /// </summary>
-        public int GetBindingPinAtPlugRotation(float plugRotation)
+        public int FindBindingPin(float plugRotation)
         {
-            for (int i = 0; i < bindingRotations.Length; i++)
+            (int pin, float rotation) candidate = (-1, 1);
+
+            for (int pin = 0; pin < PinCount; pin++)
             {
-                if (bindingRotations[i] > plugRotation)
-                    return i;
+                float rotation = BindingRotations[pin];
+
+                // This pin is already picked due to plug rotation.
+                if (plugRotation > rotation)
+                    continue;
+
+                // The current candidate is closer to the plug rotation.
+                if (candidate.rotation < rotation)
+                    continue;
+
+                // Found a candidate pin that might bind next.
+                candidate = (pin, rotation);
             }
-            return -1;
+
+            return candidate.pin;
         }
 
         public int ClampPinIndex(int pin) => Math.Clamp(pin, 0, LastPinIndex);

@@ -44,7 +44,7 @@ namespace Lokpik.Visuals
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
                 float radius = Config.GetAdequatePlugRotation(pin) / 2f;
-                Handles.color = pin == lockpicker.PickingPin ? Color.green : Color.red;
+                Handles.color = pin == lockpicker.PickingPin ? Color.blue : Color.red;
                 Handles.DrawWireDisc(center, forward, radius);
             }
 
@@ -68,9 +68,8 @@ namespace Lokpik.Visuals
             Vector3 rightTop = tensionVisual.transform.TransformPoint(1, maxTorqueX, 0);
             Vector3 rightBottom = tensionVisual.transform.TransformPoint(-1, maxTorqueX, 0);
 
-            Handles.color = Color.green;
+            Handles.color = Color.white;
             Handles.DrawLine(leftTop, leftBottom, 1f);
-            Handles.color = Color.red;
             Handles.DrawLine(rightTop, rightBottom, 1f);
 
             // Pin labels

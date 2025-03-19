@@ -36,10 +36,8 @@ namespace Lokpik.Visuals
             driverPinRenderer.transform.localScale = new Vector3(pinWidth, DriverPinLength, 1);
 
             Chamber chamber = tumblerLock.Chambers[pinIndex];
-            float driverPinY = chamber.DriverPinLift + KeyPinLength;
-
             keyPinRenderer.transform.localPosition = new Vector3(0, chamber.KeyPinLift, 0);
-            driverPinRenderer.transform.localPosition = new Vector3(0, driverPinY, 0);
+            driverPinRenderer.transform.localPosition = new Vector3(0, chamber.DriverPinLift, 0);
         }
 
         internal void SetLock(TumblerLock value, int pin)

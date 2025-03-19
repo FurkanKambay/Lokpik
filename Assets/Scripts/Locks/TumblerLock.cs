@@ -27,8 +27,10 @@ namespace Lokpik.Locks
         /// <summary>
         /// The pin currently binding due to <see cref="PlugRotation"/> and Chamber <see cref="Chamber.State"/>.
         /// </summary>
-        [LayoutGroup("./Binding Pin", ELayout.TitleOut)]
+        [LayoutGroup("./Binding", ELayout.TitleOut)]
         [ShowInInspector, Ordered] public int BindingPin => bindingPin;
+        [ShowInInspector, Ordered] public int NextBindingPin => nextBindingPin;
+        [ShowInInspector, Ordered] public int Tension => tension;
         // ReSharper restore ConvertToAutoPropertyWithPrivateSetter
 
         [SaintsRow(inline: true)]
@@ -36,7 +38,8 @@ namespace Lokpik.Locks
 
         public TumblerLockConfig Config => config;
         public Chamber[] Chambers => chambers;
-        public Chamber BindingChamber => chambers[bindingPin];
+        public Chamber BindingChamber => Chambers[BindingPin];
+        public Chamber NextBindingChamber => Chambers[NextBindingPin];
 
         public bool IsLocked
         {
@@ -53,6 +56,8 @@ namespace Lokpik.Locks
 
         private float plugRotation;
         private int bindingPin = -1;
+        private int tension = -1;
+        private int nextBindingPin = -1;
 
         public void StopPicking()
         {
@@ -61,60 +66,36 @@ namespace Lokpik.Locks
 
             plugRotation = 0f;
             bindingPin = -1;
+            nextBindingPin = Config.FindBindingPin(0);
         }
 
-        // public void StartPicking(int pin)
-        // {
-        //     bool adequateRotation = plugRotation > Config.GetAdequatePlugRotation(pickingPin);
-        //
-        //     if (adequateRotation && PickingChamber.State is ChamberState.Underset or ChamberState.Overset)
-        //         Bind(pickingPin, PickingChamber.KeyPinLift);
-        //
-        //     // TODO: don't reset if we're past the needed torque
-        //     // reset the pin if it's not binding
-        //     if (pickingPin != bindingPin)
-        //         PickingChamber.Reset();
-        //
-        //     pickingPin = ClampPinIndex(pin);
-        // }
+        public void StopManipulating(int pin) =>
+            Chambers[pin].ResetLift();
 
-        public void StopManipulating(int pin) => Chambers[pin].ResetLift();
+        public void SetTension(int value)
+        {
+            tension = value;
+
+            if (nextBindingPin != -1)
+                NextBindingChamber.SetTension(Tension);
+        }
 
         public void RotatePlug(float delta)
         {
-            float maxRotation = GetMaxPlugRotation();
+            if (NextBindingPin != -1 && delta > 0)
+                Chambers[NextBindingPin].SetTension(1);
 
-            // bool allPinsPicked = chambers.All(c => c.IsPicked);
-            // float maxRotation = PickingChamber.State switch
-            // {
-            //     _ when allPinsPicked => 1,
-            //     ChamberState.Underset or ChamberState.Overset => Config.GetAdequatePlugRotation(pickingPin),
-            //     ChamberState.Set or ChamberState.AboveShearLine => Config.GetAdequatePlugRotation(pickingPin + 1),
-            //     _ => 0
-            // };
+            nextBindingPin = Config.FindBindingPin(PlugRotation);
 
-            plugRotation = Mathf.Clamp(PlugRotation + delta, 0, maxRotation);
+            if (nextBindingPin != -1)
+                NextBindingChamber.SetTension(Tension);
+
+            plugRotation = Mathf.Clamp(PlugRotation + delta, 0, GetMaxPlugRotation());
             IsLocked = PlugRotation < 1;
         }
 
-        public void LiftPin(int pin, float delta) => Chambers[pin].LiftPin(delta);
-
-        public void StopBinding() => bindingPin = -1;
-        public void Bind(int pin)
-        {
-            if (pin < 0 || pin >= Config.PinCount)
-                return;
-
-            if (!Chambers[pin].IsBlocking)
-                return;
-
-            bindingPin = Config.ClampPinIndex(pin);
-            // TODO: figure out where to handle binding point (binding rotation)
-
-            Chambers[pin].Bind();
-            // var bindingPoint = Mathf.Clamp(, 0, config.GetMaxLiftForPin(pin));
-            // PickingChamber.BindingPoint = point;
-        }
+        public void LiftPin(int pin, float delta) =>
+            Chambers[pin].Lift(delta);
 
         public float GetMaxPlugRotation()
         {

@@ -336,8 +336,8 @@ MonoBehaviour:
       - 0.35
       - 0.4
       bindingRotations:
-      - 0.1
       - 0.2
+      - 0.1
       - 0.3
   tensionCurve:
     serializedVersion: 2

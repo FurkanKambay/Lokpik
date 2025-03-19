@@ -38,7 +38,6 @@ namespace Lokpik
 
         [Header("Debug")]
         [SerializeField, ReadOnly, Range(0, 1)] float appliedTorque;
-        [SerializeField, ReadOnly, Range(0, 1)] float progress;
         [SerializeField, ReadOnly] int pickingPin;
 
         public TumblerLock Lock => tumblerLock;
@@ -54,12 +53,12 @@ namespace Lokpik
             private set => appliedTorque = Mathf.Clamp(value, 0, 1);
         }
 
-        private void Awake() => Lock.StopPicking();
-
         private void OnEnable()
         {
             for (int i = 0; i < Lock.Chambers.Length; i++)
                 Lock.Chambers[i].SetLock(Lock, i);
+
+            Lock.StopPicking();
         }
 
         private void Update()
@@ -106,6 +105,11 @@ namespace Lokpik
                 : -tensionGravity;
 
             AppliedTorque += torque * Time.deltaTime;
+
+            bool lowTorque = AppliedTorque < MinTorque;     // not enough to Set any pin
+            bool highTorque = AppliedTorque > MaxTorque;    // too much for the pin to move
+            Lock.SetTension(lowTorque ? -1 : highTorque ? 1 : 0);
+
             RotatePlug();
         }
 
@@ -117,15 +121,17 @@ namespace Lokpik
         {
             // TODO: constrain plug rotation when pins are binding
 
-            bool lowTorque = AppliedTorque < minTorque;     // not enough to Set any pin
-            bool highTorque = AppliedTorque > maxTorque;    // too much for the pin to move
+            bool lowTorque = AppliedTorque < MinTorque;     // not enough to Set any pin
+            bool highTorque = AppliedTorque > MaxTorque;    // too much for the pin to move
 
             // TODO: ?
             // if (highTorque && allPinsArePicked)
             // {
             // }
 
-            Lock.Chambers[pickingPin].SetTension(highTorque ? 1 : lowTorque ? -1 : 0);
+            // TODO: this is wrong. the tension on the NEXT BINDING PIN should be set,
+            // not the pin currently being manipulated
+            // Lock.Chambers[pickingPin].SetTension(highTorque ? 1 : lowTorque ? -1 : 0);
 
             if (highTorque)
             {

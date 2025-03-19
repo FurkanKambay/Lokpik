@@ -29,9 +29,9 @@ namespace Lokpik.Locks
 
         public float KeyPinLength => Lock.Config.KeyPinLengths[chamberIndex];
         public float DriverPinLength => Lock.Config.DriverPinLengths[chamberIndex];
-        public bool IsBinding => state.IsBinding();
-        public bool IsPicked => state.IsPicked();
-        public bool IsBlocking => state.IsBlocking();
+        public bool IsBinding => State.IsBinding();
+        public bool IsPicked => State.IsPicked();
+        public bool IsFree => State.IsFree();
 
         internal float MaxLift => TumblerLockConfig.ChamberHeight - DriverPinLength - KeyPinLength;
 
@@ -42,119 +42,133 @@ namespace Lokpik.Locks
         private ChamberState state;
         private float driverPinLift;
         private float keyPinLift;
-        private int tension;
+        private int tension = -1;
 
-        public void SetState(ChamberState value) => state = value;
+        // public void SetState(ChamberState value) => state = value;
 
+        // TODO: RESTRICT ACCESS TO ONLY TumblerLock
         public void SetTension(int value)
         {
             tension = value;
-
-            if (Tension > 0)
-                Bind();
-            else if (Tension < 0)
-            {
-                // we could be manipulating the pin right now
-                // so can't just reset
-            }
+            UpdateState();
         }
 
-        public void LiftPin(float delta)
+        public void Lift(float delta)
         {
             // Binding resolutions
-            if (state is ChamberState.UndersetBinding)
+            if (state is ChamberState.Underset)
             {
-                float maxKeyLift = DriverPinLift;
-                keyPinLift = Mathf.Min(KeyPinLift, maxKeyLift);
+                float maxKeyPinLift = DriverPinLift - KeyPinLength;
+                keyPinLift = Mathf.Clamp(KeyPinLift + delta, 0, maxKeyPinLift);
                 // The driver pin can't be moved until counter-rotation is applied.
                 // Same logic as below, but in this case, the key pin will still move.
                 // The key pin needs to touch the driver pin before applying heavy pick force.
-                // return;
             }
-            else if (state is ChamberState.OversetBinding)
+            else if (state is ChamberState.Overset)
             {
                 // Both pins are stuck until counter-rotation is applied,
-                // Or more heavy pick force is used to force a counter-rotation.
+                // or heavy pick force is used to apply counter-rotation.
                 // (Repeatedly pressing `W` decreases the Torque applied with `Space`.)
-                // return;
+            }
+            else if (state is ChamberState.AboveShearLine)
+            {
+                keyPinLift = Lock.Config.ShearLine;
+                driverPinLift = keyPinLift + KeyPinLength;
+            }
+            else if (state is ChamberState.Set)
+            {
+                driverPinLift = Lock.Config.ShearLine;
+                float maxKeyLift = DriverPinLift - KeyPinLength;
+                keyPinLift = Mathf.Clamp(KeyPinLift + delta, 0, maxKeyLift);
             }
             else
             {
                 // nothing is binding so lift both pins
-                driverPinLift = KeyPinLift;
-                keyPinLift = Mathf.Clamp(keyPinLift + delta, 0, MaxLift);
-
-                float perfectLift = Lock.Config.ShearLine - KeyPinLength;
-
-                bool isSet = Math.Abs(KeyPinLift - perfectLift) < Lock.Config.Tolerance;
-                bool isAboveShearLine = KeyPinLift >= Lock.Config.ShearLine;
-                bool isOverset = KeyPinLift > perfectLift;
-                bool isUnderset = KeyPinLift < perfectLift;
-
-                state = Tension switch
-                {
-                    > 0 when isOverset => ChamberState.OversetBinding,
-                    > 0 when isUnderset => ChamberState.UndersetBinding,
-                    _ when isSet => ChamberState.Set,
-                    _ when isAboveShearLine => ChamberState.AboveShearLine,
-                    _ when isOverset => ChamberState.Overset,
-                    _ when isUnderset => ChamberState.Underset,
-                    _ => default
-                };
+                keyPinLift = Mathf.Clamp(KeyPinLift + delta, 0, MaxLift);
+                driverPinLift = KeyPinLength + KeyPinLift;
             }
+
+            UpdateState();
+        }
+
+        private void UpdateState()
+        {
+            // float perfectLift = Lock.Config.ShearLine - KeyPinLength;
+            // bool isPerfect = Math.Abs(KeyPinLift - perfectLift) < Lock.Config.Tolerance;
+            // bool isExploited = KeyPinLift >= Lock.Config.ShearLine;
+            // bool isAbove = KeyPinLift > perfectLift;
+            // bool isUnder = KeyPinLift < perfectLift;
+
+            float shearLine = Lock.Config.ShearLine;
+            bool isPerfect = Math.Abs(DriverPinLift - shearLine) < Lock.Config.Tolerance;
+            bool isExploited = KeyPinLift >= shearLine;
+            bool isAbove = DriverPinLift >= shearLine;
+            bool isUnder = DriverPinLift < shearLine;
+
+            state = Tension switch
+            {
+                // Adequate tension
+                0 or 1 when isPerfect => ChamberState.Set,
+                0 or 1 when isExploited => ChamberState.AboveShearLine,
+
+                // High tension: binding
+                1 when isAbove => ChamberState.Overset,
+                1 when isUnder => ChamberState.Underset,
+
+                // Low tension: blocking, but not binding
+                _ => ChamberState.Free
+            };
         }
 
         public void ResetLift()
         {
             switch (State)
             {
-                case ChamberState.OversetBinding: return;
-                case ChamberState.UndersetBinding:
+                case ChamberState.Free:
+                default:
                     keyPinLift = 0;
+                    driverPinLift = KeyPinLength;
                     return;
                 case ChamberState.Underset:
                 case ChamberState.Set:
+                    keyPinLift = 0;
+                    return;
                 case ChamberState.Overset:
                 case ChamberState.AboveShearLine:
-                default:
-                    // TODO: shouldn't drop when the pin is picked
-                    state = ChamberState.Underset;
-                    keyPinLift = 0;
-                    driverPinLift = 0;
                     return;
             }
         }
 
         // TODO: maybe this shouldn't be called externally
         // but instead an "overtension" flag could be set, then this logic becomes internal?
-        public void Bind()
-        {
-            state = State switch
-            {
-                ChamberState.Underset => ChamberState.UndersetBinding,
-                ChamberState.Overset => ChamberState.OversetBinding,
-                _ => State
-            };
-        }
-
-        public void Unbind()
-        {
-            state = State switch
-            {
-                ChamberState.UndersetBinding => ChamberState.Underset,
-                ChamberState.OversetBinding => ChamberState.Overset,
-                _ => State
-            };
-
-            // TODO: what happens to PinLifts when unbinded
-            // while pin being manipulated vs when it's not
-            if (State is ChamberState.UndersetBinding)
-            {
-            }
-            else if (State is ChamberState.OversetBinding)
-            {
-            }
-        }
+        // public void Bind()
+        // {
+        //     state = State switch
+        //     {
+        //         ChamberState.Underset => ChamberState.UndersetBinding,
+        //         ChamberState.Overset => ChamberState.OversetBinding,
+        //         _ => State
+        //     };
+        // }
+        //
+        // public void Unbind()
+        // {
+        //     state = State switch
+        //     {
+        //         ChamberState.UndersetBinding => ChamberState.Underset,
+        //         ChamberState.OversetBinding => ChamberState.Overset,
+        //         _ => State
+        //     };
+        //
+        //     // TODO: what happens to PinLifts when unbinded
+        //     // while pin being manipulated vs when it's not
+        //     if (State is ChamberState.UndersetBinding)
+        //     {
+        //     }
+        //     else if (State is ChamberState.OversetBinding)
+        //     {
+        //     }
+        // }
 
         internal void SetLock(TumblerLock value, int index)
         {

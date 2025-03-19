@@ -3,7 +3,11 @@
     public enum ChamberState
     {
         /// <summary>
-        /// The driver pin is blocking the shear line.
+        /// Both pins can be moved freely.
+        /// </summary>
+        Free,
+        /// <summary>
+        /// The driver pin is blocking the shear line, and is binding. The key pin is free.
         /// </summary>
         Underset,
         /// <summary>
@@ -11,21 +15,13 @@
         /// </summary>
         Set,
         /// <summary>
-        /// The key pin is blocking the shear line.
+        /// The key pin is blocking the shear line, and is binding. The driver pin is unreachable.
         /// </summary>
         Overset,
         /// <summary>
-        /// The pins are above the shear line.
+        /// Both pins are above the shear line.
         /// </summary>
-        AboveShearLine,
-        /// <summary>
-        /// The driver pin is blocking the shear line, and is binding. The key pin is free.
-        /// </summary>
-        UndersetBinding,
-        /// <summary>
-        /// The key pin is blocking the shear line, and is binding. The driver pin is unreachable.
-        /// </summary>
-        OversetBinding
+        AboveShearLine
     }
 
     public static class ChamberStateExtensions
@@ -33,13 +29,10 @@
         public static bool IsPicked(this ChamberState state) =>
             state is ChamberState.Set or ChamberState.AboveShearLine;
 
-        /// <summary>
-        /// Is the shear line blocked?
-        /// </summary>
-        public static bool IsBlocking(this ChamberState state) =>
-            !state.IsPicked();
-
         public static bool IsBinding(this ChamberState state) =>
-            state is ChamberState.UndersetBinding or ChamberState.OversetBinding;
+            state is ChamberState.Underset or ChamberState.Overset;
+
+        public static bool IsFree(this ChamberState state) =>
+            state is ChamberState.Free;
     }
 }
