@@ -125,10 +125,10 @@ namespace Lokpik
 
             float turnDelta = (lowTorque, highTorque) switch
             {
-                (_, true) when !State.IsLocked => turnSpeed,  // unlocked: free rotation
-                (_, true) => deltaForBinding,           // tension is too high: binding
-                (true, _) => -plugGravity,              // tension is too low
-                (false, false) => turnSpeed             // tension is adequate
+                (_, true) when !State.IsLocked => turnSpeed,    // unlocked: free rotation
+                (_, true) => deltaForBinding,                   // tension is too high: binding
+                (true, _) => -plugGravity,                      // tension is too low
+                (false, false) => turnSpeed                     // tension is adequate
             };
 
             State.RotatePlug(turnDelta * Time.deltaTime);

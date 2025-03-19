@@ -12,17 +12,13 @@ namespace Lokpik.Locks
         public event Action OnLocked;
         public event Action OnUnlocked;
 
-        [LayoutGroup("Tumbler Lock State", ELayout.TitleBox)]
+        [LayoutGroup("Tumbler Lock State", ELayout.CollapseBox)]
         [SerializeField, Ordered, ReadOnly] bool isLocked;
-
-        [SaintsRow(inline: true)]
-        [SerializeField, Ordered] Chamber[] chambers;
 
         // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
         /// <summary>
         /// The pin currently being manipulated by a tool.
         /// </summary>
-        [LayoutGroup("./Manipulated Pin", ELayout.TitleOut)]
         [ShowInInspector, Ordered] public int PickingPin => pickingPin;
 
         /// <summary>
@@ -30,6 +26,9 @@ namespace Lokpik.Locks
         /// </summary>
         /// <remarks>Use <see cref="RotatePlug"/> to modify.</remarks>
         [ShowInInspector, Ordered] public float PlugRotation => plugRotation;
+
+        [SaintsRow(inline: true)]
+        [SerializeField, Ordered] Chamber[] chambers;
 
         /// <summary>
         /// The pin currently binding due to <see cref="PlugRotation"/> and Chamber <see cref="Chamber.State"/>.

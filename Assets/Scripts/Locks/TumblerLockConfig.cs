@@ -11,7 +11,7 @@ namespace Lokpik.Locks
     {
         public const float ChamberHeight = 1f;
 
-        [LayoutGroup("Tumbler Lock Config", ELayout.TitleBox)]
+        [LayoutGroup("Tumbler Lock Config", ELayout.FoldoutBox)]
         [SerializeField, Range(0, 1)] float shearLine = 0.5f;
         [SerializeField] float tolerance = 0.01f;
 
