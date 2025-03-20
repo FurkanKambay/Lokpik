@@ -1,4 +1,5 @@
 using Lokpik.Locks;
+using SaintsField;
 using UnityEngine;
 
 namespace Lokpik.Visuals
@@ -7,16 +8,16 @@ namespace Lokpik.Visuals
     public class PinVisual : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] SpriteRenderer keyPinRenderer;
-        [SerializeField] SpriteRenderer driverPinRenderer;
-        [SerializeField] SpriteRenderer backgroundRenderer;
+        [SerializeField] Transform keyPinRenderer;
+        [SerializeField] Transform driverPinRenderer;
+        [SerializeField] Transform backgroundRenderer;
 
         [Header("Config")]
         [SerializeField, Min(0)] float chamberWidth;
         [SerializeField, Min(0)] float pinWidth;
 
         [Header("Info")]
-        [SerializeReference] TumblerLock tumblerLock;
+        [SerializeReference, ReadOnly] TumblerLock tumblerLock;
 
         public float ChamberWidth => chamberWidth;
 
@@ -26,18 +27,21 @@ namespace Lokpik.Visuals
 
         private int pinIndex;
 
+        private void Awake()
+        {
+            backgroundRenderer.localScale = new Vector3(chamberWidth, ChamberHeight, 1);
+            keyPinRenderer.localScale = new Vector3(pinWidth, KeyPinLength, 1);
+            driverPinRenderer.localScale = new Vector3(pinWidth, DriverPinLength, 1);
+        }
+
         private void Update()
         {
             if (tumblerLock == null)
                 return;
 
-            backgroundRenderer.transform.localScale = new Vector3(chamberWidth, ChamberHeight, 1);
-            keyPinRenderer.transform.localScale = new Vector3(pinWidth, KeyPinLength, 1);
-            driverPinRenderer.transform.localScale = new Vector3(pinWidth, DriverPinLength, 1);
-
-            Chamber chamber = tumblerLock.Chambers[pinIndex];
-            keyPinRenderer.transform.localPosition = new Vector3(0, chamber.KeyPinLift, 0);
-            driverPinRenderer.transform.localPosition = new Vector3(0, chamber.DriverPinLift, 0);
+            Chamber chamber = tumblerLock.Chamber(pinIndex);
+            keyPinRenderer.localPosition = new Vector3(0, chamber.KeyPinLift, 0);
+            driverPinRenderer.localPosition = new Vector3(0, chamber.DriverPinLift, 0);
         }
 
         internal void SetLock(TumblerLock value, int pin)

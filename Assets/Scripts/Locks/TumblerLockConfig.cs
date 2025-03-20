@@ -32,6 +32,8 @@ namespace Lokpik.Locks
         [RichLabel(nameof(GetPinArrayLabel), isCallback: true)]
         [SerializeField, Range(0, 1)] float[] bindingRotations;
 
+        [SerializeField, ReadOnly] int[] bindingOrder;
+
         [LayoutGroup("./Info", ELayout.TitleOut)]
         [ShowInInspector] internal bool IsVulnerableToCombPicking =>
             Enumerable.Range(0, PinCount).All(pin => GetMaxLiftForPin(pin) >= ShearLine);
@@ -110,6 +112,17 @@ namespace Lokpik.Locks
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
+            // Binding order
+            if (bindingRotations != null)
+            {
+                bindingOrder = bindingRotations
+                    .Select((rotation, index) => (rotation, index))
+                    .OrderBy(t => t.rotation)
+                    .Select(t => t.index)
+                    .ToArray();
+            }
+
+            // Uniform driver pins
             if (uniformDriverPins && driverPinLengths.Any())
                 Array.Fill(driverPinLengths, driverPinLengths.First());
 

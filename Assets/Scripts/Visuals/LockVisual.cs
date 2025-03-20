@@ -75,7 +75,7 @@ namespace Lokpik.Visuals
             // Pin labels
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
-                ChamberState pinState = Lock.Chambers[pin].State;
+                ChamberState pinState = Lock.Chamber(pin).State;
                 string text = pinState.ToString();
 
                 Color color = pinState switch

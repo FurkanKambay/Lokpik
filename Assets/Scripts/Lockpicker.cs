@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 namespace Lokpik
 {
-    // https://newworldfishingguide.com/how-to-fish-in-new-world.html
     public class Lockpicker : MonoBehaviour
     {
         [Header("Input")]
@@ -17,6 +16,7 @@ namespace Lokpik
         [SaintsRow(inline: true)]
         [SerializeField] TumblerLock tumblerLock;
 
+        // TODO: use two different curves?
         [Header("Tension Wrench")]
         [SerializeField] AnimationCurve tensionCurve;
         [SerializeField, Min(0)] float tensionForce = 0.2f;
@@ -55,8 +55,8 @@ namespace Lokpik
 
         private void OnEnable()
         {
-            for (int i = 0; i < Lock.Chambers.Length; i++)
-                Lock.Chambers[i].SetLock(Lock, i);
+            for (int i = 0; i < Lock.PinCount; i++)
+                Lock.Chamber(i).SetLock(Lock, i);
 
             Lock.StopPicking();
         }
@@ -99,49 +99,24 @@ namespace Lokpik
         /// </summary>
         private void ApplyTorque()
         {
-            // TODO: use two different curves
             float torque = holdTensionInput.action.inProgress
-                ? tensionForce * tensionCurve.Evaluate(appliedTorque)
+                ? tensionForce * tensionCurve.Evaluate(AppliedTorque)
                 : -tensionGravity;
 
             AppliedTorque += torque * Time.deltaTime;
+
+            // TODO: move this all into TumblerLock?
 
             bool lowTorque = AppliedTorque < MinTorque;     // not enough to Set any pin
             bool highTorque = AppliedTorque > MaxTorque;    // too much for the pin to move
             Lock.SetTension(lowTorque ? -1 : highTorque ? 1 : 0);
 
-            RotatePlug();
-        }
+            float turnDelta =
+                highTorque ? turnSpeed :
+                lowTorque ? -plugGravity
+                : turnSpeed;
 
-        // TODO: move this into TumblerLock?
-        /// <summary>
-        /// Rotate the plug when adequate torque is applied
-        /// </summary>
-        private void RotatePlug()
-        {
-            // TODO: constrain plug rotation when pins are binding
-
-            bool lowTorque = AppliedTorque < MinTorque;     // not enough to Set any pin
-            bool highTorque = AppliedTorque > MaxTorque;    // too much for the pin to move
-
-            // TODO: ?
-            // if (highTorque && allPinsArePicked)
-            // {
-            // }
-
-            // TODO: this is wrong. the tension on the NEXT BINDING PIN should be set,
-            // not the pin currently being manipulated
-            // Lock.Chambers[pickingPin].SetTension(highTorque ? 1 : lowTorque ? -1 : 0);
-
-            if (highTorque)
-            {
-                // State.Bind(pickingPin);
-                Lock.RotatePlug(turnSpeed * Time.deltaTime);
-            }
-            else if (lowTorque)
-                Lock.RotatePlug(-plugGravity * Time.deltaTime);
-            else
-                Lock.RotatePlug(turnSpeed * Time.deltaTime);
+            Lock.RotatePlug(turnDelta * Time.deltaTime);
         }
     }
 }

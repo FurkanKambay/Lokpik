@@ -11,7 +11,7 @@ namespace Lokpik.Locks
         public event Action OnLocked;
         public event Action OnUnlocked;
 
-        [LayoutGroup("Tumbler Lock State", ELayout.CollapseBox)]
+        [LayoutGroup("Tumbler Lock State", ELayout.FoldoutBox)]
         [SerializeField, Ordered, ReadOnly] bool isLocked;
 
         // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
@@ -37,9 +37,9 @@ namespace Lokpik.Locks
         [SerializeField, Ordered] TumblerLockConfig config;
 
         public TumblerLockConfig Config => config;
-        public Chamber[] Chambers => chambers;
-        public Chamber BindingChamber => Chambers[BindingPin];
-        public Chamber NextBindingChamber => Chambers[NextBindingPin];
+        public int PinCount => Config.PinCount;
+        public Chamber BindingChamber => Chamber(BindingPin);
+        public Chamber NextBindingChamber => Chamber(NextBindingPin);
 
         public bool IsLocked
         {
@@ -61,7 +61,7 @@ namespace Lokpik.Locks
 
         public void StopPicking()
         {
-            foreach (Chamber chamber in Chambers)
+            foreach (Chamber chamber in chambers)
                 chamber.ResetLift();
 
             plugRotation = 0f;
@@ -70,20 +70,22 @@ namespace Lokpik.Locks
         }
 
         public void StopManipulating(int pin) =>
-            Chambers[pin].ResetLift();
+            Chamber(pin).ResetLift();
 
         public void SetTension(int value)
         {
             tension = value;
 
-            if (nextBindingPin != -1)
+            if (NextBindingPin != -1)
                 NextBindingChamber.SetTension(Tension);
         }
 
         public void RotatePlug(float delta)
         {
             if (NextBindingPin != -1 && delta > 0)
-                Chambers[NextBindingPin].SetTension(1);
+                NextBindingChamber.SetTension(1);
+            else if (NextBindingPin != -1 && delta < 0)
+                Chamber(nextBindingPin - 1).SetTension(-1);
 
             nextBindingPin = Config.FindBindingPin(PlugRotation);
 
@@ -95,15 +97,18 @@ namespace Lokpik.Locks
         }
 
         public void LiftPin(int pin, float delta) =>
-            Chambers[pin].Lift(delta);
+            Chamber(pin).Lift(delta);
+
+        public Chamber Chamber(int pin) =>
+            chambers[Config.ClampPinIndex(pin)];
 
         public float GetMaxPlugRotation()
         {
             float maxRotation = 1;
 
-            for (int pin = 0; pin < Chambers.Length; pin++)
+            for (int pin = 0; pin < chambers.Length; pin++)
             {
-                if (Chambers[pin].IsPicked)
+                if (chambers[pin].IsPicked)
                     continue;
 
                 maxRotation = Mathf.Min(maxRotation, Config.GetAdequatePlugRotation(pin));

@@ -44,8 +44,6 @@ namespace Lokpik.Locks
         private float keyPinLift;
         private int tension = -1;
 
-        // public void SetState(ChamberState value) => state = value;
-
         // TODO: RESTRICT ACCESS TO ONLY TumblerLock
         public void SetTension(int value)
         {
@@ -93,12 +91,6 @@ namespace Lokpik.Locks
 
         private void UpdateState()
         {
-            // float perfectLift = Lock.Config.ShearLine - KeyPinLength;
-            // bool isPerfect = Math.Abs(KeyPinLift - perfectLift) < Lock.Config.Tolerance;
-            // bool isExploited = KeyPinLift >= Lock.Config.ShearLine;
-            // bool isAbove = KeyPinLift > perfectLift;
-            // bool isUnder = KeyPinLift < perfectLift;
-
             float shearLine = Lock.Config.ShearLine;
             bool isPerfect = Math.Abs(DriverPinLift - shearLine) < Lock.Config.Tolerance;
             bool isExploited = KeyPinLift >= shearLine;
@@ -138,37 +130,6 @@ namespace Lokpik.Locks
                     return;
             }
         }
-
-        // TODO: maybe this shouldn't be called externally
-        // but instead an "overtension" flag could be set, then this logic becomes internal?
-        // public void Bind()
-        // {
-        //     state = State switch
-        //     {
-        //         ChamberState.Underset => ChamberState.UndersetBinding,
-        //         ChamberState.Overset => ChamberState.OversetBinding,
-        //         _ => State
-        //     };
-        // }
-        //
-        // public void Unbind()
-        // {
-        //     state = State switch
-        //     {
-        //         ChamberState.UndersetBinding => ChamberState.Underset,
-        //         ChamberState.OversetBinding => ChamberState.Overset,
-        //         _ => State
-        //     };
-        //
-        //     // TODO: what happens to PinLifts when unbinded
-        //     // while pin being manipulated vs when it's not
-        //     if (State is ChamberState.UndersetBinding)
-        //     {
-        //     }
-        //     else if (State is ChamberState.OversetBinding)
-        //     {
-        //     }
-        // }
 
         internal void SetLock(TumblerLock value, int index)
         {

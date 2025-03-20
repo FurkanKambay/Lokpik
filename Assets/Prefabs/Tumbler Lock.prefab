@@ -339,6 +339,7 @@ MonoBehaviour:
       - 0.2
       - 0.1
       - 0.3
+      bindingOrder: 010000000000000002000000
   tensionCurve:
     serializedVersion: 2
     m_Curve:
@@ -371,7 +372,6 @@ MonoBehaviour:
   plugGravity: 0.5
   pickRaiseSpeed: 0.2
   appliedTorque: 0
-  progress: 0
   pickingPin: 0
 --- !u!1 &4469609992631167078
 GameObject:
