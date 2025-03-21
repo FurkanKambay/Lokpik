@@ -48,12 +48,11 @@ namespace Lokpik.Locks
         public void SetTension(int value)
         {
             tension = value;
-            UpdateState();
+            Lift(0);
         }
 
         public void Lift(float delta)
         {
-            // Binding resolutions
             if (state is ChamberState.Underset)
             {
                 float maxKeyPinLift = DriverPinLift - KeyPinLength;
@@ -112,7 +111,7 @@ namespace Lokpik.Locks
             };
         }
 
-        public void ResetLift()
+        public void StopLifting()
         {
             switch (State)
             {

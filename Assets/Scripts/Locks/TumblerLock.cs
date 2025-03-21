@@ -28,7 +28,7 @@ namespace Lokpik.Locks
         /// The pin currently binding due to <see cref="PlugRotation"/> and Chamber <see cref="Chamber.State"/>.
         /// </summary>
         [LayoutGroup("./Binding", ELayout.TitleOut)]
-        [ShowInInspector, Ordered] public int BindingPin => bindingPin;
+        [ShowInInspector, Ordered] public int PreviouslySetPin => previouslySetPin;
         [ShowInInspector, Ordered] public int NextBindingPin => nextBindingPin;
         [ShowInInspector, Ordered] public int Tension => tension;
         // ReSharper restore ConvertToAutoPropertyWithPrivateSetter
@@ -38,7 +38,8 @@ namespace Lokpik.Locks
 
         public TumblerLockConfig Config => config;
         public int PinCount => Config.PinCount;
-        public Chamber BindingChamber => Chamber(BindingPin);
+
+        public Chamber PreviouslySetChamber => Chamber(PreviouslySetPin);
         public Chamber NextBindingChamber => Chamber(NextBindingPin);
 
         public bool IsLocked
@@ -54,42 +55,42 @@ namespace Lokpik.Locks
             }
         }
 
-        private float plugRotation;
-        private int bindingPin = -1;
         private int tension = -1;
+        private float plugRotation;
+        private int previouslySetPin = -1;
         private int nextBindingPin = -1;
 
         public void StopPicking()
         {
             foreach (Chamber chamber in chambers)
-                chamber.ResetLift();
+                chamber.StopLifting();
 
             plugRotation = 0f;
-            bindingPin = -1;
+            previouslySetPin = -1;
             nextBindingPin = Config.FindBindingPin(0);
         }
 
         public void StopManipulating(int pin) =>
-            Chamber(pin).ResetLift();
+            Chamber(pin).StopLifting();
 
-        public void SetTension(int value)
+        public void RotatePlug(float delta, int tensionValue)
         {
-            tension = value;
+            tension = tensionValue;
 
             if (NextBindingPin != -1)
                 NextBindingChamber.SetTension(Tension);
-        }
 
-        public void RotatePlug(float delta)
-        {
+            previouslySetPin = Config.FindLastSetPin(PlugRotation);
+
             if (NextBindingPin != -1 && delta > 0)
                 NextBindingChamber.SetTension(1);
-            else if (NextBindingPin != -1 && delta < 0)
-                Chamber(nextBindingPin - 1).SetTension(-1);
+            else if (PreviouslySetPin != -1 && delta < 0)
+                PreviouslySetChamber.SetTension(-1);
 
             nextBindingPin = Config.FindBindingPin(PlugRotation);
 
-            if (nextBindingPin != -1)
+            // Next pin updated
+            if (NextBindingPin != -1)
                 NextBindingChamber.SetTension(Tension);
 
             plugRotation = Mathf.Clamp(PlugRotation + delta, 0, GetMaxPlugRotation());

@@ -57,25 +57,29 @@ namespace Lokpik.Locks
         /// </summary>
         public int FindBindingPin(float plugRotation)
         {
-            (int pin, float rotation) candidate = (-1, 1);
-
-            for (int pin = 0; pin < PinCount; pin++)
+            for (int i = 0; i < PinCount; i++)
             {
-                float rotation = BindingRotations[pin];
-
-                // This pin is already picked due to plug rotation.
-                if (plugRotation > rotation)
-                    continue;
-
-                // The current candidate is closer to the plug rotation.
-                if (candidate.rotation < rotation)
-                    continue;
-
-                // Found a candidate pin that might bind next.
-                candidate = (pin, rotation);
+                int pin = bindingOrder[i];
+                if (plugRotation <= BindingRotations[pin])
+                    return pin;
             }
 
-            return candidate.pin;
+            return -1;
+        }
+
+        /// <summary>
+        /// Find the last set pin at <paramref name="plugRotation"/>. -1 if none are set.
+        /// </summary>
+        public int FindLastSetPin(float plugRotation)
+        {
+            for (int i = 0; i < PinCount; i++)
+            {
+                int pin = bindingOrder[i];
+                if (plugRotation > BindingRotations[pin])
+                    return pin;
+            }
+
+            return -1;
         }
 
         public int ClampPinIndex(int pin) => Math.Clamp(pin, 0, LastPinIndex);
@@ -89,7 +93,7 @@ namespace Lokpik.Locks
             if (pin < 0 || pin >= PinCount)
                 return 1;
 
-            return bindingRotations[pin];
+            return BindingRotations[pin];
         }
 
         internal float GetMaxLiftForPin(int pin)
@@ -107,15 +111,15 @@ namespace Lokpik.Locks
             $"<color=pink>Pin {index + 1}";
 
         private bool IsBindingRotationValid(float rotation) =>
-            bindingRotations.Count(r => r.Equals(rotation)) == 1;
+            BindingRotations.Count(r => r.Equals(rotation)) == 1;
 #endif
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
             // Binding order
-            if (bindingRotations != null)
+            if (BindingRotations != null)
             {
-                bindingOrder = bindingRotations
+                bindingOrder = BindingRotations
                     .Select((rotation, index) => (rotation, index))
                     .OrderBy(t => t.rotation)
                     .Select(t => t.index)

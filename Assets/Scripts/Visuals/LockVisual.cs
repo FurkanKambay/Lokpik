@@ -16,24 +16,26 @@ namespace Lokpik.Visuals
         [ArraySize(nameof(PinCount))]
         [SerializeField] PinVisual[] pinVisuals;
 
-        private TumblerLockConfig Config => lockpicker.Config;
         private TumblerLock Lock => lockpicker.Lock;
+        private TumblerLockConfig LockConfig => Lock.Config;
 
 #if UNITY_EDITOR
-        private int PinCount => Config.PinCount;
+        private int PinCount => Lock.PinCount;
 #endif
 
         private void OnEnable()
         {
             for (int pin = 0; pin < pinVisuals.Length; pin++)
-                pinVisuals[pin].SetLock(lockpicker.Lock, pin);
+                pinVisuals[pin].SetLock(this, pin);
         }
 
         private void Update()
         {
             tensionVisual.Progress = lockpicker.AppliedTorque;
-            plugVisual.Progress = lockpicker.Lock.PlugRotation;
+            plugVisual.Progress = Lock.PlugRotation;
         }
+
+        internal Chamber GetChamber(int pin) => Lock.Chamber(pin);
 
         private void OnDrawGizmos()
         {
@@ -43,13 +45,13 @@ namespace Lokpik.Visuals
 
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
-                float radius = Config.GetAdequatePlugRotation(pin) / 2f;
+                float radius = LockConfig.GetAdequatePlugRotation(pin) / 2f;
                 Handles.color = pin == lockpicker.PickingPin ? Color.blue : Color.red;
                 Handles.DrawWireDisc(center, forward, radius);
             }
 
             // Shear line
-            float shearLine = lockpicker.Config.ShearLine * TumblerLockConfig.ChamberHeight;
+            float shearLine = LockConfig.ShearLine * TumblerLockConfig.ChamberHeight;
 
             PinVisual firstPin = pinVisuals.First();
             PinVisual lastPin = pinVisuals.Last();
@@ -81,7 +83,7 @@ namespace Lokpik.Visuals
                 Color color = pinState switch
                 {
                     _ when pin == lockpicker.PickingPin => Color.blue,
-                    _ when pin == Lock.BindingPin => Color.red,
+                    _ when pinState.IsBinding() => Color.red,
                     _ when pinState.IsPicked() => Color.green,
                     _ => Color.white,
                 };
