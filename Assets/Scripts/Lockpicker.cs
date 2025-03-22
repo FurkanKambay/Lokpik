@@ -16,9 +16,9 @@ namespace Lokpik
         [SaintsRow(inline: true)]
         [SerializeField] TumblerLock tumblerLock;
 
-        // TODO: use two different curves?
         [Header("Tension Wrench")]
         [SerializeField] AnimationCurve tensionCurve;
+        [SerializeField] AnimationCurve tensionDownCurve;
         [SerializeField, Min(0)] float tensionForce = 0.2f;
         [SerializeField, Min(0)] float tensionGravity = 0.2f;
 
@@ -98,7 +98,7 @@ namespace Lokpik
         {
             float torque = holdTensionInput.action.inProgress
                 ? tensionForce * tensionCurve.Evaluate(AppliedTorque)
-                : -tensionGravity;
+                : -tensionGravity * tensionDownCurve.Evaluate(AppliedTorque);
 
             AppliedTorque += torque * Time.deltaTime;
 
