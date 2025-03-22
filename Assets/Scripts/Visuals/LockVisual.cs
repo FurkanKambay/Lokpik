@@ -23,10 +23,10 @@ namespace Lokpik.Visuals
         private int PinCount => Lock.PinCount;
 #endif
 
-        private void OnEnable()
+        private void Awake()
         {
             for (int pin = 0; pin < pinVisuals.Length; pin++)
-                pinVisuals[pin].SetLock(this, pin);
+                pinVisuals[pin].SetPin(pin);
         }
 
         private void Update()

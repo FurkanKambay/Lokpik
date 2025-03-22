@@ -114,7 +114,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.16, y: 1, z: 1}
+  m_LocalScale: {x: 0.15, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4838794093184905734}
@@ -221,18 +221,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170b6945d8de2114cba99a168290ea1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyPinRenderer: {fileID: 7872234990635423739}
-  driverPinRenderer: {fileID: 400600411446070358}
-  backgroundRenderer: {fileID: 7326764160622576590}
-  chamberWidth: 0.16
+  keyPin: {fileID: 7872234990635423739}
+  driverPin: {fileID: 400600411446070358}
+  background: {fileID: 7326764160622576590}
+  chamberWidth: 0.15
   pinWidth: 0.15
-  tumblerLock:
-    rid: -2
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+  decay: 20
 --- !u!1 &9072662904130622510
 GameObject:
   m_ObjectHideFlags: 0
