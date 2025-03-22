@@ -73,7 +73,7 @@ namespace Lokpik
             if (!changePinInput.action.triggered || delta == 0)
                 return;
 
-            tumblerLock.StopManipulating(PickingPin);
+            tumblerLock.StopLifting(PickingPin);
             PickingPin = Lock.Config.ClampPinIndex(PickingPin + delta);
         }
 

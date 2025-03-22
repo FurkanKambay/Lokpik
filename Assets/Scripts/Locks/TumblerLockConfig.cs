@@ -47,19 +47,19 @@ namespace Lokpik.Locks
         public float[] DriverPinLengths => driverPinLengths;
         public float[] KeyPinLengths => keyPinLengths;
         public float[] BindingRotations => bindingRotations;
+        public int[] BindingOrder => bindingOrder;
 
         internal float MaxKeyPinHeight => keyPinLengths.Max();
         internal float MaxDriverPinHeight => driverPinLengths.Max();
 
-        // TODO: optimize this by caching on validate
         /// <summary>
-        /// Find the next binding pin at <paramref name="plugRotation"/>. -1 if none are going to bind.
+        /// Find the next binding pin at <paramref name="plugRotation"/>. -1 if all pins are set.
         /// </summary>
-        public int FindBindingPin(float plugRotation)
+        public int FindNextPinAt(float plugRotation)
         {
             for (int i = 0; i < PinCount; i++)
             {
-                int pin = bindingOrder[i];
+                int pin = BindingOrder[i];
                 if (plugRotation <= BindingRotations[pin])
                     return pin;
             }
@@ -70,11 +70,11 @@ namespace Lokpik.Locks
         /// <summary>
         /// Find the last set pin at <paramref name="plugRotation"/>. -1 if none are set.
         /// </summary>
-        public int FindLastSetPin(float plugRotation)
+        public int FindPreviousPinAt(float plugRotation)
         {
-            for (int i = 0; i < PinCount; i++)
+            for (int i = PinCount - 1; i >= 0; i--)
             {
-                int pin = bindingOrder[i];
+                int pin = BindingOrder[i];
                 if (plugRotation > BindingRotations[pin])
                     return pin;
             }

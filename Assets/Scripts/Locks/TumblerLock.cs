@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using SaintsField;
 using SaintsField.Playa;
 using UnityEngine;
@@ -28,8 +29,6 @@ namespace Lokpik.Locks
         /// The pin currently binding due to <see cref="PlugRotation"/> and Chamber <see cref="Chamber.State"/>.
         /// </summary>
         [LayoutGroup("./Binding", ELayout.TitleOut)]
-        [ShowInInspector, Ordered] public int PreviouslySetPin => previouslySetPin;
-        [ShowInInspector, Ordered] public int NextBindingPin => nextBindingPin;
         [ShowInInspector, Ordered] public int Tension => tension;
         // ReSharper restore ConvertToAutoPropertyWithPrivateSetter
 
@@ -39,8 +38,8 @@ namespace Lokpik.Locks
         public TumblerLockConfig Config => config;
         public int PinCount => Config.PinCount;
 
-        public Chamber PreviouslySetChamber => Chamber(PreviouslySetPin);
-        public Chamber NextBindingChamber => Chamber(NextBindingPin);
+        public Chamber PreviousChamber => previousPin < 0 ? null : Chamber(previousPin);
+        public Chamber NextChamber => nextPin < 0 ? null : Chamber(nextPin);
 
         public bool IsLocked
         {
@@ -57,8 +56,8 @@ namespace Lokpik.Locks
 
         private int tension = -1;
         private float plugRotation;
-        private int previouslySetPin = -1;
-        private int nextBindingPin = -1;
+        private int previousPin = -1;
+        private int nextPin = -1;
 
         public void StopPicking()
         {
@@ -66,32 +65,26 @@ namespace Lokpik.Locks
                 chamber.StopLifting();
 
             plugRotation = 0f;
-            previouslySetPin = -1;
-            nextBindingPin = Config.FindBindingPin(0);
+            previousPin = -1;
+            nextPin = Config.FindNextPinAt(0);
         }
 
-        public void StopManipulating(int pin) =>
+        public void StopLifting(int pin) =>
             Chamber(pin).StopLifting();
 
         public void RotatePlug(float delta, int tensionValue)
         {
             tension = tensionValue;
+            previousPin = Config.FindPreviousPinAt(PlugRotation);
+            nextPin = Config.FindNextPinAt(PlugRotation);
 
-            if (NextBindingPin != -1)
-                NextBindingChamber.SetTension(Tension);
+            switch (delta)
+            {
+                case > 0: NextChamber?.SetTension(1); break;
+                case < 0: PreviousChamber?.SetTension(-1); break;
+            }
 
-            previouslySetPin = Config.FindLastSetPin(PlugRotation);
-
-            if (NextBindingPin != -1 && delta > 0)
-                NextBindingChamber.SetTension(1);
-            else if (PreviouslySetPin != -1 && delta < 0)
-                PreviouslySetChamber.SetTension(-1);
-
-            nextBindingPin = Config.FindBindingPin(PlugRotation);
-
-            // Next pin updated
-            if (NextBindingPin != -1)
-                NextBindingChamber.SetTension(Tension);
+            NextChamber?.SetTension(Tension);
 
             plugRotation = Mathf.Clamp(PlugRotation + delta, 0, GetMaxPlugRotation());
             IsLocked = PlugRotation < 1;
@@ -101,7 +94,7 @@ namespace Lokpik.Locks
             Chamber(pin).Lift(delta);
 
         public Chamber Chamber(int pin) =>
-            chambers[Config.ClampPinIndex(pin)];
+            chambers.ElementAtOrDefault(Config.ClampPinIndex(pin));
 
         public float GetMaxPlugRotation()
         {
