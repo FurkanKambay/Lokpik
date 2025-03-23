@@ -20,6 +20,7 @@ namespace Lokpik
         [SerializeField] AnimationCurve tensionCurve;
         [SerializeField] AnimationCurve tensionDownCurve;
         [SerializeField, Min(0)] float tensionForce = 0.2f;
+        [SerializeField, Min(0)] float tensionHoldForce = 0.2f;
         [SerializeField, Min(0)] float tensionGravity = 0.2f;
 
         [Tooltip("Minimum torque required to turn plug.")]
@@ -96,8 +97,12 @@ namespace Lokpik
         /// </summary>
         private void ApplyTorque()
         {
-            float torque = holdTensionInput.action.inProgress
-                ? tensionForce * tensionCurve.Evaluate(AppliedTorque)
+            bool triggered = holdTensionInput.action.triggered;
+            bool inProgress = holdTensionInput.action.inProgress;
+
+            float torque =
+                triggered ? tensionForce :
+                inProgress ? tensionHoldForce * tensionCurve.Evaluate(AppliedTorque)
                 : -tensionGravity * tensionDownCurve.Evaluate(AppliedTorque);
 
             AppliedTorque += torque * Time.deltaTime;

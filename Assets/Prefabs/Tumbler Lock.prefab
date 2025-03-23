@@ -340,11 +340,11 @@ MonoBehaviour:
       - 0.236
       - 0.271
       bindingRotations:
-      - 0.07
-      - 0.01
-      - 0.1
-      - 0.06
-      bindingOrder: 01000000030000000000000002000000
+      - 0.106
+      - 0.034
+      - 0.073
+      - 0.011
+      bindingOrder: 03000000010000000200000000000000
   tensionCurve:
     serializedVersion: 2
     m_Curve:
@@ -402,7 +402,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  tensionForce: 1.5
+  tensionForce: 3
+  tensionHoldForce: 0.05
   tensionGravity: 0.5
   minTorque: 0.4
   maxTorque: 0.9
