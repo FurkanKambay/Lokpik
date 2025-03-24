@@ -51,15 +51,12 @@ namespace Lokpik.Visuals
             Handles.DrawDottedLine(leftPoint, rightPoint, 2f);
 
             // Torque markers
-            Transform tensionTransform = tensionVisual.transform;
-            Vector3 leftTop = tensionTransform.TransformPoint(1, lockpicker.MinTorque, 0);
-            Vector3 leftBottom = tensionTransform.TransformPoint(-1, lockpicker.MinTorque, 0);
-            Vector3 rightTop = tensionTransform.TransformPoint(1, lockpicker.MaxTorque, 0);
-            Vector3 rightBottom = tensionTransform.TransformPoint(-1, lockpicker.MaxTorque, 0);
+            Vector3 tensionCenter = tensionVisual.transform.position;
+            float tensionScale = tensionVisual.transform.localScale.x * 0.5f;
 
             Handles.color = Color.white;
-            Handles.DrawLine(leftTop, leftBottom, 1f);
-            Handles.DrawLine(rightTop, rightBottom, 1f);
+            Handles.DrawWireDisc(tensionCenter, Vector3.forward, lockpicker.MinTorque * tensionScale);
+            Handles.DrawWireDisc(tensionCenter, Vector3.forward, lockpicker.MaxTorque * tensionScale);
 
             // Pin labels
             if (lockpicker.Lock == null)

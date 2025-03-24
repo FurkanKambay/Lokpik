@@ -4,12 +4,10 @@ using UnityEngine;
 
 namespace Lokpik.Visuals
 {
-    [ExecuteAlways]
     public class TensionVisual : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] SpriteRenderer innerBar;
-        [SerializeField] SpriteRenderer outerBar;
+        [SerializeField] Transform innerCircle;
 
         [Header("Config")]
         [SerializeField] float decay;
@@ -21,8 +19,8 @@ namespace Lokpik.Visuals
 
         private void Update()
         {
-            float yScale = innerBar.transform.localScale.y.ExpDecay(progress, decay, Time.deltaTime);
-            innerBar.transform.localScale = new Vector3(1, yScale, 1);
+            float scale = innerCircle.localScale.y.ExpDecay(progress, decay, Time.deltaTime);
+            innerCircle.localScale = new Vector3(scale, scale, 1);
         }
     }
 }
