@@ -39,17 +39,6 @@ namespace Lokpik.Visuals
 
         private void OnDrawGizmos()
         {
-            // Required plug rotation per pin
-            Vector3 center = plugVisual.transform.position;
-            Vector3 forward = plugVisual.transform.forward;
-
-            for (int pin = 0; pin < pinVisuals.Length; pin++)
-            {
-                float radius = LockConfig.GetAdequatePlugRotation(pin) / 2f;
-                Handles.color = pin == lockpicker.PickingPin ? Color.blue : Color.red;
-                Handles.DrawWireDisc(center, forward, radius);
-            }
-
             // Shear line
             float shearLine = LockConfig.ShearLine * TumblerLockConfig.ChamberHeight;
 
