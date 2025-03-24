@@ -46,7 +46,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Axis",
+                    "name": "Keyboard AD",
                     "id": "9d669743-d81e-495a-9290-af88f4fdcb32",
                     "path": "1DAxis",
                     "interactions": "",
@@ -79,39 +79,6 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Keyboard WS",
-                    "id": "f3f314f9-d603-4f04-9f15-3362c70ddf4f",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move Pick",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "positive",
-                    "id": "381885a9-fba6-4da5-8670-3dc986649f46",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Move Pick",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "negative",
-                    "id": "346b4fb0-7679-44b0-9d86-3125cefb80b9",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Move Pick",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "Mouse Delta",
                     "id": "521b0dc6-07aa-458b-99fc-282aa0385718",
                     "path": "1DAxis",
@@ -140,6 +107,39 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
+                    "action": "Move Pick",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Keyboard WS",
+                    "id": "f3f314f9-d603-4f04-9f15-3362c70ddf4f",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move Pick",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "positive",
+                    "id": "381885a9-fba6-4da5-8670-3dc986649f46",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Move Pick",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "negative",
+                    "id": "346b4fb0-7679-44b0-9d86-3125cefb80b9",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "Move Pick",
                     "isComposite": false,
                     "isPartOfComposite": true
