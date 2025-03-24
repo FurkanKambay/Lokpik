@@ -62,19 +62,20 @@ namespace Lokpik.Visuals
             Handles.DrawDottedLine(leftPoint, rightPoint, 2f);
 
             // Torque markers
-            float minTorqueX = lockpicker.MinTorque;
-            float maxTorqueX = lockpicker.MaxTorque;
-
-            Vector3 leftTop = tensionVisual.transform.TransformPoint(1, minTorqueX, 0);
-            Vector3 leftBottom = tensionVisual.transform.TransformPoint(-1, minTorqueX, 0);
-            Vector3 rightTop = tensionVisual.transform.TransformPoint(1, maxTorqueX, 0);
-            Vector3 rightBottom = tensionVisual.transform.TransformPoint(-1, maxTorqueX, 0);
+            Transform tensionTransform = tensionVisual.transform;
+            Vector3 leftTop = tensionTransform.TransformPoint(1, lockpicker.MinTorque, 0);
+            Vector3 leftBottom = tensionTransform.TransformPoint(-1, lockpicker.MinTorque, 0);
+            Vector3 rightTop = tensionTransform.TransformPoint(1, lockpicker.MaxTorque, 0);
+            Vector3 rightBottom = tensionTransform.TransformPoint(-1, lockpicker.MaxTorque, 0);
 
             Handles.color = Color.white;
             Handles.DrawLine(leftTop, leftBottom, 1f);
             Handles.DrawLine(rightTop, rightBottom, 1f);
 
             // Pin labels
+            if (lockpicker.Lock == null)
+                return;
+
             for (int pin = 0; pin < pinVisuals.Length; pin++)
             {
                 ChamberState pinState = Lock.Chamber(pin).State;

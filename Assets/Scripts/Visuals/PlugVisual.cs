@@ -2,17 +2,20 @@ using UnityEngine;
 
 namespace Lokpik.Visuals
 {
-    [ExecuteAlways]
     public class PlugVisual : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] Transform progressCircle;
+        [Header("Config")]
+        [SerializeField, Range(0, 360)] float maxAngle = 90f;
 
         [Header("Debug")]
         [SerializeField, Range(0, 1)] float progress;
 
         public float Progress { set => progress = value; }
 
-        private void Update() => progressCircle.localScale = Vector3.one * progress;
+        private void Update()
+        {
+            float zAngle = Mathf.Lerp(0, maxAngle, progress);
+            transform.localRotation = Quaternion.Euler(0, 0, -zAngle);
+        }
     }
 }
