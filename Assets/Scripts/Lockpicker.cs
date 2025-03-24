@@ -54,6 +54,8 @@ namespace Lokpik
 
         private void Awake()
         {
+            Cursor.lockState = CursorLockMode.Locked;
+
             for (int i = 0; i < Lock.PinCount; i++)
                 Lock.Chamber(i).SetLock(Lock, i);
 

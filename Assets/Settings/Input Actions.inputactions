@@ -79,7 +79,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Axis",
+                    "name": "Keyboard WS",
                     "id": "f3f314f9-d603-4f04-9f15-3362c70ddf4f",
                     "path": "1DAxis",
                     "interactions": "",
@@ -107,6 +107,39 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
+                    "action": "Move Pick",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Mouse Delta",
+                    "id": "521b0dc6-07aa-458b-99fc-282aa0385718",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "Scale(factor=0.05)",
+                    "groups": "",
+                    "action": "Move Pick",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "positive",
+                    "id": "a5e628b7-4df7-464f-8230-14ba00db5a80",
+                    "path": "<Mouse>/delta/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move Pick",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "negative",
+                    "id": "d707be11-8395-4e34-a5c5-df6d367f0a12",
+                    "path": "<Mouse>/delta/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "Move Pick",
                     "isComposite": false,
                     "isPartOfComposite": true
