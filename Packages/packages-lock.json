@@ -138,7 +138,7 @@
       }
     },
     "com.unity.ide.rider": {
-      "version": "3.0.34",
+      "version": "3.0.35",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -259,7 +259,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.8.7",
+      "version": "1.8.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -280,7 +280,7 @@
       }
     },
     "today.comes.saintsfield": {
-      "version": "3.36.2",
+      "version": "3.36.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
