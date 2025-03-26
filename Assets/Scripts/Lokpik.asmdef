@@ -1,7 +1,10 @@
 {
     "name": "Lokpik",
     "rootNamespace": "Lokpik",
-    "references": [],
+    "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:9b261077c7a2ac34886513ec1345f8e0"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
