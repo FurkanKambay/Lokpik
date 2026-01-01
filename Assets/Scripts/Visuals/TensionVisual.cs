@@ -1,5 +1,4 @@
 using Lokpik.Common;
-using SaintsField;
 using UnityEngine;
 
 namespace Lokpik.Visuals
@@ -13,7 +12,7 @@ namespace Lokpik.Visuals
         [SerializeField] float decay;
 
         [Header("Debug")]
-        [SerializeField, ReadOnly, Range(0, 1)] float progress;
+        [SerializeField, Range(0, 1)] float progress;
 
         public float Progress { set => progress = value; }
 

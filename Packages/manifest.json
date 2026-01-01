@@ -9,7 +9,6 @@
     "com.unity.render-pipelines.universal": "17.3.0",
     "com.unity.timeline": "1.8.10",
     "com.unity.ugui": "2.0.0",
-    "today.comes.saintsfield": "4.24.5",
     "com.unity.modules.adaptiveperformance": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.assetbundle": "1.0.0",
@@ -25,14 +24,5 @@
     "com.unity.modules.unitywebrequest": "1.0.0",
     "com.unity.modules.unitywebrequestwww": "1.0.0",
     "com.unity.modules.vectorgraphics": "1.0.0"
-  },
-  "scopedRegistries": [
-    {
-      "name": "package.openupm.com",
-      "url": "https://package.openupm.com",
-      "scopes": [
-        "today.comes.saintsfield"
-      ]
-    }
-  ]
+  }
 }

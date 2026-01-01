@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
-using SaintsField;
-using SaintsField.Playa;
+using UnityEditor;
 using UnityEngine;
 
 namespace Lokpik.Locks
@@ -11,31 +10,23 @@ namespace Lokpik.Locks
     {
         public const float ChamberHeight = 1f;
 
-        [LayoutGroup("Tumbler Lock Config", ELayout.FoldoutBox)]
+        [Header("Tumbler Lock Config")]
         [SerializeField, Range(0, 1)] float shearLine = 0.5f;
         [SerializeField] float tolerance = 0.01f;
 
-        [LayoutGroup("./Pins", ELayout.TitleOut)]
+        [Header("./Pins")]
         [SerializeField, Min(0)] int pinCount = 2;
         [SerializeField] bool uniformDriverPins;
 
-        [ArraySize(nameof(PinCount))]
-        [RichLabel(nameof(GetPinArrayLabel), isCallback: true)]
         [SerializeField, Range(0, 1)] float[] driverPinLengths = { 0.5f, 0.5f };
-
-        [ArraySize(nameof(PinCount))]
-        [RichLabel(nameof(GetPinArrayLabel), isCallback: true)]
         [SerializeField, Range(0, 1)] float[] keyPinLengths = { 0.2f, 0.4f };
-
-        [ArraySize(nameof(PinCount))]
-        [ValidateInput(nameof(IsBindingRotationValid))]
-        [RichLabel(nameof(GetPinArrayLabel), isCallback: true)]
         [SerializeField, Range(0, 1)] float[] bindingRotations;
 
-        [SerializeField, ReadOnly] int[] bindingOrder;
+        // [ReadOnly]
+        [SerializeField] int[] bindingOrder;
 
-        [LayoutGroup("./Info", ELayout.TitleOut)]
-        [ShowInInspector] internal bool IsVulnerableToCombPicking =>
+        [Header("./Info")]
+        internal bool IsVulnerableToCombPicking =>
             Enumerable.Range(0, PinCount).All(pin => GetMaxLiftForPin(pin) >= ShearLine);
 
         public int PinCount => pinCount;
@@ -60,6 +51,7 @@ namespace Lokpik.Locks
             for (int i = 0; i < PinCount; i++)
             {
                 int pin = BindingOrder[i];
+
                 if (plugRotation <= BindingRotations[pin])
                     return pin;
             }
@@ -75,6 +67,7 @@ namespace Lokpik.Locks
             for (int i = PinCount - 1; i >= 0; i--)
             {
                 int pin = BindingOrder[i];
+
                 if (plugRotation > BindingRotations[pin])
                     return pin;
             }
@@ -106,16 +99,15 @@ namespace Lokpik.Locks
             return ChamberHeight - (driverPinLength + keyPinLength);
         }
 
-#if UNITY_EDITOR
-        private string GetPinArrayLabel(float _, int index) =>
-            $"<color=pink>Pin {index + 1}";
-
-        private bool IsBindingRotationValid(float rotation) =>
-            BindingRotations.Count(r => r.Equals(rotation)) == 1;
-#endif
-
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
+            Array.Resize(ref driverPinLengths, PinCount);
+            Array.Resize(ref keyPinLengths, PinCount);
+            Array.Resize(ref bindingRotations, PinCount);
+
+            // if (BindingRotations.Distinct().Count() != BindingRotations.Length)
+            //     EditorGUILayout.HelpBox("Some pins bind together", MessageType.Error, true);
+
             // Binding order
             if (BindingRotations != null)
             {

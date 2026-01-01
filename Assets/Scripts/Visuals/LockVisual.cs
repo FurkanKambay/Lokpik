@@ -1,6 +1,6 @@
+using System;
 using System.Linq;
 using Lokpik.Locks;
-using SaintsField;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,7 +13,6 @@ namespace Lokpik.Visuals
         [SerializeField] TensionVisual tensionVisual;
         [SerializeField] PlugVisual plugVisual;
 
-        [ArraySize(nameof(PinCount))]
         [SerializeField] PinVisual[] pinVisuals;
 
         private TumblerLock Lock => lockpicker.Lock;
@@ -85,6 +84,11 @@ namespace Lokpik.Visuals
                 PinVisual pinVisual = pinVisuals[pin];
                 Handles.Label(pinVisual.transform.position, text, style);
             }
+        }
+
+        private void OnValidate()
+        {
+            Array.Resize(ref pinVisuals, PinCount);
         }
     }
 }

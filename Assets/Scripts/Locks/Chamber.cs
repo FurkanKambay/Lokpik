@@ -1,5 +1,4 @@
 ﻿using System;
-using SaintsField.Playa;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -12,19 +11,19 @@ namespace Lokpik.Locks
     public class Chamber
     {
         // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
-        [ShowInInspector] public ChamberState State => state;
+        public ChamberState State => state;
 
         /// <summary>
         /// The lift amount from the top of the key pin.
         /// </summary>
-        [ShowInInspector] public float DriverPinLift => driverPinLift;
+        public float DriverPinLift => driverPinLift;
 
         /// <summary>
         /// The lift amount from the resting line.
         /// </summary>
-        [ShowInInspector] public float KeyPinLift => keyPinLift;
+        public float KeyPinLift => keyPinLift;
 
-        [ShowInInspector] public int Tension => tension;
+        public int Tension => tension;
         // ReSharper restore ConvertToAutoPropertyWithPrivateSetter
 
         public float KeyPinLength => Lock.Config.KeyPinLengths[chamberIndex];

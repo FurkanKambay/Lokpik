@@ -1,5 +1,4 @@
 using Lokpik.Locks;
-using SaintsField;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,7 +12,6 @@ namespace Lokpik
         [SerializeField] InputActionReference changePinInput;
         // TODO: a "lift pick hard" button/repeated press to apply counter-rotation for unbinding a pin
 
-        [SaintsRow(inline: true)]
         [SerializeField] TumblerLock tumblerLock;
 
         [Header("Tension Wrench")]
