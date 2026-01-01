@@ -52,6 +52,7 @@ namespace Lokpik
 
         private void Awake()
         {
+            InputSystem.actions.Enable();
             Cursor.lockState = CursorLockMode.Locked;
 
             for (int i = 0; i < Lock.PinCount; i++)
