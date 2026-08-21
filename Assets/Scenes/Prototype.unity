@@ -492,10 +492,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tumbler Lock
       objectReference: {fileID: 0}
-    - target: {fileID: 6724146748325058508, guid: fc26f13d7b13df3468c1913d30d5e952, type: 3}
-      propertyPath: tensionGravity
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

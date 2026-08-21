@@ -15,3 +15,6 @@ MonoBehaviour:
   tensionInput: {fileID: -8588818605772243609, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   pickHeightInput: {fileID: 6561589016460532179, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   changePinInput: {fileID: -2865560764156463112, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  tensionValue: 0
+  pickHeightValue: 0
+  changePinValue: 0
