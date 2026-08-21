@@ -30,8 +30,8 @@ namespace Lokpik.Visuals
 
         private void Update()
         {
-            tensionVisual.Progress = lockpicker.AppliedTorque;
-            plugVisual.Progress = Lock.PlugRotation;
+            tensionVisual.SetFillValue(lockpicker.AppliedTorque);
+            plugVisual.SetFillValue(Lock.PlugRotation);
         }
 
         internal Chamber GetChamber(int pin) => Lock.Chamber(pin);

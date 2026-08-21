@@ -1,4 +1,3 @@
-using Lokpik.Common;
 using UnityEngine;
 
 namespace Lokpik.Visuals
@@ -6,20 +5,17 @@ namespace Lokpik.Visuals
     public class TensionVisual : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] Transform innerCircle;
-
-        [Header("Config")]
-        [SerializeField] float decay;
+        [SerializeField] private Transform innerCircle;
 
         [Header("Debug")]
-        [SerializeField, Range(0, 1)] float progress;
-
-        public float Progress { set => progress = value; }
+        [SerializeField, Range(0, 1)] private float fillValue;
 
         private void Update()
         {
-            float scale = innerCircle.localScale.y.ExpDecay(progress, decay, Time.deltaTime);
-            innerCircle.localScale = new Vector3(scale, scale, 1);
+            innerCircle.localScale = new Vector3(fillValue, fillValue, 1);
         }
+
+        internal void SetFillValue(float value) =>
+            fillValue = value;
     }
 }
