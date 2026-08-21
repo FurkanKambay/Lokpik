@@ -17,7 +17,7 @@
                 },
                 {
                     "name": "Tension",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "fb9e6328-cc5e-4a46-8627-1b8ef1414446",
                     "expectedControlType": "",
                     "processors": "",
@@ -52,7 +52,7 @@
                     "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Gamepad",
                     "action": "Change Pin",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -63,7 +63,7 @@
                     "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Gamepad",
                     "action": "Change Pin",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -103,17 +103,6 @@
                 },
                 {
                     "name": "",
-                    "id": "a350955a-de0e-4ca8-8c89-1d92245f51b2",
-                    "path": "<Gamepad>/leftTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Tension",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "ebea601b-b92d-4e62-9a2c-c13931a5dce7",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
@@ -129,7 +118,7 @@
                     "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Gamepad",
                     "action": "Pick Height",
                     "isComposite": false,
                     "isPartOfComposite": false
