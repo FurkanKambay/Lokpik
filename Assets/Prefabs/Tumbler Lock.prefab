@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAngle: 90
-  progress: 0
+  fillValue: 0
 --- !u!1 &2371701191969243765
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,8 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   innerCircle: {fileID: 2074969193189386869}
-  decay: 10
-  progress: 0.5
+  fillValue: 0
 --- !u!1 &3391559332016177299
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,14 +351,8 @@ MonoBehaviour:
       - 0.073
       - 0.011
       bindingOrder: 03000000010000000200000000000000
-  tensionGravity: 0.5
-  tensionKeepDrift: 0.008
-  changeTargetChamberRate: 0.3
-  minTorque: 0.4
-  maxTorque: 0.9
-  turnSpeed: 1.5
-  plugGravity: 0.5
-  pickingPin: 0
+  controls: {fileID: 11400000, guid: a4038a98c7490794a8965789d9c6415e, type: 2}
+  targetedPin: 0
   appliedTorque: 0
   chamberRetargetTimer: 0
 --- !u!1 &4469609992631167078

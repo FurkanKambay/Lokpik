@@ -10,5 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17b4dcf109514bf1a77d3c43b1874d16, type: 3}
-  m_Name: Pick Controls Config
+  m_Name: Pick Controls
   m_EditorClassIdentifier: Lokpik::Lokpik.Data.PickControlsConfig
+  chamberRetargetRate: 0.3
+  useTensionDrift: 0
+  tensionDrift: 0.008
+  minTorque: 0.4
+  maxTorque: 0.9
+  turnSpeed: 1.5
+  plugGravity: 0.2
