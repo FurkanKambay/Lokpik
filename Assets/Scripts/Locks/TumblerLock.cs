@@ -70,9 +70,8 @@ namespace Lokpik.Locks
 
         public void RotatePlug(float delta, int tensionValue)
         {
-            tension = tensionValue;
-            previousPin = Config.FindPreviousPinAt(PlugRotation);
-            nextPin = Config.FindNextPinAt(PlugRotation);
+            previousPin = Config.FindPreviousPinAt(plugRotation);
+            nextPin = Config.FindNextPinAt(plugRotation);
 
             switch (delta)
             {
@@ -80,10 +79,11 @@ namespace Lokpik.Locks
                 case < 0: PreviousChamber?.SetTension(-1); break;
             }
 
-            NextChamber?.SetTension(Tension);
+            tension = tensionValue;
+            NextChamber?.SetTension(tension);
 
-            plugRotation = Mathf.Clamp(PlugRotation + delta, 0, GetMaxPlugRotation());
-            IsLocked = PlugRotation < 1;
+            plugRotation = Mathf.Clamp(plugRotation + delta, 0, GetMaxPlugRotation());
+            IsLocked = plugRotation < 1;
         }
 
         public void LiftPin(int pin, float delta) =>

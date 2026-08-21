@@ -28,17 +28,17 @@ namespace Lokpik.Locks
 
         public float KeyPinLength => Lock.Config.KeyPinLengths[chamberIndex];
         public float DriverPinLength => Lock.Config.DriverPinLengths[chamberIndex];
-        public bool IsBinding => State.IsBinding();
-        public bool IsPicked => State.IsPicked();
-        public bool IsFree => State.IsFree();
+        public bool IsBinding => state.IsBinding();
+        public bool IsPicked => state.IsPicked();
+        public bool IsFree => state.IsFree();
 
         internal float MaxLift => TumblerLockConfig.ChamberHeight - DriverPinLength - KeyPinLength;
 
         [field: NonSerialized]
         public TumblerLock Lock { get; private set; }
 
-        private int chamberIndex;
         private ChamberState state;
+        private int chamberIndex;
         private float driverPinLift;
         private float keyPinLift;
         private int tension = -1;
@@ -51,40 +51,43 @@ namespace Lokpik.Locks
         }
 
         public void Lift(float delta) =>
-            LiftTowards(KeyPinLift + delta);
+            LiftTowards(keyPinLift + delta);
 
         public void LiftTowards(float desiredTarget)
         {
-            if (state is ChamberState.Underset)
+            switch (state)
             {
-                float maxKeyPinLift = DriverPinLift - KeyPinLength;
-                keyPinLift = Mathf.Clamp(desiredTarget, 0, maxKeyPinLift);
-                // The driver pin can't be moved until counter-rotation is applied.
-                // Same logic as below, but in this case, the key pin will still move.
-                // The key pin needs to touch the driver pin before applying heavy pick force.
-            }
-            else if (state is ChamberState.Overset)
-            {
-                // Both pins are stuck until counter-rotation is applied,
-                // or heavy pick force is used to apply counter-rotation.
-                // (Repeatedly pressing `W` decreases the Torque applied with `Space`.)
-            }
-            else if (state is ChamberState.AboveShearLine)
-            {
-                keyPinLift = Lock.Config.ShearLine;
-                driverPinLift = keyPinLift + KeyPinLength;
-            }
-            else if (state is ChamberState.Set)
-            {
-                driverPinLift = Lock.Config.ShearLine;
-                float maxKeyLift = DriverPinLift - KeyPinLength;
-                keyPinLift = Mathf.Clamp(desiredTarget, 0, maxKeyLift);
-            }
-            else
-            {
-                // nothing is binding so lift both pins
-                keyPinLift = Mathf.Clamp(desiredTarget, 0, MaxLift);
-                driverPinLift = KeyPinLength + KeyPinLift;
+                case ChamberState.Underset:
+                {
+                    float maxKeyPinLift = driverPinLift - KeyPinLength;
+                    keyPinLift = Mathf.Clamp(desiredTarget, 0, maxKeyPinLift);
+                    // The driver pin can't be moved until counter-rotation is applied.
+                    // Same logic as below, but in this case, the key pin will still move.
+                    // The key pin needs to touch the driver pin before applying heavy pick force.
+                    break;
+                }
+                case ChamberState.Overset:
+                    // Both pins are stuck until counter-rotation is applied,
+                    // or heavy pick force is used to apply counter-rotation.
+                    // (Repeatedly pressing `W` decreases the Torque applied with `Space`.)
+                    break;
+                case ChamberState.AboveShearLine:
+                    keyPinLift = Lock.Config.ShearLine;
+                    driverPinLift = keyPinLift + KeyPinLength;
+                    break;
+                case ChamberState.Set:
+                {
+                    driverPinLift = Lock.Config.ShearLine;
+                    float maxKeyLift = driverPinLift - KeyPinLength;
+                    keyPinLift = Mathf.Clamp(desiredTarget, 0, maxKeyLift);
+                    break;
+                }
+                case ChamberState.Free:
+                default:
+                    // nothing is binding so lift both pins
+                    keyPinLift = Mathf.Clamp(desiredTarget, 0, MaxLift);
+                    driverPinLift = KeyPinLength + keyPinLift;
+                    break;
             }
 
             UpdateState();
@@ -93,12 +96,12 @@ namespace Lokpik.Locks
         private void UpdateState()
         {
             float shearLine = Lock.Config.ShearLine;
-            bool isPerfect = Math.Abs(DriverPinLift - shearLine) < Lock.Config.Tolerance;
-            bool isExploited = KeyPinLift >= shearLine;
-            bool isAbove = DriverPinLift >= shearLine;
-            bool isUnder = DriverPinLift < shearLine;
+            bool isPerfect = Math.Abs(driverPinLift - shearLine) < Lock.Config.Tolerance;
+            bool isExploited = keyPinLift >= shearLine;
+            bool isAbove = driverPinLift >= shearLine;
+            bool isUnder = driverPinLift < shearLine;
 
-            state = Tension switch
+            state = tension switch
             {
                 // Adequate tension
                 0 or 1 when isPerfect => ChamberState.Set,
@@ -115,7 +118,7 @@ namespace Lokpik.Locks
 
         public void StopLifting()
         {
-            switch (State)
+            switch (state)
             {
                 case ChamberState.Free:
                 default:

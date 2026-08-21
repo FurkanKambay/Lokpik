@@ -68,7 +68,7 @@ namespace Lokpik.Visuals
 
                 Color color = pinState switch
                 {
-                    _ when pin == lockpicker.PickingPin => Color.blue,
+                    _ when pin == lockpicker.TargetedPin => Color.blue,
                     _ when pinState.IsBinding() => Color.red,
                     _ when pinState.IsPicked() => Color.green,
                     _ => Color.white,

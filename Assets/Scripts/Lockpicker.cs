@@ -7,32 +7,32 @@ namespace Lokpik
     public class Lockpicker : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] TumblerLock tumblerLock;
+        [SerializeField] private TumblerLock tumblerLock;
 
         [Header("Input Config")]
         [SerializeField, Min(0)] private float chamberRetargetRate = 0.3f;
 
         [Header("Artificial Skill Hindrance")]
-        [SerializeField] bool useTensionDrift;
+        [SerializeField] private bool useTensionDrift;
         [SerializeField, Min(0)] private float tensionKeepDrift = 0.5f;
 
         [Header("Pin Setting")]
         [Tooltip("Minimum torque required to turn plug.")]
-        [SerializeField, Range(0, 1)] float minTorque = 0.5f;
+        [SerializeField, Range(0, 1)] private float minTorque = 0.5f;
         [Tooltip("Maximum torque the plug can handle before binding the pin.")]
-        [SerializeField, Range(0, 1)] float maxTorque = 0.8f;
+        [SerializeField, Range(0, 1)] private float maxTorque = 0.8f;
 
         [Header("Plug Rotation")]
-        [SerializeField, Min(0)] float turnSpeed = 1f;
-        [SerializeField, Min(0)] float plugGravity = 5f;
+        [SerializeField, Min(0)] private float turnSpeed = 1f;
+        [SerializeField, Min(0)] private float plugGravity = 5f;
 
         [Header("Debug")]
-        [SerializeField, Range(0, 5)] private int pickingPin;
+        [SerializeField, Range(0, 5)] private int targetedPin;
         [SerializeField, Range(0, 1)] private float appliedTorque;
         [SerializeField, Min(0)] private float chamberRetargetTimer;
 
         public TumblerLock Lock => tumblerLock;
-        public int PickingPin => pickingPin;
+        public int TargetedPin => targetedPin;
         public float MinTorque => minTorque;
         public float MaxTorque => maxTorque;
 
@@ -46,10 +46,10 @@ namespace Lokpik
 
         private void Awake()
         {
-            for (int i = 0; i < Lock.PinCount; i++)
-                Lock.Chamber(i).SetLock(Lock, i);
+            for (int i = 0; i < tumblerLock.PinCount; i++)
+                tumblerLock.Chamber(i).SetLock(tumblerLock, i);
 
-            Lock.StopPicking();
+            tumblerLock.StopPicking();
         }
 
         internal void Init(IPickInput input) => this.input = input;
@@ -61,7 +61,8 @@ namespace Lokpik
 
             HandleChangePin();
             ApplyTorque();
-            TickPinRaise();
+
+            tumblerLock.LiftPinTowards(targetedPin, input.PickHeight);
         }
 
         private void HandleChangePin()
@@ -74,39 +75,35 @@ namespace Lokpik
             if (delta == 0) return;
 
             chamberRetargetTimer = 0;
-            tumblerLock.StopLifting(pickingPin);
-            pickingPin = Lock.Config.ClampPinIndex(pickingPin + delta);
+            tumblerLock.StopLifting(targetedPin);
+            targetedPin = tumblerLock.Config.ClampPinIndex(targetedPin + delta);
         }
-
-        private void TickPinRaise() =>
-            Lock.LiftPinTowards(pickingPin, input.PickHeight);
 
         /// <summary>
         /// Apply torque and rotate the plug accordingly.
         /// </summary>
         private void ApplyTorque()
         {
-            AppliedTorque = input.Tension;
-
-            if (useTensionDrift)
+            float tension = input.Tension;
+            if (useTensionDrift && tension > 0)
             {
                 float randomDrift = Random.Range(-tensionKeepDrift, tensionKeepDrift);
-                AppliedTorque += randomDrift;
+                tension += randomDrift;
             }
 
+            AppliedTorque = tension;
 
             // TODO: move this all into TumblerLock?
-
-            bool lowTorque = AppliedTorque < MinTorque; // not enough to Set any pin
-            bool highTorque = AppliedTorque > MaxTorque; // too much for the pin to move
-            int tension = lowTorque ? -1 : highTorque ? 1 : 0;
+            bool lowTorque = appliedTorque < minTorque; // not enough to Set any pin
+            bool highTorque = appliedTorque > maxTorque; // too much for the pin to move
+            int tensionValue = lowTorque ? -1 : highTorque ? 1 : 0;
 
             float turnDelta =
                 highTorque ? turnSpeed
                 : lowTorque ? -plugGravity
                 : turnSpeed;
 
-            Lock.RotatePlug(turnDelta * Time.deltaTime, tension);
+            tumblerLock.RotatePlug(turnDelta * Time.deltaTime, tensionValue);
         }
     }
 }
