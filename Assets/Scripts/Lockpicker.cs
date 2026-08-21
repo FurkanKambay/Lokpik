@@ -14,7 +14,7 @@ namespace Lokpik
 
         [Header("Artificial Skill Hindrance")]
         [SerializeField] private bool useTensionDrift;
-        [SerializeField, Min(0)] private float tensionKeepDrift = 0.5f;
+        [SerializeField, Min(0)] private float tensionDrift = 0.008f;
 
         [Header("Pin Setting")]
         [Tooltip("Minimum torque required to turn plug.")]
@@ -87,7 +87,7 @@ namespace Lokpik
             float tension = input.Tension;
             if (useTensionDrift && tension > 0)
             {
-                float randomDrift = Random.Range(-tensionKeepDrift, tensionKeepDrift);
+                float randomDrift = Random.Range(-tensionDrift, tensionDrift);
                 tension += randomDrift;
             }
 
