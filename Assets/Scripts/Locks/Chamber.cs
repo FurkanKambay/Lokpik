@@ -50,12 +50,15 @@ namespace Lokpik.Locks
             Lift(0);
         }
 
-        public void Lift(float delta)
+        public void Lift(float delta) =>
+            LiftTowards(KeyPinLift + delta);
+
+        public void LiftTowards(float desiredTarget)
         {
             if (state is ChamberState.Underset)
             {
                 float maxKeyPinLift = DriverPinLift - KeyPinLength;
-                keyPinLift = Mathf.Clamp(KeyPinLift + delta, 0, maxKeyPinLift);
+                keyPinLift = Mathf.Clamp(desiredTarget, 0, maxKeyPinLift);
                 // The driver pin can't be moved until counter-rotation is applied.
                 // Same logic as below, but in this case, the key pin will still move.
                 // The key pin needs to touch the driver pin before applying heavy pick force.
@@ -75,12 +78,12 @@ namespace Lokpik.Locks
             {
                 driverPinLift = Lock.Config.ShearLine;
                 float maxKeyLift = DriverPinLift - KeyPinLength;
-                keyPinLift = Mathf.Clamp(KeyPinLift + delta, 0, maxKeyLift);
+                keyPinLift = Mathf.Clamp(desiredTarget, 0, maxKeyLift);
             }
             else
             {
                 // nothing is binding so lift both pins
-                keyPinLift = Mathf.Clamp(KeyPinLift + delta, 0, MaxLift);
+                keyPinLift = Mathf.Clamp(desiredTarget, 0, MaxLift);
                 driverPinLift = KeyPinLength + KeyPinLift;
             }
 

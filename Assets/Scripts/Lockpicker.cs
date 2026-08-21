@@ -1,29 +1,24 @@
+using Lokpik.Data;
 using Lokpik.Locks;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Lokpik
 {
     public class Lockpicker : MonoBehaviour
     {
-        [Header("Input")]
-        [SerializeField] InputActionReference holdTensionInput;
-        [SerializeField] InputActionReference movePickInput;
-        [SerializeField] InputActionReference changePinInput;
-        // TODO: a "lift pick hard" button/repeated press to apply counter-rotation for unbinding a pin
-
+        [Header("References")]
         [SerializeField] TumblerLock tumblerLock;
 
-        [Header("Tension Wrench")]
-        [SerializeField] AnimationCurve tensionCurve;
-        [SerializeField] AnimationCurve tensionDownCurve;
-        [SerializeField, Min(0)] float tensionForce = 0.2f;
-        [SerializeField, Min(0)] float tensionHoldForce = 0.2f;
-        [SerializeField, Min(0)] float tensionGravity = 0.2f;
+        [Header("Input Config")]
+        [SerializeField, Min(0)] private float chamberRetargetRate = 0.3f;
 
+        [Header("Artificial Skill Hindrance")]
+        [SerializeField] bool useTensionDrift;
+        [SerializeField, Min(0)] private float tensionKeepDrift = 0.5f;
+
+        [Header("Pin Setting")]
         [Tooltip("Minimum torque required to turn plug.")]
         [SerializeField, Range(0, 1)] float minTorque = 0.5f;
-
         [Tooltip("Maximum torque the plug can handle before binding the pin.")]
         [SerializeField, Range(0, 1)] float maxTorque = 0.8f;
 
@@ -31,16 +26,15 @@ namespace Lokpik
         [SerializeField, Min(0)] float turnSpeed = 1f;
         [SerializeField, Min(0)] float plugGravity = 5f;
 
-        [Header("Pick")]
-        [SerializeField, Min(0)] float pickRaiseSpeed = 2f;
-        // [SerializeField] float coyoteTime = 0.5f;
+        [Header("Debug")]
+        [SerializeField, Range(0, 5)] private int pickingPin;
+        [SerializeField, Range(0, 1)] private float appliedTorque;
+        [SerializeField, Min(0)] private float chamberRetargetTimer;
 
         public TumblerLock Lock => tumblerLock;
-
+        public int PickingPin => pickingPin;
         public float MinTorque => minTorque;
         public float MaxTorque => maxTorque;
-
-        public int PickingPin { get; private set; }
 
         public float AppliedTorque
         {
@@ -48,21 +42,23 @@ namespace Lokpik
             private set => appliedTorque = Mathf.Clamp(value, 0, 1);
         }
 
-        private float appliedTorque;
+        private IPickInput input;
 
         private void Awake()
         {
-            InputSystem.actions.Enable();
-            Cursor.lockState = CursorLockMode.Locked;
-
             for (int i = 0; i < Lock.PinCount; i++)
                 Lock.Chamber(i).SetLock(Lock, i);
 
             Lock.StopPicking();
         }
 
+        internal void Init(IPickInput input) => this.input = input;
+
         private void Update()
         {
+            if (input is not Object)
+                return;
+
             HandleChangePin();
             ApplyTorque();
             TickPinRaise();
@@ -70,53 +66,44 @@ namespace Lokpik
 
         private void HandleChangePin()
         {
-            int delta = (int)changePinInput.action.ReadValue<float>();
-
-            if (!changePinInput.action.triggered || delta == 0)
+            chamberRetargetTimer += Time.deltaTime;
+            if (chamberRetargetTimer < chamberRetargetRate)
                 return;
 
-            tumblerLock.StopLifting(PickingPin);
-            PickingPin = Lock.Config.ClampPinIndex(PickingPin + delta);
+            int delta = input.PickMoveDelta;
+            if (delta == 0) return;
+
+            chamberRetargetTimer = 0;
+            tumblerLock.StopLifting(pickingPin);
+            pickingPin = Lock.Config.ClampPinIndex(pickingPin + delta);
         }
 
-        private void TickPinRaise()
-        {
-            if (PickingPin < 0)
-                return;
-
-            float delta = movePickInput.action.ReadValue<float>();
-
-            if (delta == 0)
-                return;
-
-            float pickMoveDelta = pickRaiseSpeed * delta;
-            Lock.LiftPin(PickingPin, pickMoveDelta * Time.deltaTime);
-        }
+        private void TickPinRaise() =>
+            Lock.LiftPinTowards(pickingPin, input.PickHeight);
 
         /// <summary>
         /// Apply torque and rotate the plug accordingly.
         /// </summary>
         private void ApplyTorque()
         {
-            bool triggered = holdTensionInput.action.triggered;
-            bool inProgress = holdTensionInput.action.inProgress;
+            AppliedTorque = input.Tension;
 
-            float torque =
-                triggered ? tensionForce :
-                inProgress ? tensionHoldForce * tensionCurve.Evaluate(AppliedTorque)
-                : -tensionGravity * tensionDownCurve.Evaluate(AppliedTorque);
+            if (useTensionDrift)
+            {
+                float randomDrift = Random.Range(-tensionKeepDrift, tensionKeepDrift);
+                AppliedTorque += randomDrift;
+            }
 
-            AppliedTorque += torque * Time.deltaTime;
 
             // TODO: move this all into TumblerLock?
 
-            bool lowTorque = AppliedTorque < MinTorque;     // not enough to Set any pin
-            bool highTorque = AppliedTorque > MaxTorque;    // too much for the pin to move
+            bool lowTorque = AppliedTorque < MinTorque; // not enough to Set any pin
+            bool highTorque = AppliedTorque > MaxTorque; // too much for the pin to move
             int tension = lowTorque ? -1 : highTorque ? 1 : 0;
 
             float turnDelta =
-                highTorque ? turnSpeed :
-                lowTorque ? -plugGravity
+                highTorque ? turnSpeed
+                : lowTorque ? -plugGravity
                 : turnSpeed;
 
             Lock.RotatePlug(turnDelta * Time.deltaTime, tension);

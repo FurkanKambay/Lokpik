@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8a4084cb3f84d7fa179ea6d78a93443, type: 3}
+  m_Name: Real Pick Input
+  m_EditorClassIdentifier: Lokpik::Lokpik.Data.PickInput
+  tensionInput: {fileID: -8588818605772243609, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  pickHeightInput: {fileID: 6561589016460532179, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  changePinInput: {fileID: -2865560764156463112, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

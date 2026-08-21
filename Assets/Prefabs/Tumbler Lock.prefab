@@ -328,9 +328,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62dc3ea4a42838499a9bd1f5b4b104e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdTensionInput: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  movePickInput: {fileID: -3560264501342311791, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  changePinInput: {fileID: -2865560764156463112, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   tumblerLock:
     isLocked: 0
     chambers: []
@@ -355,71 +352,16 @@ MonoBehaviour:
       - 0.073
       - 0.011
       bindingOrder: 03000000010000000200000000000000
-  tensionCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 3
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 1
-      weightedMode: 2
-      inWeight: 0
-      outWeight: 1
-    - serializedVersion: 3
-      time: 0.4
-      value: 1
-      inSlope: Infinity
-      outSlope: 0
-      tangentMode: 7
-      weightedMode: 3
-      inWeight: 0
-      outWeight: 1
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 210
-      outSlope: 210
-      tangentMode: 0
-      weightedMode: 1
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  tensionDownCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  tensionForce: 10
-  tensionHoldForce: 0.04
   tensionGravity: 0.5
+  tensionKeepDrift: 0.008
+  changeTargetChamberRate: 0.3
   minTorque: 0.4
   maxTorque: 0.9
   turnSpeed: 1.5
   plugGravity: 0.5
-  pickRaiseSpeed: 0.2
+  pickingPin: 0
+  appliedTorque: 0
+  chamberRetargetTimer: 0
 --- !u!1 &4469609992631167078
 GameObject:
   m_ObjectHideFlags: 0

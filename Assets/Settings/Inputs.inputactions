@@ -7,15 +7,6 @@
             "id": "df70fa95-8a34-4494-b137-73ab6b9c7d37",
             "actions": [
                 {
-                    "name": "Move Pick",
-                    "type": "Value",
-                    "id": "8410cf18-6099-4be0-b007-c5414db928c4",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Change Pin",
                     "type": "Button",
                     "id": "e3679ea4-e733-48c4-9d8e-e08327b23858",
@@ -25,9 +16,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Hold Tension",
+                    "name": "Tension",
+                    "type": "Value",
+                    "id": "fb9e6328-cc5e-4a46-8627-1b8ef1414446",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Pick Height",
                     "type": "Button",
-                    "id": "f1ba0d36-48eb-4cd5-b651-1c94a6531f70",
+                    "id": "33e3609c-428f-4777-869a-93d9b1600205",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -36,15 +36,37 @@
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "eb40bb66-4559-4dfa-9a2f-820438abb426",
-                    "path": "<Keyboard>/space",
+                    "name": "Gamepad D-Pad",
+                    "id": "97f9e8e3-d0a4-4320-a032-c22a66e5869c",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Hold Tension",
-                    "isComposite": false,
+                    "groups": "",
+                    "action": "Change Pin",
+                    "isComposite": true,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "790e46b6-1a4c-45d8-842c-5c33192d228e",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Pin",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "c29388f8-e2db-4c80-9b50-c5b694f29c1c",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Pin",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "Keyboard AD",
@@ -80,70 +102,37 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Mouse Delta",
-                    "id": "521b0dc6-07aa-458b-99fc-282aa0385718",
-                    "path": "1DAxis",
+                    "name": "",
+                    "id": "a350955a-de0e-4ca8-8c89-1d92245f51b2",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
-                    "processors": "Scale(factor=0.05)",
-                    "groups": "",
-                    "action": "Move Pick",
-                    "isComposite": true,
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Tension",
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "positive",
-                    "id": "a5e628b7-4df7-464f-8230-14ba00db5a80",
-                    "path": "<Mouse>/delta/up",
+                    "name": "",
+                    "id": "ebea601b-b92d-4e62-9a2c-c13931a5dce7",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Move Pick",
+                    "groups": ";Gamepad",
+                    "action": "Tension",
                     "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "negative",
-                    "id": "d707be11-8395-4e34-a5c5-df6d367f0a12",
-                    "path": "<Mouse>/delta/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move Pick",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Keyboard WS",
-                    "id": "f3f314f9-d603-4f04-9f15-3362c70ddf4f",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move Pick",
-                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "positive",
-                    "id": "381885a9-fba6-4da5-8670-3dc986649f46",
-                    "path": "<Keyboard>/w",
+                    "name": "",
+                    "id": "21e068ce-022a-40bf-a2cf-695a1a611091",
+                    "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Move Pick",
+                    "groups": "",
+                    "action": "Pick Height",
                     "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "negative",
-                    "id": "346b4fb0-7679-44b0-9d86-3125cefb80b9",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Move Pick",
-                    "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         },

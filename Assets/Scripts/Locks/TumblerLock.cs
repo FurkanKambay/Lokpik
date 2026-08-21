@@ -89,6 +89,9 @@ namespace Lokpik.Locks
         public void LiftPin(int pin, float delta) =>
             Chamber(pin).Lift(delta);
 
+        public void LiftPinTowards(int pin, float desiredTarget) =>
+            Chamber(pin).LiftTowards(desiredTarget);
+
         public Chamber Chamber(int pin) =>
             chambers.ElementAtOrDefault(Config.ClampPinIndex(pin));
 
