@@ -18,10 +18,6 @@ namespace Lokpik.Visuals
         private TumblerLock Lock => lockpicker.Lock;
         private TumblerLockConfig LockConfig => Lock.Config;
 
-#if UNITY_EDITOR
-        private int PinCount => Lock.PinCount;
-#endif
-
         private void Awake()
         {
             for (int pin = 0; pin < pinVisuals.Length; pin++)
@@ -39,6 +35,7 @@ namespace Lokpik.Visuals
 
         internal Chamber GetChamber(int pin) => Lock.Chamber(pin);
 
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             // Shear line
@@ -91,7 +88,8 @@ namespace Lokpik.Visuals
 
         private void OnValidate()
         {
-            Array.Resize(ref pinVisuals, PinCount);
+            Array.Resize(ref pinVisuals, Lock.Config.PinCount);
         }
+#endif
     }
 }

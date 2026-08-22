@@ -30,7 +30,7 @@ namespace Lokpik
 
         private void Awake()
         {
-            for (int i = 0; i < tumblerLock.PinCount; i++)
+            for (int i = 0; i < tumblerLock.Config.PinCount; i++)
                 tumblerLock.Chamber(i).SetLock(tumblerLock, i);
 
             tumblerLock.StopPicking();
@@ -80,13 +80,10 @@ namespace Lokpik
             // TODO: move this all into TumblerLock?
             bool lowTorque = appliedTorque < controls.MinTorque; // not enough to Set any pin
             bool highTorque = appliedTorque > controls.MaxTorque; // too much for the pin to move
+
+            float turnDelta = lowTorque ? -controls.PlugGravity : controls.TurnSpeed;
+
             int tensionValue = lowTorque ? -1 : highTorque ? 1 : 0;
-
-            float turnDelta =
-                highTorque ? controls.TurnSpeed
-                : lowTorque ? -controls.PlugGravity
-                : controls.TurnSpeed;
-
             tumblerLock.RotatePlug(turnDelta * Time.deltaTime, tensionValue);
         }
     }
