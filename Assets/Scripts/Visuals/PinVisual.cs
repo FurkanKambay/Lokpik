@@ -1,8 +1,8 @@
 using FK.Common.Extensions;
-using Lokpik.Locks;
+using FK.Lokpik.Locks;
 using UnityEngine;
 
-namespace Lokpik.Visuals
+namespace FK.Lokpik.Visuals
 {
     public class PinVisual : MonoBehaviour
     {

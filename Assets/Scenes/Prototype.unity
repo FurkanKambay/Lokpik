@@ -162,7 +162,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5cd26f72e234a6db1f6c91d6ce9e598, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Lokpik::Lokpik.WorkshopManager
+  m_EditorClassIdentifier: FK.Lokpik::FK.Lokpik.WorkshopManager
   lockpicker: {fileID: 1177998438}
   input: {fileID: 11400000, guid: 9a630723f3ca65e458e7907db1ed159e, type: 2}
   debugInput: {fileID: 11400000, guid: 71f39f9955dcd514b9294c883ed6a845, type: 2}

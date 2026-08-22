@@ -1,7 +1,7 @@
 using UnityEngine;
 using Vertx.Attributes;
 
-namespace Lokpik.Visuals
+namespace FK.Lokpik.Visuals
 {
     using RO = ReadOnlyFieldAttribute;
 

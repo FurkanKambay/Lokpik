@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using Lokpik.Data;
+using FK.Lokpik.Data;
 using UnityEngine;
 using Vertx.Attributes;
 
-namespace Lokpik.Locks
+namespace FK.Lokpik.Locks
 {
     using RO = ReadOnlyFieldAttribute;
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Lokpik.Data
+namespace FK.Lokpik.Data
 {
     public interface IPickControlsConfig
     {

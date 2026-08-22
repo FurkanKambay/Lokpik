@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-namespace Lokpik.Locks
+namespace FK.Lokpik.Locks
 {
     [Serializable]
     public class TumblerLockConfig : ISerializationCallbackReceiver

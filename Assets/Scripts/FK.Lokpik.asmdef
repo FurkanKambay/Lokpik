@@ -1,6 +1,6 @@
 {
-    "name": "Lokpik",
-    "rootNamespace": "Lokpik",
+    "name": "FK.Lokpik",
+    "rootNamespace": "FK.Lokpik",
     "references": [
         "GUID:ade22e0cbd0966a43aa01ef49b183800",
         "GUID:75469ad4d38634e559750d17036d5f7c",

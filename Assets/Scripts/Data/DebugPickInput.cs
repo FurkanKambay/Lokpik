@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Lokpik.Data
+namespace FK.Lokpik.Data
 {
     [CreateAssetMenu(menuName = "Pick/Debug Input")]
     internal sealed class DebugPickInput : ScriptableObject, IPickInput

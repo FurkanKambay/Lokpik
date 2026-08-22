@@ -1,8 +1,8 @@
-using Lokpik.Locks;
+using FK.Lokpik.Locks;
 using UnityEngine;
 using Vertx.Attributes;
 
-namespace Lokpik.Data
+namespace FK.Lokpik.Data
 {
     [CreateAssetMenu(menuName = "Lock/Tumbler Lock Config")]
     public class TumblerLockConfigAsset : ScriptableObject

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Vertx.Attributes;
 
-namespace Lokpik.Data
+namespace FK.Lokpik.Data
 {
     using RO = ReadOnlyFieldAttribute;
 

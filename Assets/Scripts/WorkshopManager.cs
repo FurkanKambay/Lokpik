@@ -1,8 +1,8 @@
-using Lokpik.Data;
+using FK.Lokpik.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Lokpik
+namespace FK.Lokpik
 {
     internal sealed class WorkshopManager : MonoBehaviour
     {

@@ -1,4 +1,4 @@
-﻿namespace Lokpik.Locks
+﻿namespace FK.Lokpik.Locks
 {
     public enum ChamberState
     {

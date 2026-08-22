@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using Lokpik.Locks;
+using FK.Lokpik.Locks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Lokpik.Visuals
+namespace FK.Lokpik.Visuals
 {
     public class LockVisual : MonoBehaviour
     {

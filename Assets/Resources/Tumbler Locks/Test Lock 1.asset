@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a6db1eeee40496cb5e3718d37f72bd6, type: 3}
   m_Name: Test Lock 1
-  m_EditorClassIdentifier: Lokpik::Lokpik.Data.TumblerLockConfigAsset
+  m_EditorClassIdentifier: FK.Lokpik::FK.Lokpik.Data.TumblerLockConfigAsset
   lockConfig:
     shearLine: 0.43199998
     tolerance: 0.03

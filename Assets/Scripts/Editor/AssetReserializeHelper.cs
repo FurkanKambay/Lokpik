@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Lokpik.Editor
+namespace FK.Lokpik.Editor
 {
     internal sealed class AssetReserializeHelper : MonoBehaviour
     {
