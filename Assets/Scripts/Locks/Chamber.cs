@@ -10,6 +10,8 @@ namespace Lokpik.Locks
     [Serializable]
     public class Chamber
     {
+        public event Action<Chamber, ChamberState> OnStateChange;
+
         public ChamberState State => state;
 
         /// <summary>
@@ -97,6 +99,7 @@ namespace Lokpik.Locks
             bool isAbove = driverPinLift >= shearLine;
             bool isUnder = driverPinLift < shearLine;
 
+            ChamberState oldState = state;
             state = tension switch
             {
                 // Adequate tension
@@ -110,6 +113,9 @@ namespace Lokpik.Locks
                 // Low tension: blocking, but NOT binding
                 _ => ChamberState.Free
             };
+
+            if (state != oldState)
+                OnStateChange?.Invoke(this, state);
         }
 
         public void StopLifting()
