@@ -29,8 +29,8 @@ namespace FK.Lokpik.Locks
 
         public int Tension => tension;
 
-        public float KeyPinLength => Lock.Config.KeyPinLengths[chamberIndex];
-        public float DriverPinLength => Lock.Config.DriverPinLengths[chamberIndex];
+        public float KeyPinLength => Lock.Config.GetKeyPinLength(chamberIndex);
+        public float DriverPinLength => Lock.Config.GetDriverPinLength(chamberIndex);
         public bool IsBinding => state.IsBinding();
         public bool IsPicked => state.IsPicked();
         public bool IsFree => state.IsFree();

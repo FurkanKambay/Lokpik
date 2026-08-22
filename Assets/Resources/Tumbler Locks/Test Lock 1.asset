@@ -13,23 +13,25 @@ MonoBehaviour:
   m_Name: Test Lock 1
   m_EditorClassIdentifier: FK.Lokpik::FK.Lokpik.Data.TumblerLockConfigAsset
   lockConfig:
-    shearLine: 0.43199998
+    shearLine: 0.432
     tolerance: 0.03
     pinCount: 4
     uniformDriverPins: 0
-    driverPinLengths:
-    - 0.387
-    - 0.286
-    - 0.347
-    - 0.508
-    keyPinLengths:
-    - 0.151
-    - 0.332
-    - 0.236
-    - 0.271
-    bindingRotations:
-    - 0.1
-    - 0.3
-    - 0.5
-    - 0.7
+    pins:
+    - chamberIndex: 0
+      pinLengthDriver: 0.387
+      pinLengthKey: 0.151
+      bindRotation: 0.1
+    - chamberIndex: 1
+      pinLengthDriver: 0.286
+      pinLengthKey: 0.332
+      bindRotation: 0.3
+    - chamberIndex: 2
+      pinLengthDriver: 0.347
+      pinLengthKey: 0.236
+      bindRotation: 0.5
+    - chamberIndex: 3
+      pinLengthDriver: 0.5
+      pinLengthKey: 0.271
+      bindRotation: 0.7
     bindingOrder: 00000000010000000200000003000000

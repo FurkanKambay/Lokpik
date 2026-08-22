@@ -1,9 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Vertx.Attributes;
 
 namespace FK.Lokpik.Locks
 {
+    [Serializable]
+    public struct PinData
+    {
+        [ReadOnlyField] public int chamberIndex;
+        [Range(0.1f, 0.5f)] public float pinLengthDriver;
+        [Range(0.1f, 0.5f)] public float pinLengthKey;
+
+        [Range(0.1f, 0.9f)] public float bindRotation;
+        // [Min(0)] public int bindIndex; // replace with bindAngle?
+    }
+
     [Serializable]
     public class TumblerLockConfig : ISerializationCallbackReceiver
     {
@@ -13,20 +26,16 @@ namespace FK.Lokpik.Locks
         [SerializeField] float tolerance = 0.04f;
 
         [Header("Pins")]
-        [SerializeField, Min(0)] int pinCount = 2;
+        [SerializeField, Min(0)] int pinCount = 5;
         [SerializeField] bool uniformDriverPins;
+        [SerializeField, Inline] private PinData[] pins = new PinData[1];
 
-        [SerializeField, Range(0, 1)] float[] driverPinLengths = { 0.5f, 0.5f };
-        [SerializeField, Range(0, 1)] float[] keyPinLengths = { 0.2f, 0.4f };
-        [SerializeField, Range(0, 1)] float[] bindingRotations;
+        // TODO: min binding separation angle (the less, the more difficult + drift is less manageable)
+        // + maybe an Unlock Angle to Remap 0-1 to 0-90, e.g. with bindings at angles 10, 15, 18, 23, 29 deg
 
-        // TODO: min binding separation angle (the less the more difficult + drift is more manageable)
-        // + maybe an Unlock Angle to Remap 0-1 to 0-90 with bindings at angles 10, 15, 18, 23, 29 deg
+        [Header("Debug")]
+        [SerializeField, ReadOnlyField] int[] bindingOrder;
 
-        // [ReadOnly]
-        [SerializeField] int[] bindingOrder;
-
-        [Header("Info")]
         internal bool IsVulnerableToCombPicking =>
             Enumerable.Range(0, PinCount).All(pin => GetMaxLiftForPin(pin) >= ShearLine);
 
@@ -36,25 +45,23 @@ namespace FK.Lokpik.Locks
         public float ShearLine => shearLine;
         public float Tolerance => tolerance;
 
-        public float[] DriverPinLengths => driverPinLengths;
-        public float[] KeyPinLengths => keyPinLengths;
-        public float[] BindingRotations => bindingRotations;
-        public int[] BindingOrder => bindingOrder;
+        internal float MaxKeyPinHeight => pins.Max(p => p.pinLengthKey);
+        internal float MaxDriverPinHeight => pins.Max(p => p.pinLengthDriver);
 
-        internal float MaxKeyPinHeight => keyPinLengths.Max();
-        internal float MaxDriverPinHeight => driverPinLengths.Max();
+        public float GetKeyPinLength(int pin) => pin < 0 || pin >= PinCount ? -1 : pins[pin].pinLengthKey;
+        public float GetDriverPinLength(int pin) => pin < 0 || pin >= PinCount ? -1 : pins[pin].pinLengthDriver;
 
         /// <summary>
         /// Find the next binding pin at <paramref name="plugRotation"/>. -1 if all pins are set.
         /// </summary>
         public int FindNextPinAt(float plugRotation)
         {
-            for (int i = 0; i < PinCount; i++)
+            for (int i = 0; i < bindingOrder.Length; i++)
             {
-                int pin = BindingOrder[i];
+                int chamberIndex = bindingOrder[i];
 
-                if (plugRotation <= BindingRotations[pin])
-                    return pin;
+                if (plugRotation <= pins[chamberIndex].bindRotation)
+                    return chamberIndex;
             }
 
             return -1;
@@ -65,12 +72,12 @@ namespace FK.Lokpik.Locks
         /// </summary>
         public int FindPreviousPinAt(float plugRotation)
         {
-            for (int i = PinCount - 1; i >= 0; i--)
+            for (int i = bindingOrder.Length - 1; i >= 0; i--)
             {
-                int pin = BindingOrder[i];
+                int chamberIndex = bindingOrder[i];
 
-                if (plugRotation > BindingRotations[pin])
-                    return pin;
+                if (plugRotation > pins[chamberIndex].bindRotation)
+                    return chamberIndex;
             }
 
             return -1;
@@ -87,7 +94,7 @@ namespace FK.Lokpik.Locks
             if (pin < 0 || pin >= PinCount)
                 return -1;
 
-            return BindingRotations[pin];
+            return pins[pin].bindRotation;
         }
 
         internal float GetMaxLiftForPin(int pin)
@@ -95,39 +102,42 @@ namespace FK.Lokpik.Locks
             if (pin < 0 || pin >= PinCount)
                 return 1;
 
-            float driverPinLength = DriverPinLengths[pin];
-            float keyPinLength = KeyPinLengths[pin];
+            float driverPinLength = pins[pin].pinLengthDriver;
+            float keyPinLength = pins[pin].pinLengthKey;
             return ChamberHeight - (driverPinLength + keyPinLength);
         }
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            Array.Resize(ref driverPinLengths, PinCount);
-            Array.Resize(ref keyPinLengths, PinCount);
-            Array.Resize(ref bindingRotations, PinCount);
+            Array.Resize(ref pins, PinCount);
+            for (int i = 0; i < pins.Length; i++)
+                pins[i].chamberIndex = i;
 
             // if (BindingRotations.Distinct().Count() != BindingRotations.Length)
             //     EditorGUILayout.HelpBox("Some pins bind together", MessageType.Error, true);
 
             // Binding order
-            if (BindingRotations != null)
+            if (pins != null)
             {
-                bindingOrder = BindingRotations
-                    .Select((rotation, index) => (rotation, index))
-                    .OrderBy(t => t.rotation)
-                    .Select(t => t.index)
+                bindingOrder = pins
+                    .OrderBy(pin => pin.bindRotation)
+                    .Select(pin => pin.chamberIndex)
                     .ToArray();
             }
 
             // Uniform driver pins
-            if (uniformDriverPins && driverPinLengths.Any())
-                Array.Fill(driverPinLengths, driverPinLengths.First());
+            if (uniformDriverPins && pins.Length > 1)
+            {
+                float uniformLength = pins[0].pinLengthDriver;
+                for (int i = 1; i < pins.Length; i++)
+                    pins[i].pinLengthDriver = uniformLength;
+            }
 
             // Make sure key pins fit in chambers
             for (int pin = 0; pin < PinCount; pin++)
             {
-                float maxKeyPinLength = ChamberHeight - driverPinLengths[pin];
-                keyPinLengths[pin] = Mathf.Clamp(keyPinLengths[pin], 0, maxKeyPinLength);
+                float maxKeyPinLength = ChamberHeight - pins[pin].pinLengthDriver;
+                pins[pin].pinLengthKey = Mathf.Clamp(pins[pin].pinLengthKey, 0, maxKeyPinLength);
             }
 
             // Constrain shear line to valid positions
