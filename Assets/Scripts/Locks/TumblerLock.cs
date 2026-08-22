@@ -51,6 +51,8 @@ namespace FK.Lokpik.Locks
         {
             previousPin = Config.FindPreviousPinAt(plugRotation);
             nextPin = Config.FindNextPinAt(plugRotation);
+            plugRotation = Mathf.Clamp(desiredRotation, 0, GetMaxPlugRotation());
+
             float prevRotation = Config.GetAdequatePlugRotation(previousPin);
             float nextRotation = Config.GetAdequatePlugRotation(nextPin);
 
@@ -64,7 +66,6 @@ namespace FK.Lokpik.Locks
             else if (desiredRotation >= nextRotation)
                 NextChamber?.SetTension(1);
 
-            plugRotation = Mathf.Clamp(desiredRotation, 0, GetMaxPlugRotation());
             IsLocked = plugRotation < 1;
         }
 

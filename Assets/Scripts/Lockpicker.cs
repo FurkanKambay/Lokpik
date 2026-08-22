@@ -68,9 +68,6 @@ namespace FK.Lokpik
             targetedPin = tumblerLock.Config.ClampPinIndex(targetedPin + delta);
         }
 
-        /// <summary>
-        /// Apply torque and rotate the plug accordingly.
-        /// </summary>
         private void ApplyTorque()
         {
             float tension = input.Tension;
