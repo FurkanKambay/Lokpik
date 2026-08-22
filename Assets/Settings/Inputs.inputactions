@@ -69,6 +69,39 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "Gamepad: RS",
+                    "id": "8221e915-f21f-47e4-812e-701be197b68d",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Pin",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "76830f8d-b728-49cf-8f94-418fa1360f0f",
+                    "path": "<Gamepad>/rightStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Change Pin",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "334063b9-d380-4e4b-9470-e607db1813d6",
+                    "path": "<Gamepad>/rightStick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Change Pin",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "Keyboard AD",
                     "id": "9d669743-d81e-495a-9290-af88f4fdcb32",
                     "path": "1DAxis",
