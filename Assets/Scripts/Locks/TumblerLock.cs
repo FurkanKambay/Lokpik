@@ -58,6 +58,7 @@ namespace FK.Lokpik.Locks
             float prevRotation = Config.GetAdequatePlugRotation(previousPin);
             float nextRotation = Config.GetAdequatePlugRotation(nextPin);
 
+            // TODO: go over all pins instead
             if (plugRotation < prevRotation)
             {
                 PreviousChamber?.SetTension(-1);
