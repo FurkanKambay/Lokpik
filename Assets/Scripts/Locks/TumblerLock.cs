@@ -47,23 +47,25 @@ namespace FK.Lokpik.Locks
         [SerializeField, RO] private int previousPin = -1;
         [SerializeField, RO] private int nextPin = -1;
 
-        public void TurnPlugTowards(float desiredRotation)
+        public void TurnPlugTowards(float desiredRotation, bool preventUnsettingPins = false)
         {
+            float minPlugProgress = preventUnsettingPins ? Config.GetAdequatePlugRotation(previousPin) + 0.01f : 0f;
+            plugRotation = Mathf.Clamp(desiredRotation, minPlugProgress, GetMaxPlugRotation());
+
             previousPin = Config.FindPreviousPinAt(plugRotation);
             nextPin = Config.FindNextPinAt(plugRotation);
-            plugRotation = Mathf.Clamp(desiredRotation, 0, GetMaxPlugRotation());
 
             float prevRotation = Config.GetAdequatePlugRotation(previousPin);
             float nextRotation = Config.GetAdequatePlugRotation(nextPin);
 
-            if (desiredRotation < prevRotation)
+            if (plugRotation < prevRotation)
             {
                 PreviousChamber?.SetTension(-1);
                 NextChamber?.SetTension(-1);
             }
-            else if (desiredRotation < nextRotation)
+            else if (plugRotation < nextRotation)
                 NextChamber?.SetTension(-1);
-            else if (desiredRotation >= nextRotation)
+            else if (plugRotation >= nextRotation)
                 NextChamber?.SetTension(1);
 
             IsLocked = plugRotation < 1;

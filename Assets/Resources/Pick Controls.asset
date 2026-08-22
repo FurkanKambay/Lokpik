@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: FK.Lokpik::FK.Lokpik.Data.PickControlsConfig
   maxHeightReach: 0.5
   chamberRetargetRate: 0.3
+  preventUnsettingPins: 0
   useTensionDrift: 0
   tensionDrift: 0.008
