@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAngle: 90
-  fillValue: 0
+  progress: 0
 --- !u!1 &2371701191969243765
 GameObject:
   m_ObjectHideFlags: 0

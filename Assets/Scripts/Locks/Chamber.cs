@@ -1,9 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Vertx.Attributes;
 
 namespace Lokpik.Locks
 {
+    using RO = ReadOnlyFieldAttribute;
+
     /// <summary>
     /// The state of a pin stack chamber.
     /// </summary>
@@ -37,11 +40,11 @@ namespace Lokpik.Locks
         [field: NonSerialized]
         public TumblerLock Lock { get; private set; }
 
-        [SerializeField] private int chamberIndex;
-        [SerializeField] private ChamberState state;
-        [SerializeField] private float driverPinLift;
-        [SerializeField] private float keyPinLift;
-        [SerializeField] private int tension = -1;
+        [SerializeField, RO] private int chamberIndex;
+        [SerializeField, RO] private ChamberState state;
+        [SerializeField, RO] private float driverPinLift;
+        [SerializeField, RO] private float keyPinLift;
+        [SerializeField, RO] private int tension = -1;
 
         // TODO: should only be called by TumblerLock
         public void SetTension(int value)

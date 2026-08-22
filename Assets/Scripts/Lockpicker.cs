@@ -1,9 +1,12 @@
 using Lokpik.Data;
 using Lokpik.Locks;
 using UnityEngine;
+using Vertx.Attributes;
 
 namespace Lokpik
 {
+    using RO = ReadOnlyFieldAttribute;
+
     public class Lockpicker : MonoBehaviour
     {
         [Header("References")]
@@ -11,9 +14,9 @@ namespace Lokpik
         [SerializeField] private TumblerLock tumblerLock;
 
         [Header("Debug")]
-        [SerializeField, Range(0, 5)] private int targetedPin;
-        [SerializeField, Range(0, 1)] private float appliedTorque;
-        [SerializeField, Min(0)] private float chamberRetargetTimer;
+        [SerializeField, RO, Range(0, 5)] private int targetedPin;
+        [SerializeField, RO, Range(0, 1)] private float appliedTorque;
+        [SerializeField, RO, Min(0)] private float chamberRetargetTimer;
 
         public TumblerLock Lock => tumblerLock;
         public int TargetedPin => targetedPin;

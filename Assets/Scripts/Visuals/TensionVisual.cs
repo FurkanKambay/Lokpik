@@ -1,14 +1,17 @@
 using UnityEngine;
+using Vertx.Attributes;
 
 namespace Lokpik.Visuals
 {
+    using RO = ReadOnlyFieldAttribute;
+
     public class TensionVisual : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private Transform innerCircle;
 
         [Header("Debug")]
-        [SerializeField, Range(0, 1)] private float fillValue;
+        [SerializeField, RO, Range(0, 1)] private float fillValue;
 
         private void Update()
         {

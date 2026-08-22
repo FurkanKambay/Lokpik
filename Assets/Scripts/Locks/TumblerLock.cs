@@ -6,6 +6,8 @@ using Vertx.Attributes;
 
 namespace Lokpik.Locks
 {
+    using RO = ReadOnlyFieldAttribute;
+
     [Serializable]
     public class TumblerLock : ISerializationCallbackReceiver
     {
@@ -40,10 +42,10 @@ namespace Lokpik.Locks
         }
 
         [Header("Debug")]
-        [SerializeField] private bool isLocked;
-        [SerializeField] private float plugRotation;
-        [SerializeField] private int previousPin = -1;
-        [SerializeField] private int nextPin = -1;
+        [SerializeField, RO] private bool isLocked;
+        [SerializeField, RO] private float plugRotation;
+        [SerializeField, RO] private int previousPin = -1;
+        [SerializeField, RO] private int nextPin = -1;
 
         public void TurnPlugTowards(float desiredRotation)
         {

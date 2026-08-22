@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Vertx.Attributes;
 
 namespace Lokpik.Data
 {
+    using RO = ReadOnlyFieldAttribute;
+
     public interface IPickInput
     {
         float Tension { get; }
@@ -23,8 +26,8 @@ namespace Lokpik.Data
         public int PickMoveDelta => changePinValue = (int)changePinInput.action.ReadValue<float>();
 
         [Header("Debug")]
-        [SerializeField, Range(0, 1)] private float tensionValue;
-        [SerializeField, Range(0, 1)] private float pickHeightValue;
-        [SerializeField, Range(-1, 1)] private int changePinValue;
+        [SerializeField, RO, Range(0, 1)] private float tensionValue;
+        [SerializeField, RO, Range(0, 1)] private float pickHeightValue;
+        [SerializeField, RO, Range(-1, 1)] private int changePinValue;
     }
 }
