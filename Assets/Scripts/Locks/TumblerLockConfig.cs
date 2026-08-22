@@ -83,7 +83,7 @@ namespace Lokpik.Locks
         internal float GetAdequatePlugRotation(int pin)
         {
             if (pin < 0 || pin >= PinCount)
-                return 1;
+                return -1;
 
             return BindingRotations[pin];
         }
