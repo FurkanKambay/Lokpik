@@ -37,9 +37,8 @@ namespace Lokpik.Locks
         [field: NonSerialized]
         public TumblerLock Lock { get; private set; }
 
-        [Header("Debug")]
-        [SerializeField] private ChamberState state;
         [SerializeField] private int chamberIndex;
+        [SerializeField] private ChamberState state;
         [SerializeField] private float driverPinLift;
         [SerializeField] private float keyPinLift;
         [SerializeField] private int tension = -1;

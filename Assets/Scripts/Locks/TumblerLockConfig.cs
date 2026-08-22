@@ -10,7 +10,7 @@ namespace Lokpik.Locks
         public const float ChamberHeight = 1f;
 
         [SerializeField, Range(0, 1)] float shearLine = 0.5f;
-        [SerializeField] float tolerance = 0.05f;
+        [SerializeField] float tolerance = 0.04f;
 
         [Header("Pins")]
         [SerializeField, Min(0)] int pinCount = 2;
@@ -21,7 +21,7 @@ namespace Lokpik.Locks
         [SerializeField, Range(0, 1)] float[] bindingRotations;
 
         // TODO: min binding separation angle (the less the more difficult + drift is more manageable)
-        // + maybe an Unlock Angle to Remap 0-1 to 0-90 with bindings at agles 10, 15, 18, 23, 29 deg
+        // + maybe an Unlock Angle to Remap 0-1 to 0-90 with bindings at angles 10, 15, 18, 23, 29 deg
 
         // [ReadOnly]
         [SerializeField] int[] bindingOrder;

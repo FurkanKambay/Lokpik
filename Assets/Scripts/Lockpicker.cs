@@ -7,8 +7,8 @@ namespace Lokpik
     public class Lockpicker : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private TumblerLock tumblerLock;
         [SerializeField] private PickControlsConfig controls;
+        [SerializeField] private TumblerLock tumblerLock;
 
         [Header("Debug")]
         [SerializeField, Range(0, 5)] private int targetedPin;
@@ -17,8 +17,6 @@ namespace Lokpik
 
         public TumblerLock Lock => tumblerLock;
         public int TargetedPin => targetedPin;
-        // public float MinTorque => controls ? controls.MinTorque : -1f;
-        // public float MaxTorque => controls ? controls.MaxTorque : -1f;
 
         public float AppliedTorque
         {

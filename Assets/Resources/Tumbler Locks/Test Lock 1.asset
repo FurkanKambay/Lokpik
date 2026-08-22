@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a6db1eeee40496cb5e3718d37f72bd6, type: 3}
+  m_Name: Test Lock 1
+  m_EditorClassIdentifier: Lokpik::Lokpik.Data.TumblerLockConfigAsset
+  lockConfig:
+    shearLine: 0.43199998
+    tolerance: 0.03
+    pinCount: 4
+    uniformDriverPins: 0
+    driverPinLengths:
+    - 0.387
+    - 0.286
+    - 0.347
+    - 0.508
+    keyPinLengths:
+    - 0.151
+    - 0.332
+    - 0.236
+    - 0.271
+    bindingRotations:
+    - 0.106
+    - 0.034
+    - 0.073
+    - 0.011
+    bindingOrder: 03000000010000000200000000000000

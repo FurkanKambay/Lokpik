@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Lokpik.Data;
 using UnityEngine;
+using Vertx.Attributes;
 
 namespace Lokpik.Locks
 {
@@ -10,11 +12,10 @@ namespace Lokpik.Locks
         public event Action OnLocked;
         public event Action OnUnlocked;
 
-        [SerializeField] private bool isLocked;
-        [SerializeField] private Chamber[] chambers;
-        [SerializeField] private TumblerLockConfig config;
+        [SerializeField] private TumblerLockConfigAsset configAsset;
+        [SerializeField, Inline] private Chamber[] chambers;
 
-        public TumblerLockConfig Config => config;
+        public TumblerLockConfig Config => configAsset.LockConfig;
 
         /// <summary>
         /// The progression of the plug rotation normalized in the range of [0,1].
@@ -39,9 +40,10 @@ namespace Lokpik.Locks
         }
 
         [Header("Debug")]
+        [SerializeField] private bool isLocked;
+        [SerializeField] private float plugRotation;
         [SerializeField] private int previousPin = -1;
         [SerializeField] private int nextPin = -1;
-        [SerializeField] private float plugRotation;
 
         public void TurnPlugTowards(float desiredRotation)
         {

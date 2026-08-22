@@ -327,54 +327,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62dc3ea4a42838499a9bd1f5b4b104e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controls: {fileID: 11400000, guid: a4038a98c7490794a8965789d9c6415e, type: 2}
   tumblerLock:
-    isLocked: 0
+    configAsset: {fileID: 11400000, guid: 78862c34dce4ca14882a492aebb31233, type: 2}
     chambers:
-    - state: 0
-      chamberIndex: 0
+    - chamberIndex: 0
+      state: 0
       driverPinLift: 0
       keyPinLift: 0
       tension: -1
-    - state: 0
-      chamberIndex: 0
+    - chamberIndex: 0
+      state: 0
       driverPinLift: 0
       keyPinLift: 0
       tension: -1
-    - state: 0
-      chamberIndex: 0
+    - chamberIndex: 0
+      state: 0
       driverPinLift: 0
       keyPinLift: 0
       tension: -1
-    - state: 0
-      chamberIndex: 0
+    - chamberIndex: 0
+      state: 0
       driverPinLift: 0
       keyPinLift: 0
       tension: -1
-    config:
-      shearLine: 0.43199998
-      tolerance: 0.03
-      pinCount: 4
-      uniformDriverPins: 0
-      driverPinLengths:
-      - 0.387
-      - 0.286
-      - 0.347
-      - 0.508
-      keyPinLengths:
-      - 0.151
-      - 0.332
-      - 0.236
-      - 0.271
-      bindingRotations:
-      - 0.106
-      - 0.034
-      - 0.073
-      - 0.011
-      bindingOrder: 03000000010000000200000000000000
+    isLocked: 0
+    plugRotation: 0
     previousPin: -1
     nextPin: -1
-    plugRotation: 0
-  controls: {fileID: 11400000, guid: a4038a98c7490794a8965789d9c6415e, type: 2}
   targetedPin: 0
   appliedTorque: 0
   chamberRetargetTimer: 0
