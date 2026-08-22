@@ -19,12 +19,11 @@ namespace Lokpik.Locks
         /// <summary>
         /// The progression of the plug rotation normalized in the range of [0,1].
         /// </summary>
-        /// <remarks>Use <see cref="RotatePlug"/> to modify.</remarks>
-        public float PlugRotation => plugRotation;
+        /// <remarks>Use <see cref="TurnPlugTowards"/> to manipulate.</remarks>
+        public float PlugTurnProgress => plugRotation;
 
         public Chamber PreviousChamber => previousPin < 0 ? null : Chamber(previousPin);
         public Chamber NextChamber => nextPin < 0 ? null : Chamber(nextPin);
-        public int Tension => tension;
 
         public bool IsLocked
         {
@@ -43,7 +42,6 @@ namespace Lokpik.Locks
         [SerializeField] private int previousPin = -1;
         [SerializeField] private int nextPin = -1;
         [SerializeField] private float plugRotation;
-        [SerializeField] private int tension = -1;
 
         public void StopPicking()
         {
@@ -58,26 +56,26 @@ namespace Lokpik.Locks
         public void StopLifting(int pin) =>
             Chamber(pin).StopLifting();
 
-        public void RotatePlug(float delta, int tensionValue)
+        public void TurnPlugTowards(float desiredRotation)
         {
             previousPin = Config.FindPreviousPinAt(plugRotation);
             nextPin = Config.FindNextPinAt(plugRotation);
+            float prevRotation = Config.GetAdequatePlugRotation(previousPin);
+            float nextRotation = Config.GetAdequatePlugRotation(nextPin);
 
-            switch (delta)
+            if (desiredRotation < prevRotation)
             {
-                case > 0: NextChamber?.SetTension(1); break;
-                case < 0: PreviousChamber?.SetTension(-1); break;
+                PreviousChamber?.SetTension(-1);
+                NextChamber?.SetTension(-1);
             }
+            else if (desiredRotation < nextRotation)
+                NextChamber?.SetTension(-1);
+            else if (desiredRotation >= nextRotation)
+                NextChamber?.SetTension(1);
 
-            tension = tensionValue;
-            NextChamber?.SetTension(tension);
-
-            plugRotation = Mathf.Clamp(plugRotation + delta, 0, GetMaxPlugRotation());
+            plugRotation = Mathf.Clamp(desiredRotation, 0, GetMaxPlugRotation());
             IsLocked = plugRotation < 1;
         }
-
-        public void LiftPin(int pin, float delta) =>
-            Chamber(pin).Lift(delta);
 
         public void LiftPinTowards(int pin, float desiredTarget) =>
             Chamber(pin).LiftTowards(desiredTarget);

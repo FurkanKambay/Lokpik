@@ -37,31 +37,28 @@ namespace Lokpik.Locks
         [field: NonSerialized]
         public TumblerLock Lock { get; private set; }
 
-        private ChamberState state;
-        private int chamberIndex;
-        private float driverPinLift;
-        private float keyPinLift;
-        private int tension = -1;
+        [Header("Debug")]
+        [SerializeField] private ChamberState state;
+        [SerializeField] private int chamberIndex;
+        [SerializeField] private float driverPinLift;
+        [SerializeField] private float keyPinLift;
+        [SerializeField] private int tension = -1;
 
-        // TODO: RESTRICT ACCESS TO ONLY TumblerLock
+        // TODO: should only be called by TumblerLock
         public void SetTension(int value)
         {
             tension = value;
-            Lift(0);
+            LiftTowards(keyPinLift);
         }
-
-        public void Lift(float delta) =>
-            LiftTowards(keyPinLift + delta);
 
         public void LiftTowards(float desiredTarget)
         {
-            float target = desiredTarget / 2f;
             switch (state)
             {
                 case ChamberState.Underset:
                 {
                     float maxKeyPinLift = driverPinLift - KeyPinLength;
-                    keyPinLift = Mathf.Clamp(target, 0, maxKeyPinLift);
+                    keyPinLift = Mathf.Clamp(desiredTarget, 0, maxKeyPinLift);
                     // The driver pin can't be moved until counter-rotation is applied.
                     // Same logic as below, but in this case, the key pin will still move.
                     // The key pin needs to touch the driver pin before applying heavy pick force.
@@ -80,13 +77,13 @@ namespace Lokpik.Locks
                 {
                     driverPinLift = Lock.Config.ShearLine;
                     float maxKeyLift = driverPinLift - KeyPinLength;
-                    keyPinLift = Mathf.Clamp(target, 0, maxKeyLift);
+                    keyPinLift = Mathf.Clamp(desiredTarget, 0, maxKeyLift);
                     break;
                 }
                 case ChamberState.Free:
                 default:
                     // nothing is binding so lift both pins
-                    keyPinLift = Mathf.Clamp(target, 0, MaxLift);
+                    keyPinLift = Mathf.Clamp(desiredTarget, 0, MaxLift);
                     driverPinLift = KeyPinLength + keyPinLift;
                     break;
             }
@@ -105,8 +102,8 @@ namespace Lokpik.Locks
             state = tension switch
             {
                 // Adequate tension
-                0 or 1 when isPerfect => ChamberState.Set,
-                0 or 1 when isExploited => ChamberState.AboveShearLine,
+                1 when isPerfect => ChamberState.Set,
+                1 when isExploited => ChamberState.AboveShearLine,
 
                 // High tension: binding
                 1 when isAbove => ChamberState.Overset,

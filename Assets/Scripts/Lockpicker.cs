@@ -17,8 +17,8 @@ namespace Lokpik
 
         public TumblerLock Lock => tumblerLock;
         public int TargetedPin => targetedPin;
-        public float MinTorque => controls ? controls.MinTorque : -1f;
-        public float MaxTorque => controls ? controls.MaxTorque : -1f;
+        // public float MinTorque => controls ? controls.MinTorque : -1f;
+        // public float MaxTorque => controls ? controls.MaxTorque : -1f;
 
         public float AppliedTorque
         {
@@ -76,15 +76,7 @@ namespace Lokpik
             }
 
             AppliedTorque = tension;
-
-            // TODO: move this all into TumblerLock?
-            bool lowTorque = appliedTorque < controls.MinTorque; // not enough to Set any pin
-            bool highTorque = appliedTorque > controls.MaxTorque; // too much for the pin to move
-
-            float turnDelta = lowTorque ? -controls.PlugGravity : controls.TurnSpeed;
-
-            int tensionValue = lowTorque ? -1 : highTorque ? 1 : 0;
-            tumblerLock.RotatePlug(turnDelta * Time.deltaTime, tensionValue);
+            tumblerLock.TurnPlugTowards(appliedTorque);
         }
     }
 }

@@ -9,11 +9,10 @@ namespace Lokpik.Locks
     {
         public const float ChamberHeight = 1f;
 
-        [Header("Tumbler Lock Config")]
         [SerializeField, Range(0, 1)] float shearLine = 0.5f;
         [SerializeField] float tolerance = 0.01f;
 
-        [Header("./Pins")]
+        [Header("Pins")]
         [SerializeField, Min(0)] int pinCount = 2;
         [SerializeField] bool uniformDriverPins;
 
@@ -21,10 +20,13 @@ namespace Lokpik.Locks
         [SerializeField, Range(0, 1)] float[] keyPinLengths = { 0.2f, 0.4f };
         [SerializeField, Range(0, 1)] float[] bindingRotations;
 
+        // TODO: min binding separation angle (the less the more difficult + drift is more manageable)
+        // + maybe an Unlock Angle to Remap 0-1 to 0-90 with bindings at agles 10, 15, 18, 23, 29 deg
+
         // [ReadOnly]
         [SerializeField] int[] bindingOrder;
 
-        [Header("./Info")]
+        [Header("Info")]
         internal bool IsVulnerableToCombPicking =>
             Enumerable.Range(0, PinCount).All(pin => GetMaxLiftForPin(pin) >= ShearLine);
 

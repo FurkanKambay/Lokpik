@@ -30,7 +30,7 @@ namespace Lokpik.Visuals
         private void Update()
         {
             tensionVisual.SetFillValue(lockpicker.AppliedTorque);
-            plugVisual.SetFillValue(Lock.PlugRotation);
+            plugVisual.SetFillValue(Lock.PlugTurnProgress);
         }
 
         internal Chamber GetChamber(int pin) => Lock.Chamber(pin);
@@ -54,8 +54,8 @@ namespace Lokpik.Visuals
             float tensionScale = tensionVisual.transform.localScale.x * 0.5f;
 
             Handles.color = Color.white;
-            Handles.DrawWireDisc(tensionCenter, Vector3.forward, lockpicker.MinTorque * tensionScale);
-            Handles.DrawWireDisc(tensionCenter, Vector3.forward, lockpicker.MaxTorque * tensionScale);
+            // Handles.DrawWireDisc(tensionCenter, Vector3.forward, lockpicker.MinTorque * tensionScale);
+            // Handles.DrawWireDisc(tensionCenter, Vector3.forward, lockpicker.MaxTorque * tensionScale);
 
             // Pin labels
             if (lockpicker.Lock == null)
