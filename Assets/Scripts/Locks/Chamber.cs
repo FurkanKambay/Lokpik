@@ -10,21 +10,19 @@ namespace Lokpik.Locks
     [Serializable]
     public class Chamber
     {
-        // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
         public ChamberState State => state;
 
         /// <summary>
-        /// The lift amount from the top of the key pin.
+        /// The lift amount of the driver pin from the resting line.
         /// </summary>
         public float DriverPinLift => driverPinLift;
 
         /// <summary>
-        /// The lift amount from the resting line.
+        /// The lift amount of the key pin from the resting line.
         /// </summary>
         public float KeyPinLift => keyPinLift;
 
         public int Tension => tension;
-        // ReSharper restore ConvertToAutoPropertyWithPrivateSetter
 
         public float KeyPinLength => Lock.Config.KeyPinLengths[chamberIndex];
         public float DriverPinLength => Lock.Config.DriverPinLengths[chamberIndex];
@@ -105,11 +103,11 @@ namespace Lokpik.Locks
                 1 when isPerfect => ChamberState.Set,
                 1 when isExploited => ChamberState.AboveShearLine,
 
-                // High tension: binding
+                // Excessive tension: binding
                 1 when isAbove => ChamberState.Overset,
                 1 when isUnder => ChamberState.Underset,
 
-                // Low tension: blocking, but not binding
+                // Low tension: blocking, but NOT binding
                 _ => ChamberState.Free
             };
         }
@@ -120,15 +118,20 @@ namespace Lokpik.Locks
             {
                 case ChamberState.Free:
                 default:
+                    // drop both pins back down
                     keyPinLift = 0;
                     driverPinLift = KeyPinLength;
                     return;
+
                 case ChamberState.Underset:
                 case ChamberState.Set:
+                    // driver pin is binding, so only drop key pin
                     keyPinLift = 0;
                     return;
+
                 case ChamberState.Overset:
                 case ChamberState.AboveShearLine:
+                    // both pins are stuck at/above shear line
                     return;
             }
         }

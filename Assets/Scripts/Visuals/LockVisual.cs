@@ -53,9 +53,7 @@ namespace Lokpik.Visuals
             Vector3 tensionCenter = tensionVisual.transform.position;
             float tensionScale = tensionVisual.transform.localScale.x * 0.5f;
 
-            Handles.color = Color.white;
-            // Handles.DrawWireDisc(tensionCenter, Vector3.forward, lockpicker.MinTorque * tensionScale);
-            // Handles.DrawWireDisc(tensionCenter, Vector3.forward, lockpicker.MaxTorque * tensionScale);
+            // Handles.color = Color.white;
 
             // Pin labels
             if (lockpicker.Lock == null)

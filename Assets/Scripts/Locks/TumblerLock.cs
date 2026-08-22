@@ -10,9 +10,9 @@ namespace Lokpik.Locks
         public event Action OnLocked;
         public event Action OnUnlocked;
 
-        [SerializeField] bool isLocked;
-        [SerializeField] Chamber[] chambers;
-        [SerializeField] TumblerLockConfig config;
+        [SerializeField] private bool isLocked;
+        [SerializeField] private Chamber[] chambers;
+        [SerializeField] private TumblerLockConfig config;
 
         public TumblerLockConfig Config => config;
 
@@ -43,19 +43,6 @@ namespace Lokpik.Locks
         [SerializeField] private int nextPin = -1;
         [SerializeField] private float plugRotation;
 
-        public void StopPicking()
-        {
-            foreach (Chamber chamber in chambers)
-                chamber.StopLifting();
-
-            plugRotation = 0f;
-            previousPin = -1;
-            nextPin = Config.FindNextPinAt(0);
-        }
-
-        public void StopLifting(int pin) =>
-            Chamber(pin).StopLifting();
-
         public void TurnPlugTowards(float desiredRotation)
         {
             previousPin = Config.FindPreviousPinAt(plugRotation);
@@ -79,6 +66,19 @@ namespace Lokpik.Locks
 
         public void LiftPinTowards(int pin, float desiredTarget) =>
             Chamber(pin).LiftTowards(desiredTarget);
+
+        public void StopPicking()
+        {
+            foreach (Chamber chamber in chambers)
+                chamber.StopLifting();
+
+            plugRotation = 0f;
+            previousPin = -1;
+            nextPin = Config.FindNextPinAt(0);
+        }
+
+        public void StopLifting(int pin) =>
+            Chamber(pin).StopLifting();
 
         public Chamber Chamber(int pin) =>
             chambers.ElementAtOrDefault(Config.ClampPinIndex(pin));
