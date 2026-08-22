@@ -10,6 +10,8 @@
     "com.unity.render-pipelines.universal": "17.5.0",
     "com.unity.timeline": "1.8.12",
     "com.unity.ugui": "2.5.0",
+    "com.vertx.attributes": "1.6.0",
+    "com.vertx.debugging": "3.0.3",
     "com.unity.modules.adaptiveperformance": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.assetbundle": "1.0.0",
@@ -30,9 +32,10 @@
   "scopedRegistries": [
     {
       "name": "OpenUPM",
-      "url": "https://package.openupm.com/",
+      "url": "https://package.openupm.com",
       "scopes": [
-        "com.inspiaaa.unityhfsm"
+        "com.inspiaaa",
+        "com.vertx"
       ]
     }
   ]
