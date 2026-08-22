@@ -25,7 +25,10 @@ namespace Lokpik.Visuals
         private void Awake()
         {
             for (int pin = 0; pin < pinVisuals.Length; pin++)
-                pinVisuals[pin].SetPin(pin);
+            {
+                Chamber chamber = GetChamber(pin);
+                pinVisuals[pin].Init(chamber);
+            }
         }
 
         private void Update()

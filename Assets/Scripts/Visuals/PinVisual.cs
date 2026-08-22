@@ -1,7 +1,6 @@
 using Lokpik.Common;
 using Lokpik.Locks;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Lokpik.Visuals
 {
@@ -19,15 +18,11 @@ namespace Lokpik.Visuals
 
         internal float ChamberWidth => chamberWidth;
 
-        private LockVisual lockVisual;
         private Chamber chamber;
         private int pinIndex;
 
-        private void Awake()
-        {
-            lockVisual = GetComponentInParent<LockVisual>();
-            Assert.IsNotNull(lockVisual, $"{nameof(PinVisual)} doesn't have a {nameof(LockVisual)} as its parent.");
-        }
+        internal void Init(Chamber chamber) =>
+            this.chamber = chamber;
 
         private void Start()
         {
@@ -48,9 +43,6 @@ namespace Lokpik.Visuals
             keyPin.localPosition = Vector3.up * keyPinLift;
             driverPin.localPosition = Vector3.up * driverPinLift;
         }
-
-        internal void SetPin(int pin) =>
-            chamber = lockVisual.GetChamber(pin);
 
         private void UpdateScales()
         {
