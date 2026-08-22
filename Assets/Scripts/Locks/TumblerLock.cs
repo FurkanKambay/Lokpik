@@ -10,32 +10,21 @@ namespace Lokpik.Locks
         public event Action OnLocked;
         public event Action OnUnlocked;
 
-        [Header("Tumbler Lock State")]
         [SerializeField] bool isLocked;
+        [SerializeField] Chamber[] chambers;
+        [SerializeField] TumblerLockConfig config;
 
-        // ReSharper disable ConvertToAutoPropertyWithPrivateSetter
+        public TumblerLockConfig Config => config;
+
         /// <summary>
         /// The progression of the plug rotation normalized in the range of [0,1].
         /// </summary>
         /// <remarks>Use <see cref="RotatePlug"/> to modify.</remarks>
         public float PlugRotation => plugRotation;
 
-        [SerializeField] Chamber[] chambers;
-
-        /// <summary>
-        /// The pin currently binding due to <see cref="PlugRotation"/> and Chamber <see cref="Chamber.State"/>.
-        /// </summary>
-        [Header("./Binding")]
-        public int Tension => tension;
-        // ReSharper restore ConvertToAutoPropertyWithPrivateSetter
-
-        [SerializeField] TumblerLockConfig config;
-
-        public TumblerLockConfig Config => config;
-        public int PinCount => Config.PinCount;
-
         public Chamber PreviousChamber => previousPin < 0 ? null : Chamber(previousPin);
         public Chamber NextChamber => nextPin < 0 ? null : Chamber(nextPin);
+        public int Tension => tension;
 
         public bool IsLocked
         {
@@ -50,10 +39,11 @@ namespace Lokpik.Locks
             }
         }
 
-        private int tension = -1;
-        private float plugRotation;
-        private int previousPin = -1;
-        private int nextPin = -1;
+        [Header("Debug")]
+        [SerializeField] private int previousPin = -1;
+        [SerializeField] private int nextPin = -1;
+        [SerializeField] private float plugRotation;
+        [SerializeField] private int tension = -1;
 
         public void StopPicking()
         {
