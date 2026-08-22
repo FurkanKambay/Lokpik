@@ -47,7 +47,7 @@ namespace FK.Lokpik
             HandleChangePin();
             ApplyTorque();
 
-            tumblerLock.LiftPinTowards(targetedPin, input.PickHeight);
+            tumblerLock.LiftPinTowards(targetedPin, input.PickHeight / 2f);
         }
 
         private void HandleChangePin()

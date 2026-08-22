@@ -80,14 +80,18 @@ namespace FK.Common
         [ContextMenu("Send Wave: Low")]
         public async Awaitable ContextItem_SendWaveLow()
         {
+            // wait a frame for context menu to close and stop blocking
             await Awaitable.NextFrameAsync();
+
             await SendWaveLowFull();
         }
 
         [ContextMenu("Send Wave: High")]
         public async Awaitable ContextItem_SendWaveHigh()
         {
+            // wait a frame for context menu to close and stop blocking
             await Awaitable.NextFrameAsync();
+
             await SendWaveHighFull();
         }
 #endif

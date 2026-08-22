@@ -33,7 +33,8 @@ namespace FK.Lokpik.Visuals
             plugVisual.SetProgress(Lock.PlugTurnProgress);
         }
 
-        internal Chamber GetChamber(int pin) => Lock.Chamber(pin);
+        private Chamber GetChamber(int pin) =>
+            Lock.Chamber(pin);
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
@@ -48,12 +49,6 @@ namespace FK.Lokpik.Visuals
 
             Handles.color = Color.cyan;
             Handles.DrawDottedLine(leftPoint, rightPoint, 2f);
-
-            // Torque markers
-            Vector3 tensionCenter = tensionVisual.transform.position;
-            float tensionScale = tensionVisual.transform.localScale.x * 0.5f;
-
-            // Handles.color = Color.white;
 
             // Pin labels
             if (lockpicker.Lock == null)
