@@ -3,10 +3,13 @@ using UnityEngine;
 
 namespace Lokpik.Editor
 {
-    public sealed class AssetReserializeHelper : MonoBehaviour
+    internal sealed class AssetReserializeHelper : MonoBehaviour
     {
-        [MenuItem("Tools/Force Reserialize Assets")]
-        private static void ForceReserializeAssets() =>
-            AssetDatabase.ForceReserializeAssets();
+        [MenuItem("Tools/Force Reserialize Assets", priority = 10)]
+        private static void ForceReserializeAssets()
+        {
+            if (!EditorApplication.isPlaying)
+                AssetDatabase.ForceReserializeAssets();
+        }
     }
 }
