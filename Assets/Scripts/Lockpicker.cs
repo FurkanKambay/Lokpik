@@ -44,13 +44,16 @@ namespace FK.Lokpik
             if (input is not Object)
                 return;
 
-            HandleChangePin();
+            MovePick();
             ApplyTorque();
 
-            tumblerLock.LiftPinTowards(targetedPin, input.PickHeight / 2f);
+            float pickHeight = Mathf.Lerp(0f, controls.MaxHeightReach, input.PickHeight);
+
+            tumblerLock.TurnPlugTowards(appliedTorque);
+            tumblerLock.LiftPinTowards(targetedPin, pickHeight);
         }
 
-        private void HandleChangePin()
+        private void MovePick()
         {
             chamberRetargetTimer += Time.deltaTime;
             if (chamberRetargetTimer < controls.ChamberRetargetRate)
@@ -60,6 +63,7 @@ namespace FK.Lokpik
             if (delta == 0) return;
 
             chamberRetargetTimer = 0;
+
             tumblerLock.StopLifting(targetedPin);
             targetedPin = tumblerLock.Config.ClampPinIndex(targetedPin + delta);
         }
@@ -77,7 +81,6 @@ namespace FK.Lokpik
             }
 
             AppliedTorque = tension;
-            tumblerLock.TurnPlugTowards(appliedTorque);
         }
     }
 }

@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17b4dcf109514bf1a77d3c43b1874d16, type: 3}
   m_Name: Pick Controls
   m_EditorClassIdentifier: FK.Lokpik::FK.Lokpik.Data.PickControlsConfig
+  maxHeightReach: 0.5
   chamberRetargetRate: 0.3
   useTensionDrift: 0
   tensionDrift: 0.008
-  turnSpeed: 1.5
-  plugGravity: 0.2
