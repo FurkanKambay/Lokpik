@@ -15,7 +15,5 @@ MonoBehaviour:
   chamberRetargetRate: 0.3
   useTensionDrift: 0
   tensionDrift: 0.008
-  minTorque: 0.4
-  maxTorque: 0.9
   turnSpeed: 1.5
   plugGravity: 0.2

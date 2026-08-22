@@ -329,7 +329,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tumblerLock:
     isLocked: 0
-    chambers: []
+    chambers:
+    - state: 0
+      chamberIndex: 0
+      driverPinLift: 0
+      keyPinLift: 0
+      tension: -1
+    - state: 0
+      chamberIndex: 0
+      driverPinLift: 0
+      keyPinLift: 0
+      tension: -1
+    - state: 0
+      chamberIndex: 0
+      driverPinLift: 0
+      keyPinLift: 0
+      tension: -1
+    - state: 0
+      chamberIndex: 0
+      driverPinLift: 0
+      keyPinLift: 0
+      tension: -1
     config:
       shearLine: 0.43199998
       tolerance: 0.01
@@ -351,6 +371,9 @@ MonoBehaviour:
       - 0.073
       - 0.011
       bindingOrder: 03000000010000000200000000000000
+    previousPin: -1
+    nextPin: -1
+    plugRotation: 0
   controls: {fileID: 11400000, guid: a4038a98c7490794a8965789d9c6415e, type: 2}
   targetedPin: 0
   appliedTorque: 0
