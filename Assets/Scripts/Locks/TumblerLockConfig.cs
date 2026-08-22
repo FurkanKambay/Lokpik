@@ -10,7 +10,7 @@ namespace Lokpik.Locks
         public const float ChamberHeight = 1f;
 
         [SerializeField, Range(0, 1)] float shearLine = 0.5f;
-        [SerializeField] float tolerance = 0.01f;
+        [SerializeField] float tolerance = 0.05f;
 
         [Header("Pins")]
         [SerializeField, Min(0)] int pinCount = 2;
