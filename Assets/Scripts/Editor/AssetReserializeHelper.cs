@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -11,4 +10,3 @@ namespace Lokpik.Editor
             AssetDatabase.ForceReserializeAssets();
     }
 }
-#endif
