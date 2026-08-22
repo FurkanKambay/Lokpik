@@ -452,7 +452,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb958e4dbde44b37b2b6c23c3847cf83, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Lokpik::Lokpik.Common.RumbleService
+  m_EditorClassIdentifier: FK.Common::FK.Common.RumbleService
   zeroThreshold: 0.001
   defaultWaveDecay: 5
   lowFrequency: 0

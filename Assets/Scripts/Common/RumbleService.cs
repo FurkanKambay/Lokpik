@@ -1,8 +1,9 @@
 using System.Threading;
+using FK.Common.Extensions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Lokpik.Common
+namespace FK.Common
 {
     public class RumbleService : MonoBehaviour
     {
