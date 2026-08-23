@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using FK.Lokpik.Data;
 using UnityEngine;
@@ -25,9 +25,6 @@ namespace FK.Lokpik.Locks
         /// <remarks>Use <see cref="TurnPlugTowards"/> to manipulate.</remarks>
         public float PlugTurnProgress => plugRotation;
 
-        public Chamber PreviousChamber => previousPin < 0 ? null : Chamber(previousPin);
-        public Chamber NextChamber => nextPin < 0 ? null : Chamber(nextPin);
-
         public bool IsLocked
         {
             get => isLocked;
@@ -45,7 +42,6 @@ namespace FK.Lokpik.Locks
         [SerializeField, RO] private bool isLocked;
         [SerializeField, RO] private float plugRotation;
         [SerializeField, RO] private int previousPin = -1;
-        [SerializeField, RO] private int nextPin = -1;
         [SerializeField, RO] private float minPlugProgress;
 
         public void TurnPlugTowards(float desiredRotation, bool preventUnsettingPins = false)
@@ -54,10 +50,6 @@ namespace FK.Lokpik.Locks
             plugRotation = Mathf.Clamp(desiredRotation, minPlugProgress, FindMaxPlugRotation());
 
             previousPin = Config.FindPreviousPinAt(plugRotation);
-            nextPin = Config.FindNextPinAt(plugRotation);
-
-            float prevRotation = Config.GetAdequatePlugRotation(previousPin);
-            float nextRotation = Config.GetAdequatePlugRotation(nextPin);
 
             for (int i = 0; i < chambers.Length; i++)
             {
@@ -83,7 +75,6 @@ namespace FK.Lokpik.Locks
 
             plugRotation = 0f;
             previousPin = -1;
-            nextPin = Config.FindNextPinAt(0);
         }
 
         public void StopLifting(int pin) =>
