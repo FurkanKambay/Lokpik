@@ -51,7 +51,7 @@ namespace FK.Lokpik.Locks
         public void TurnPlugTowards(float desiredRotation, bool preventUnsettingPins = false)
         {
             minPlugProgress = preventUnsettingPins ? Config.GetAdequatePlugRotation(previousPin) + 0.05f : 0f;
-            plugRotation = Mathf.Clamp(desiredRotation, minPlugProgress, GetMaxPlugRotation());
+            plugRotation = Mathf.Clamp(desiredRotation, minPlugProgress, FindMaxPlugRotation());
 
             previousPin = Config.FindPreviousPinAt(plugRotation);
             nextPin = Config.FindNextPinAt(plugRotation);
@@ -92,7 +92,7 @@ namespace FK.Lokpik.Locks
         public Chamber Chamber(int pin) =>
             chambers.ElementAtOrDefault(Config.ClampPinIndex(pin));
 
-        public float GetMaxPlugRotation()
+        public float FindMaxPlugRotation()
         {
             float maxRotation = 1;
 
