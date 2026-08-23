@@ -598,7 +598,9 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 1
   webEnableSubmoduleStrippingCompatibility: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Standalone: ENABLE_LOGS
+    WebGL: ENABLE_LOGS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
