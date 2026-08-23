@@ -31,6 +31,7 @@ namespace FK.Lokpik.Locks
 
         public int Tension => tension;
 
+        public int ChamberIndex => chamberIndex;
         public float KeyPinLength => Lock.Config.GetKeyPinLength(chamberIndex);
         public float DriverPinLength => Lock.Config.GetDriverPinLength(chamberIndex);
         public bool IsBinding => state.IsBinding();
