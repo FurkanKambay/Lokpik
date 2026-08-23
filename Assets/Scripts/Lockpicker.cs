@@ -47,7 +47,7 @@ namespace FK.Lokpik
             MovePick();
             ApplyTorque();
 
-            float pickHeight = Mathf.Lerp(0f, controls.MaxHeightReach, input.PickHeight);
+            float pickHeight = Mathf.Lerp(0f, controls.MaxPickReachHeight, input.PickHeight);
 
             tumblerLock.TurnPlugTowards(appliedTorque, controls.PreventUnsettingPins);
             tumblerLock.LiftPinTowards(targetedPin, pickHeight);

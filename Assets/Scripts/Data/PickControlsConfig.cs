@@ -4,7 +4,7 @@ namespace FK.Lokpik.Data
 {
     public interface IPickControlsConfig
     {
-        float MaxHeightReach { get; }
+        float MaxPickReachHeight { get; }
         float ChamberRetargetRate { get; }
         bool PreventUnsettingPins { get; }
         bool UseTensionDrift { get; }
@@ -15,15 +15,15 @@ namespace FK.Lokpik.Data
     internal sealed class PickControlsConfig : ScriptableObject, IPickControlsConfig
     {
         [Header("Tension Wrench Movement")]
-        [SerializeField, Range(0, 1)] private float maxHeightReach = 0.5f;
+        [SerializeField, Range(0, 1)] private float maxPickReachHeight = 0.5f;
         [SerializeField, Min(0)] private float chamberRetargetRate = 0.3f;
 
-        [Header("Artificial Skill Hindrance")]
+        [Header("Difficulty")]
         [SerializeField] private bool preventUnsettingPins;
         [SerializeField] private bool useTensionDrift;
         [SerializeField, Min(0)] private float tensionDrift = 0.008f;
 
-        public float MaxHeightReach => maxHeightReach;
+        public float MaxPickReachHeight => maxPickReachHeight;
         public float ChamberRetargetRate => chamberRetargetRate;
 
         public bool PreventUnsettingPins => preventUnsettingPins;
