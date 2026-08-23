@@ -355,8 +355,10 @@ MonoBehaviour:
     plugRotation: 0
     previousPin: -1
     nextPin: -1
-  targetedPin: 0
+    minPlugProgress: 0
   appliedTorque: 0
+  appliedPickLiftForce: 0
+  targetedPin: 0
   chamberRetargetTimer: 0
 --- !u!1 &4469609992631167078
 GameObject:

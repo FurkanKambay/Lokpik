@@ -14,8 +14,9 @@ namespace FK.Lokpik
         [SerializeField] private TumblerLock tumblerLock;
 
         [Header("Debug")]
-        [SerializeField, RO, Range(0, 5)] private int targetedPin;
         [SerializeField, RO, Range(0, 1)] private float appliedTorque;
+        [SerializeField, RO, Range(0, 1)] private float appliedPickLiftForce;
+        [SerializeField, RO, Range(0, 5)] private int targetedPin;
         [SerializeField, RO, Min(0)] private float chamberRetargetTimer;
 
         public TumblerLock Lock => tumblerLock;
@@ -47,10 +48,10 @@ namespace FK.Lokpik
             MovePick();
             ApplyTorque();
 
-            float pickHeight = Mathf.Lerp(0f, controls.MaxPickReachHeight, input.PickHeight);
+            appliedPickLiftForce = Mathf.Lerp(0f, controls.MaxPickReachHeight, input.PickHeight);
 
             tumblerLock.TurnPlugTowards(appliedTorque, controls.PreventUnsettingPins);
-            tumblerLock.LiftPinTowards(targetedPin, pickHeight);
+            tumblerLock.LiftPinTowards(targetedPin, appliedPickLiftForce);
         }
 
         private void MovePick()
@@ -61,6 +62,9 @@ namespace FK.Lokpik
 
             int delta = input.PickMoveDelta;
             if (delta == 0) return;
+
+            if (appliedPickLiftForce > 0)
+                return; // prevent moving pick while it's still manipulating a pin
 
             chamberRetargetTimer = 0;
 
