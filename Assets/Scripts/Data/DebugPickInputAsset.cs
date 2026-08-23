@@ -3,7 +3,7 @@ using UnityEngine;
 namespace FK.Lokpik.Data
 {
     [CreateAssetMenu(menuName = "Pick/Debug Input")]
-    internal sealed class DebugPickInput : ScriptableObject, IPickInput
+    internal sealed class DebugPickInputAsset : ScriptableObject, IPickInput
     {
         [SerializeField, Range(0, 1)] private float tensionInput;
         [SerializeField, Range(0, 1)] private float pickHeightInput;

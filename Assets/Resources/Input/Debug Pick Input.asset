@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c20135545c54db5b06da7fb364a9774, type: 3}
   m_Name: Debug Pick Input
-  m_EditorClassIdentifier: FK.Lokpik::FK.Lokpik.Data.DebugPickInput
+  m_EditorClassIdentifier: FK.Lokpik::FK.Lokpik.Data.DebugPickInputAsset
   tensionInput: 0
   pickHeightInput: 0
   changePinInput: 0

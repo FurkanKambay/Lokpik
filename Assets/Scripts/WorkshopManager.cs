@@ -8,8 +8,8 @@ namespace FK.Lokpik
     {
         [Header("References")]
         [SerializeField] private Lockpicker lockpicker;
-        [SerializeField] private PickInput input;
-        [SerializeField] private DebugPickInput debugInput;
+        [SerializeField] private PickInputAsset input;
+        [SerializeField] private DebugPickInputAsset debugInput;
 
         [Header("Config")]
         [SerializeField] private bool useDebugInput;

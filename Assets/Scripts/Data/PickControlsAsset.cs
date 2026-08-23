@@ -12,7 +12,7 @@ namespace FK.Lokpik.Data
     }
 
     [CreateAssetMenu(menuName = "Pick/Controls Config")]
-    internal sealed class PickControlsConfig : ScriptableObject, IPickControlsConfig
+    internal sealed class PickControlsAsset : ScriptableObject, IPickControlsConfig
     {
         [Header("Tension Wrench Movement")]
         [SerializeField, Range(0, 1)] private float maxPickReachHeight = 0.5f;

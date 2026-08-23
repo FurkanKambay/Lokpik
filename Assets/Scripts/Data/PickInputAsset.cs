@@ -14,7 +14,7 @@ namespace FK.Lokpik.Data
     }
 
     [CreateAssetMenu(menuName = "Pick/Input")]
-    internal sealed class PickInput : ScriptableObject, IPickInput
+    internal sealed class PickInputAsset : ScriptableObject, IPickInput
     {
         [SerializeField] private InputActionReference tensionInput;
         [SerializeField] private InputActionReference pickHeightInput;

@@ -10,7 +10,7 @@ namespace FK.Lokpik
     public class Lockpicker : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private PickControlsConfig controls;
+        [SerializeField] private PickControlsAsset controls;
         [SerializeField] private TumblerLock tumblerLock;
 
         [Header("Debug")]
