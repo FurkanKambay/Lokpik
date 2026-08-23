@@ -56,15 +56,18 @@ namespace FK.Common
             SetHighFrequency(0);
         }
 
-        public void SetLowFrequencySolo(float frequency) => SetFrequencies(frequency, 0f);
-        public void SetHighFrequencySolo(float frequency) => SetFrequencies(0f, frequency);
+        public bool SetLowFrequencySolo(float frequency) => SetFrequencies(frequency, 0f);
+        public bool SetHighFrequencySolo(float frequency) => SetFrequencies(0f, frequency);
 
-        public void SetLowFrequency(float frequency) => SetFrequencies(frequency, highFrequency);
-        public void SetHighFrequency(float frequency) => SetFrequencies(lowFrequency, frequency);
+        public bool SetLowFrequency(float frequency) => SetFrequencies(frequency, highFrequency);
+        public bool SetHighFrequency(float frequency) => SetFrequencies(lowFrequency, frequency);
 
-        public void StopRumble() => SetFrequencies(0f, 0f);
+        public bool StopRumble() => SetFrequencies(0f, 0f);
 
-        internal bool SetFrequencies(float lowFrequency, float highFrequency)
+        public bool SetFrequencies(RumbleProfile profile) =>
+            SetFrequencies(profile.lowFrequency, profile.highFrequency);
+
+        public bool SetFrequencies(float lowFrequency, float highFrequency)
         {
             if (Gamepad.current is not { } gamepad)
                 return false;
