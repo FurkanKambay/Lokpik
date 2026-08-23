@@ -17,3 +17,13 @@ MonoBehaviour:
   preventUnsettingPins: 0
   useTensionDrift: 0
   tensionDrift: 0.008
+  rumbleDuration: 0.08
+  pinSetRumble:
+    lowFrequency: 0
+    highFrequency: 0.22
+  pinFreedRumble:
+    lowFrequency: 0
+    highFrequency: 0.5
+  pinBindRumble:
+    lowFrequency: 0
+    highFrequency: 0

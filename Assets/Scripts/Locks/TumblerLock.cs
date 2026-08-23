@@ -50,6 +50,9 @@ namespace FK.Lokpik.Locks
                 chamber.OnStateChange += handler;
         }
 
+        public ChamberState GetChamberState(int pin) =>
+            Chamber(pin)?.State ?? throw new ArgumentOutOfRangeException(nameof(pin));
+
         public void TurnPlugTowards(float desiredRotation, bool preventUnsettingPins = false)
         {
             minPlugProgress = preventUnsettingPins ? Config.GetAdequatePlugRotation(previousPin) + 0.05f : 0f;

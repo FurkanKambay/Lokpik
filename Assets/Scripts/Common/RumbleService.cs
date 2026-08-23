@@ -62,7 +62,14 @@ namespace FK.Common
         public bool SetLowFrequency(float frequency) => SetFrequencies(frequency, highFrequency);
         public bool SetHighFrequency(float frequency) => SetFrequencies(lowFrequency, frequency);
 
-        public bool StopRumble() => SetFrequencies(0f, 0f);
+        public async Awaitable<bool> SetFrequencies(RumbleProfile profile, float duration)
+        {
+            if (!SetFrequencies(profile.lowFrequency, profile.highFrequency))
+                return false;
+
+            await Awaitable.WaitForSecondsAsync(duration);
+            return StopRumble();
+        }
 
         public bool SetFrequencies(RumbleProfile profile) =>
             SetFrequencies(profile.lowFrequency, profile.highFrequency);
@@ -78,6 +85,9 @@ namespace FK.Common
             gamepad.SetMotorSpeeds(lowFrequency, highFrequency);
             return true;
         }
+
+        public bool StopRumble() =>
+            SetFrequencies(0f, 0f);
 
 #if UNITY_EDITOR
         [ContextMenu("Send Wave: Low")]

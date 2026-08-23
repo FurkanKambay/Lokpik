@@ -59,6 +59,17 @@ namespace FK.Lokpik
 
             tumblerLock.TurnPlugTowards(appliedTorque, controls.PreventUnsettingPins);
             tumblerLock.LiftPinTowards(targetedPin, appliedPickLiftForce);
+
+            // rumble if any pin is binding
+            for (int pinIndex = 0; pinIndex < tumblerLock.Config.PinCount; pinIndex++)
+            {
+                ChamberState state = tumblerLock.GetChamberState(pinIndex);
+                if (state.IsBinding())
+                {
+                    rumbleService.SetFrequencies(controls.PinBindRumble * appliedTorque);
+                    break;
+                }
+            }
         }
 
         private void MovePick()
@@ -93,6 +104,25 @@ namespace FK.Lokpik
 
         private async void Chamber_StateChanged(Chamber chamber, ChamberState oldState, ChamberState newState)
         {
+            // if (chamber.ChamberIndex != targetedPin)
+            //     return;
+
+            switch (newState)
+            {
+                case ChamberState.Free:
+                    await rumbleService.SetFrequencies(controls.PinFreedRumble, controls.RumbleDuration);
+                    break;
+                case ChamberState.Set:
+                case ChamberState.AboveShearLine:
+                    await rumbleService.SetFrequencies(controls.PinSetRumble, controls.RumbleDuration);
+                    break;
+                case ChamberState.Underset:
+                case ChamberState.Overset:
+                    // handled every frame for continuous rumble
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
+            }
         }
     }
 }
