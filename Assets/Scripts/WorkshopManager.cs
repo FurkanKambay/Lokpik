@@ -1,3 +1,4 @@
+using FK.Common;
 using FK.Lokpik.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,6 +9,7 @@ namespace FK.Lokpik
     {
         [Header("References")]
         [SerializeField] private Lockpicker lockpicker;
+        [SerializeField] private RumbleService rumbleService;
         [SerializeField] private PickInputAsset input;
         [SerializeField] private DebugPickInputAsset debugInput;
 
@@ -19,12 +21,15 @@ namespace FK.Lokpik
             InputSystem.actions.Enable();
             // Cursor.lockState = CursorLockMode.Locked;
 
-            lockpicker.Init(input);
+            InjectDependencies();
         }
 
-        private void OnValidate()
+        private void InjectDependencies()
         {
             lockpicker.Init(useDebugInput ? debugInput : input);
+            lockpicker.Init(rumbleService);
         }
+
+        private void OnValidate() => InjectDependencies();
     }
 }

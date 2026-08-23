@@ -13,7 +13,9 @@ namespace FK.Lokpik.Locks
     [Serializable]
     public class Chamber
     {
-        public event Action<Chamber, ChamberState> OnStateChange;
+        public delegate void ChamberStateChangeEvent(Chamber chamber, ChamberState oldState, ChamberState newState);
+
+        public event ChamberStateChangeEvent OnStateChange;
 
         public ChamberState State => state;
 
@@ -117,7 +119,7 @@ namespace FK.Lokpik.Locks
             };
 
             if (state != oldState)
-                OnStateChange?.Invoke(this, state);
+                OnStateChange?.Invoke(this, oldState, state);
         }
 
         public void StopLifting()

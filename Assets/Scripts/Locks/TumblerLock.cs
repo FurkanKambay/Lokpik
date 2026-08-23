@@ -44,6 +44,12 @@ namespace FK.Lokpik.Locks
         [SerializeField, RO] private int previousPin = -1;
         [SerializeField, RO] private float minPlugProgress;
 
+        public void SubscribeToChamberStateChanges(Chamber.ChamberStateChangeEvent handler)
+        {
+            foreach (Chamber chamber in chambers)
+                chamber.OnStateChange += handler;
+        }
+
         public void TurnPlugTowards(float desiredRotation, bool preventUnsettingPins = false)
         {
             minPlugProgress = preventUnsettingPins ? Config.GetAdequatePlugRotation(previousPin) + 0.05f : 0f;

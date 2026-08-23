@@ -1,7 +1,11 @@
+using System;
+using FK.Common;
 using FK.Lokpik.Data;
 using FK.Lokpik.Locks;
 using UnityEngine;
 using Vertx.Attributes;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace FK.Lokpik
 {
@@ -29,6 +33,7 @@ namespace FK.Lokpik
         }
 
         private IPickInput input;
+        private RumbleService rumbleService;
 
         private void Awake()
         {
@@ -36,9 +41,11 @@ namespace FK.Lokpik
                 tumblerLock.Chamber(i).SetLock(tumblerLock, i);
 
             tumblerLock.StopPicking();
+            tumblerLock.SubscribeToChamberStateChanges(Chamber_StateChanged);
         }
 
         internal void Init(IPickInput input) => this.input = input;
+        internal void Init(RumbleService rumbleService) => this.rumbleService = rumbleService;
 
         private void Update()
         {
@@ -82,6 +89,10 @@ namespace FK.Lokpik
             }
 
             AppliedTorque = tension;
+        }
+
+        private async void Chamber_StateChanged(Chamber chamber, ChamberState oldState, ChamberState newState)
+        {
         }
     }
 }
