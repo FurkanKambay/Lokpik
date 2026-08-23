@@ -236,7 +236,7 @@ MonoBehaviour:
   background: {fileID: 7326764160622576590}
   chamberWidth: 0.15
   pinWidth: 0.15
-  decay: 20
+  decay: 80
 --- !u!1 &9072662904130622510
 GameObject:
   m_ObjectHideFlags: 0
