@@ -46,10 +46,11 @@ namespace FK.Lokpik.Locks
         [SerializeField, RO] private float plugRotation;
         [SerializeField, RO] private int previousPin = -1;
         [SerializeField, RO] private int nextPin = -1;
+        [SerializeField, RO] private float minPlugProgress;
 
         public void TurnPlugTowards(float desiredRotation, bool preventUnsettingPins = false)
         {
-            float minPlugProgress = preventUnsettingPins ? Config.GetAdequatePlugRotation(previousPin) + 0.01f : 0f;
+            minPlugProgress = preventUnsettingPins ? Config.GetAdequatePlugRotation(previousPin) + 0.05f : 0f;
             plugRotation = Mathf.Clamp(desiredRotation, minPlugProgress, GetMaxPlugRotation());
 
             previousPin = Config.FindPreviousPinAt(plugRotation);

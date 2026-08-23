@@ -59,7 +59,7 @@ namespace FK.Lokpik.Locks
         /// </summary>
         public int FindNextPinAt(float searchTarget)
         {
-            (int index, float rotation) candidate = (-1, float.MinValue);
+            (int index, float rotation) candidate = (-1, float.MaxValue);
 
             for (int i = 0; i < pins.Length; i++)
             {
@@ -79,7 +79,7 @@ namespace FK.Lokpik.Locks
         /// </summary>
         public int FindPreviousPinAt(float searchTarget)
         {
-            (int index, float rotation) candidate = (-1, float.MaxValue);
+            (int index, float rotation) candidate = (-1, float.MinValue);
 
             for (int i = 0; i < pins.Length; i++)
             {
